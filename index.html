@@ -457,13 +457,9 @@ function openVillage(key){currentVillage=key;document.body.classList.toggle('cn-
 function closeModal(){document.getElementById('modal').classList.remove('show');document.body.classList.remove('cn-open');document.getElementById('topics').style.display='grid';document.getElementById('cnDetail').classList.remove('show')}
 
 function openLesson(i){
- const lesson=data.cn.topics[i], detail=document.getElementById('cnDetail');
- document.getElementById('topics').style.display='grid';
- detail.classList.add('show');
- const texts=i===0
- ? '<p>作者：周敦頤　｜　主旨：藉蓮花的生長特質，寄託對君子品格的讚美。</p><p>「出淤泥而不染，濯清漣而不妖。」蓮花生長在污泥中，卻保持潔淨，象徵君子潔身自愛、不隨波逐流。</p>'
- : '<p>課文主題：從生活中的細微片段，看見值得珍惜的人事物與生命體會。</p><p>閱讀時可以留意作者如何描寫片段、串連回憶，以及這些經驗帶來的感受。實際課文內容可再依課本版本補入。</p>';
- detail.innerHTML='<button class="cn-back" onclick="backToLessons()">← 返回課文卷軸</button><div><span class="cn-tag">L0'+(i+1)+'</span><h3>'+lesson[1]+'</h3>'+texts+'</div><div class="cn-actions"><h3>課文選項</h3><button onclick="showLessonText('+i+')">📖　閱讀課文　›</button><button onclick="showLessonNotes('+i+')">▤　重點整理　›</button><button onclick="startPractice('+i+')">✎　闖關練習　›</button></div><div id="cnExtra" style="grid-column:1/-1"></div>';
+ const lesson=data.cn.topics[i];
+ const url='lesson.html?lesson='+encodeURIComponent(i===0?'ailian':'life-fragments');
+ window.open(url,'_blank','noopener');
 }
 function backToLessons(){document.getElementById('cnDetail').classList.remove('show');document.getElementById('topics').style.display='grid'}
 function showLessonText(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>愛蓮說｜課文導讀</h3><p>水陸草木之花，可愛者甚蕃。晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹。予獨愛蓮之出淤泥而不染，濯清漣而不妖……</p><p>（課文全文可依學校採用版本補齊。）</p>':'<h3>生命的碎珠｜閱讀課文</h3><p>請依照課本版本閱讀本文，並找出讓你印象深刻的片段。</p>'}

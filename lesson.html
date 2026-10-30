@@ -105,6 +105,34 @@ meaning:`<h3>詞語、典故與句意解釋</h3>
 
 };
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
+if(!isAilian){
+ const paragraphs=[
+  {p:"第一段｜現代生活步調快速",q:"現代人連讓電話轉盤撥轉回來的一兩秒時間都不願等待，說明這是個＿＿＿＿的世界。",a:"分秒必爭",opts:["分秒必爭","從容自如","集腋成裘"]},
+  {p:"第二段｜珍惜零碎時間",q:"能掌握時間，尤其是＿＿＿＿的人，往往是令人欽佩的智者、成功者。",a:"零碎時間",opts:["休閒時間","零碎時間","睡眠時間"]},
+  {p:"第三段｜胡適善用時間",q:"胡適以「不做無益事，一日當三日」自勉，並能生活得＿＿＿＿。",a:"從容自如",opts:["步履匆忙","從容自如","不敷使用"]},
+  {p:"第四段｜甘迺迪利用空檔",q:"甘迺迪在接見客人之間拿起書籍閱讀，善用短暫的＿＿＿＿充實學識。",a:"空檔",opts:["空檔","瑣事","清漣"]},
+  {p:"第五段｜古人珍惜光陰",q:"歐陽脩利用「三上」構思文章，分別是枕上、廁上和＿＿＿＿。",a:"馬上",opts:["桌上","馬上","路上"]},
+  {p:"第六段｜大箱子的比喻",q:"箱子先放大石頭，再放小石頭、細沙，最後還能注入＿＿＿＿。",a:"清水",opts:["黃金","清水","泥土"]},
+  {p:"第七段｜安排每天時間",q:"作者把每天的二十四小時比喻成大箱子，提醒我們善用零星、分散的＿＿＿＿。",a:"空隙",opts:["空隙","石壁","碎珠"]},
+  {p:"第八段｜累積零碎時間",q:"「積沙成塔，集腋成裘」比喻聚少成多；零碎時間就像生命中的＿＿＿＿。",a:"碎珠",opts:["碎珠","清水","大石頭"]}
+ ];
+ const game=document.createElement('section');
+ game.id='paragraphGame';
+ game.innerHTML='<h3>🎮 分段慣用詞句配對・填空挑戰</h3><p class="muted">讀完每一段，選出最適合填入句子的詞語。完成八題看看自己能得幾分！</p><div id="gameScore" class="note">目前得分：0 / 8</div><div id="gameQuestions"></div>';
+ document.getElementById('text').appendChild(game);
+ const host=game.querySelector('#gameQuestions');
+ paragraphs.forEach((item,index)=>{
+  const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
+  const select=document.createElement('select');select.setAttribute('aria-label','第'+(index+1)+'題答案');select.style.cssText='padding:10px 12px;border:1px solid #bd9253;border-radius:8px;background:#fffdf7;color:#493321;font-size:16px;max-width:100%;';
+  const empty=document.createElement('option');empty.value='';empty.textContent='請選擇答案';select.appendChild(empty);
+  item.opts.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;select.appendChild(o);});
+  const check=document.createElement('button');check.textContent='確認答案';check.style.cssText='margin-left:8px;padding:10px 16px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';
+  const feedback=document.createElement('p');feedback.setAttribute('aria-live','polite');feedback.style.marginBottom='0';
+  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';feedback.textContent=correct?'答對了！很棒！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
+  card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);
+ });
+}
+
 document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.tab));}));
 </script>
 </body></html>

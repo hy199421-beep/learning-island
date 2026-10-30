@@ -173,35 +173,48 @@ const wordPronunciations={
   ['清漣','ㄑㄧㄥ ㄌㄧㄢˊ'],['香遠益清','ㄒㄧㄤ ㄩㄢˇ ㄧˋ ㄑㄧㄥ'],['宜乎','ㄧˊ ㄏㄨ']
  ],
  life:[
-  ['秒','ㄇㄧㄠˇ','課文詞語：分秒必爭。'],
-  ['爭','ㄓㄥ','課文詞語：分秒必爭。'],
-  ['珍','ㄓㄣ','課文詞語：珍惜時間。'],
-  ['惜','ㄒㄧˊ','課文詞語：珍惜時間。'],
-  ['碎','ㄙㄨㄟˋ','課文詞語：零碎時間。'],
-  ['閒','ㄒㄧㄢˊ','課文詞語：悠閒。'],
-  ['讀','ㄉㄨˊ','課文詞語：閱讀。'],
-  ['書','ㄕㄨ','課文詞語：書籍。'],
-  ['間','ㄐㄧㄢ','課文詞語：時間。'],
-  ['等','ㄉㄥˇ','課文詞語：等待。'],
-  ['勉','ㄇㄧㄢˇ','課文詞語：勉勵。'],
-  ['勵','ㄌㄧˋ','課文詞語：勉勵。']
+  ['履','ㄌㄩˇ','課文詞語：步履匆忙。'],
+  ['關鍵','ㄍㄨㄢ ㄐㄧㄢˋ','重要的地方；會影響結果的重點。'],
+  ['欽佩仰慕','ㄑㄧㄣ ㄆㄟˋ ㄧㄤˇ ㄇㄨˋ','敬重、羨慕一個人。'],
+  ['自勉','ㄗˋ ㄇㄧㄢˇ','自己提醒、鼓勵自己。'],
+  ['溫藹','ㄨㄣ ㄞˇ','溫和、親切。'],
+  ['不敷','ㄅㄨˋ ㄈㄨ','不夠、不足。'],
+  ['撇開','ㄆㄧㄝ ㄎㄞ','先放在一邊，暫時不談。'],
+  ['尺璧','ㄔˇ ㄅㄧˋ','一尺長的美玉。'],
+  ['空隙','ㄎㄨㄥ ㄒㄧˋ','空出來的地方或時間。'],
+  ['集腋可以成裘','ㄐㄧˊ ㄧㄝˋ ㄎㄜˇ ㄧˇ ㄔㄥˊ ㄑㄧㄡˊ','比喻一點一點累積，最後變得很多。'],
+  ['盛年','ㄕㄥˋ ㄋㄧㄢˊ','人的壯年時期。'],
+  ['著書立說','ㄓㄨˋ ㄕㄨ ㄌㄧˋ ㄕㄨㄛ','寫書，提出自己的學說或想法。']
  ]
 };
 const wordBank=wordPronunciations[isAilian?'ailian':'life'];
 const wordLetters=['A','B','C','D'];
-const wordQuiz=wordBank.map((entry,i)=>{
- const askZhuyin=i%2===0;
- const correct=i%4;
- const wrong=wordBank.filter((w,j)=>j!==i).map(w=>askZhuyin?w[0]:w[1]);
- let cursor=(i*5)%wrong.length;
+function buildWordQuestion(entry,i,askZhuyin,correct){
+ const answerText=askZhuyin?entry[0]:entry[1];
+ const wrong=[...new Set(wordBank.filter((w,j)=>j!==i).map(w=>askZhuyin?w[0]:w[1]))];
+ let cursor=(i*3+(askZhuyin?0:4))%wrong.length;
  const options=[];
  for(let k=0;k<4;k++){
-  options.push(k===correct?(askZhuyin?entry[0]:entry[1]):wrong[(cursor++)%wrong.length]);
+  options.push(k===correct?answerText:wrong[(cursor++)%wrong.length]);
  }
- return {word:entry[0],stimulus:askZhuyin?entry[1]:entry[0],hint:entry[2]||'請仔細辨認這個語詞。',askZhuyin,prompt:askZhuyin?'請依照注音選出正確的國字：':'請依照國字選出正確的注音：',answer:correct,options};
-});
+ return {
+  word:entry[0],
+  stimulus:askZhuyin?entry[1]:entry[0],
+  hint:entry[2]||'請仔細辨認這個語詞。',
+  askZhuyin,
+  prompt:askZhuyin?'請依照注音選出正確的國字：':'請依照國字選出正確的注音：',
+  answer:correct,
+  options
+ };
+}
+const wordQuiz=isAilian
+ ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,i%4))
+ :wordBank.flatMap((entry,i)=>[
+   buildWordQuestion(entry,i,true,(i*2)%4),
+   buildWordQuestion(entry,i,false,(i*2+1)%4)
+  ]);
 const zy=document.getElementById('zhuyin');
-zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文常用字注音練習')+'</h3><p class="muted">'+(isAilian?'每次只考一題，交替練習看注音選國字、看國字選注音。每題選完立即公布正確答案。':'一次練習一個字，搭配課文詞語提示。題目以常見字為主，交替練習看注音選國字、看國字選注音；選完立即公布答案。')+'</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
+zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文指定字詞國字注音練習')+'</h3><p class="muted">'+(isAilian?'每次只考一題，交替練習看注音選國字、看國字選注音。每題選完立即公布正確答案。':'依照指定的12個課文詞語出題，每個詞語都會考「看注音選國字」及「看國字選注音」各一題。答案平均分配在A、B、C、D四個選項，每題作答後立即公布正確答案。')+'</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
 let wordIndex=0;
 const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');
@@ -229,7 +242,7 @@ function renderWordQuestion(){
   button.className='zhuyin-choice';
   button.setAttribute('aria-pressed',String(wordAnswers[wordIndex]===k));
   button.disabled=wordAnswers[wordIndex]!==null;
-  button.style.cssText='display:flex;align-items:center;gap:12px;text-align:left;background:#fff9ed;border:2px solid #d7bd91;border-radius:18px;padding:18px;cursor:pointer;font-size:clamp(17px,2vw,21px);font-weight:700;color:#493321;min-height:78px;box-shadow:0 5px 0 #d4c092';
+  button.style.cssText='display:flex;align-items:center;gap:12px;text-align:left;background:#fff9ed;border:2px solid #d7bd91;border-radius:18px;padding:18px;cursor:pointer;font-size:clamp(17px,2vw,21px);font-weight:700;color:#493321;min-height:78px;box-shadow:0 5px 0 #d4c092;overflow-wrap:anywhere';
   const badge=document.createElement('span');
   badge.textContent=['🌱','⭐','🔔','💎'][k];
   badge.style.cssText='font-size:24px;flex:0 0 auto';

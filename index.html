@@ -456,6 +456,18 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 .mascot,.hero{will-change:transform}
 @media(prefers-reduced-motion:reduce){.village-label,.village-label:hover{transition:none!important}}
 
+/* 學習島中央新增作者島港口入口 */
+.author-port-link{width:clamp(150px,16vw,190px);min-height:154px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:14px 12px;text-decoration:none;text-align:center;color:#fff9e9;background:linear-gradient(155deg,#4c9eaa,#286f70);border:5px solid #d7f3eb;border-radius:25px;box-shadow:0 8px 0 #245b54,0 13px 22px #31513c66,inset 0 0 0 2px #9ed7c8;transition:transform .22s,filter .22s;position:relative}
+.author-port-link:before{content:"";position:absolute;inset:7px;border:2px dashed #c5e8d7;border-radius:16px;pointer-events:none}
+.author-port-link:hover{transform:translateY(-6px);filter:brightness(1.08)}
+.author-port-boat{font-size:clamp(34px,4vw,48px);line-height:1.1;animation:portBoat 2.8s ease-in-out infinite}
+@keyframes portBoat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
+.author-port-title{font-size:clamp(17px,1.8vw,21px);font-weight:1000;letter-spacing:.04em}
+.author-port-subtitle{font-size:13px;font-weight:800;color:#e1f5e9}
+.author-port-arrow{margin-top:3px;padding:5px 13px;border-radius:20px;background:#d8f2e4;color:#245b54;font-size:13px;font-weight:900;box-shadow:0 2px 0 #8bbca7}
+@media(max-width:700px){.center{gap:10px}.author-port-link{width:190px;min-height:138px}.author-port-boat{font-size:38px}}
+@media(prefers-reduced-motion:reduce){.author-port-boat{animation:none}}
+
 /* 島中央：每日登入打卡入口 */
 .center{z-index:8!important;display:flex;align-items:center;justify-content:center}
 .attendance-link{width:clamp(150px,17vw,205px);min-height:154px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:14px 12px;text-decoration:none;text-align:center;color:#59401f;background:linear-gradient(155deg,#fff9dc,#f5cf75);border:5px solid #fff1bd;border-radius:25px;box-shadow:0 8px 0 #a96d37,0 13px 22px #31513c66,inset 0 0 0 2px #d5a34e;transform:translateY(0) rotate(-2deg);transition:transform .22s,box-shadow .22s,filter .22s;position:relative}
@@ -479,7 +491,7 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 <section class="village v-math"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🔢</div><div class="house">📐</div></div><button class="village-label" onclick="openVillage('math')">🔢 數學村</button></section>
 <section class="village v-en"><span class="trees">🌲 🌳</span><div class="buildings"><div class="house">🔤</div><div class="house">🗣️</div></div><button class="village-label" onclick="openVillage('en')">🔤 英文村</button></section>
 <section class="village v-special"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🤝</div><div class="house">💡</div></div><button class="village-label" onclick="openVillage('special')">🤝 特需村</button></section>
-<div class="center"><a class="attendance-link" href="https://hy199421-beep.github.io/classroom/gemini-code-1789099846515.html" target="_blank" rel="noopener noreferrer" aria-label="開啟學生每日登入打卡與出缺席紀錄"><span class="attendance-icon">📋</span><span class="attendance-title">每日登入打卡</span><span class="attendance-subtitle">學生出缺席紀錄</span><span class="attendance-arrow">點我進入 ➜</span></a><span id="buddyLine" aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></span></div>
+<div class="center"><a class="author-port-link" href="author-island.html" aria-label="搭船前往作者島"><span class="author-port-boat">⛵</span><span class="author-port-title">作者島港口</span><span class="author-port-subtitle">搭船探索周敦頤</span><span class="author-port-arrow">登島出發 ➜</span></a><a class="attendance-link" href="https://hy199421-beep.github.io/classroom/gemini-code-1789099846515.html" target="_blank" rel="noopener noreferrer" aria-label="開啟學生每日登入打卡與出缺席紀錄"><span class="attendance-icon">📋</span><span class="attendance-title">每日登入打卡</span><span class="attendance-subtitle">學生出缺席紀錄</span><span class="attendance-arrow">點我進入 ➜</span></a><span id="buddyLine" aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></span></div>
 </div>
 <div class="character-row" aria-label="冒險夥伴小隊"><div class="hero" data-name="島島隊長">🤖</div><div class="hero" data-name="語文精靈">🦊</div><div class="hero" data-name="數學博士">🐼</div><div class="hero" data-name="勇氣夥伴">🐰</div></div>
 <div class="quest-banner"><span class="quest-icon">🗺️</span><span>今日任務：挑選一座村莊，完成一個挑戰！</span></div>

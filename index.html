@@ -105,6 +105,10 @@ body.cn-open .practice{background:#f5e7c9;border:1px solid #c8a66b}
 .cn-actions{display:grid;gap:10px;align-content:center}.cn-actions button{border:2px solid #d4b477;border-radius:24px;background:linear-gradient(#fff8e8,#f1d8a5);padding:13px 18px;color:#573820;font-weight:900;text-align:left;box-shadow:0 4px 0 #c29b5b}
 .cn-actions button:hover{background:#f8d58b}.cn-back{margin:0 0 10px;border:1px solid #9a6b3c;background:#71462b;color:#fff2d2;border-radius:8px;padding:8px 15px;font-weight:900}
 @media(max-width:760px){body.cn-open .panel{padding:16px 12px}body.cn-open .topic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.cn-open .topic{min-height:140px}.cn-detail.show{grid-template-columns:1fr}.cn-detail{padding:14px}}
+
+/* User-provided academy artwork as the Chinese village backdrop */
+body.cn-open .modal{background:linear-gradient(#24150d66,#24150d99),url('./assets/chinese-academy-bg.webp') center center/cover fixed no-repeat!important;backdrop-filter:none}
+body.cn-open .panel{background:linear-gradient(90deg,#fff5e9ee,#fff8e9f2);backdrop-filter:blur(2px)}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>

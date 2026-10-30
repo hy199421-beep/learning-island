@@ -109,57 +109,66 @@ meaning:`<h3>詞語、典故與句意解釋</h3>
 };
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
 
-/* 國字注音改為課文生難字選擇練習；每份 12 題，A～D 各 3 題 */
-const pronunciationSets={
+/* 課文生難詞語注音四選一：逐題呈現，A～D 正確答案各 3 題 */
+const wordPronunciations={
  ailian:[
-  ['蕃','ㄈㄢˊ'],['濯','ㄓㄨㄛˊ'],['漣','ㄌㄧㄢˊ'],['蔓','ㄇㄢˋ'],
-  ['褻','ㄒㄧㄝˋ'],['鮮','ㄒㄧㄢˇ'],['逸','ㄧˋ'],['宜','ㄧˊ'],
-  ['淤','ㄩ'],['染','ㄖㄢˇ'],['淨','ㄐㄧㄥˋ'],['植','ㄓˊ']
+  ['濯清漣','ㄓㄨㄛˊ ㄑㄧㄥ ㄌㄧㄢˊ'],['褻玩','ㄒㄧㄝˋ ㄨㄢˊ'],['隱逸','ㄧㄣˇ ㄧˋ'],
+  ['鮮有聞','ㄒㄧㄢˇ ㄧㄡˇ ㄨㄣˊ'],['不蔓不枝','ㄅㄨˋ ㄇㄢˋ ㄅㄨˋ ㄓ'],['淤泥','ㄩ ㄋㄧˊ'],
+  ['君子','ㄐㄩㄣ ㄗˇ'],['亭亭淨植','ㄊㄧㄥˊ ㄊㄧㄥˊ ㄐㄧㄥˋ ㄓˊ'],['不染','ㄅㄨˋ ㄖㄢˇ'],
+  ['清漣','ㄑㄧㄥ ㄌㄧㄢˊ'],['濯洗','ㄓㄨㄛˊ ㄒㄧˇ'],['宜乎','ㄧˊ ㄏㄨ']
  ],
  life:[
-  ['鍵','ㄐㄧㄢˋ'],['秒','ㄇㄧㄠˇ'],['競','ㄐㄧㄥˋ'],['致','ㄓˋ'],
-  ['欽','ㄑㄧㄣ'],['慕','ㄇㄨˋ'],['雜','ㄗㄚˊ'],['容','ㄖㄨㄥˊ'],
-  ['藹','ㄞˇ'],['敷','ㄈㄨ'],['撇','ㄆㄧㄝ'],['閒','ㄒㄧㄢˊ']
+  ['分秒必爭','ㄈㄣ ㄇㄧㄠˇ ㄅㄧˋ ㄓㄥ'],['零碎時間','ㄌㄧㄥˊ ㄙㄨㄟˋ ㄕˊ ㄐㄧㄢ'],['欽佩仰慕','ㄑㄧㄣ ㄆㄟˋ ㄧㄤˇ ㄇㄨˋ'],
+  ['著書立說','ㄓㄨˋ ㄕㄨ ㄌㄧˋ ㄕㄨㄛ'],['繁雜事務','ㄈㄢˊ ㄗㄚˊ ㄕˋ ㄨˋ'],['從容自如','ㄘㄨㄥ ㄖㄨㄥˊ ㄗˋ ㄖㄨˊ'],
+  ['溫藹','ㄨㄣ ㄞˇ'],['不敷使用','ㄅㄨˋ ㄈㄨ ㄕˇ ㄩㄥˋ'],['悠閒','ㄧㄡ ㄒㄧㄢˊ'],
+  ['瑣碎','ㄙㄨㄛˇ ㄙㄨㄟˋ'],['哲人','ㄓㄜˊ ㄖㄣˊ'],['勉勵','ㄇㄧㄢˇ ㄌㄧˋ']
  ]
 };
-const pronunciationDistractors=['ㄅㄧˋ','ㄑㄧㄡˊ','ㄧㄝˋ','ㄗㄨㄥ','ㄘㄜˋ','ㄌㄧˋ','ㄒㄧㄡ','ㄕˊ','ㄆㄧㄠ','ㄈㄨˊ','ㄒㄧㄢ','ㄐㄧㄥ'];
-const quizWords=pronunciationSets[isAilian?'ailian':'life'];
-const quiz=document.getElementById('zhuyin');
-quiz.innerHTML='<h3>🔤 生難字注音選擇題</h3><p class="muted">請看每個字，選出正確的注音。每題只有一個正確答案，完成後可確認得分。</p><div id="zyScore" class="note">目前得分：0 / 12</div><div id="zyQuestions"></div><button id="zySubmit" type="button" style="padding:12px 20px;border:0;border-radius:9px;background:#765034;color:white;font-size:17px;font-weight:bold;cursor:pointer">交卷並看答案</button><p id="zyResult" aria-live="polite"></p>';
-const zyHost=quiz.querySelector('#zyQuestions');
-const zyLetters=['A','B','C','D'];
-const zyQuestions=quizWords.map((entry,i)=>{
- const correctIndex=i%4;
- const distractors=pronunciationDistractors.filter(v=>v!==entry[1]);
- const opts=[];
- let d=0;
- for(let k=0;k<4;k++) opts.push(k===correctIndex?entry[1]:distractors[(i*3+d++)%distractors.length]);
- return {word:entry[0],answer:correctIndex,opts};
+const wordBank=wordPronunciations[isAilian?'ailian':'life'];
+const wordLetters=['A','B','C','D'];
+const wordQuiz=wordBank.map((entry,i)=>{
+ const correct=i%4;
+ const wrong=wordBank.filter((w,j)=>j!==i).map(w=>w[1]);
+ let cursor=(i*5)%wrong.length;
+ const options=[];
+ for(let k=0;k<4;k++) options.push(k===correct?entry[1]:wrong[(cursor++)%wrong.length]);
+ return {word:entry[0],answer:correct,options};
 });
-zyQuestions.forEach((q,i)=>{
- const card=document.createElement('div');card.className='note';card.style.margin='14px 0';
- const title=document.createElement('h3');title.style.margin='0 0 10px';title.textContent=(i+1)+'. 「'+q.word+'」的正確注音是？';card.appendChild(title);
- const choices=document.createElement('div');choices.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px';
- q.opts.forEach((opt,k)=>{
-  const label=document.createElement('label');label.style.cssText='display:flex;align-items:center;gap:8px;background:#fff9ed;border:1px solid #d7bd91;border-radius:8px;padding:10px;cursor:pointer';
-  const radio=document.createElement('input');radio.type='radio';radio.name='zy'+i;radio.value=String(k);
-  const span=document.createElement('span');span.textContent=zyLetters[k]+'．'+opt;
+const zy=document.getElementById('zhuyin');
+zy.innerHTML='<h3>🔤 課文生難詞語注音挑戰</h3><p class="muted">每次只練習一個詞語。請選出整個詞語正確的注音，再按「下一題」。</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">完成作答</button></div><p id="wordResult" aria-live="polite"></p>';
+let wordIndex=0;
+const wordAnswers=Array(wordQuiz.length).fill(null);
+let wordFinished=false;
+const wordCard=zy.querySelector('#wordCard');
+function renderWordQuestion(){
+ const q=wordQuiz[wordIndex];
+ zy.querySelector('#wordProgress').textContent='第 '+(wordIndex+1)+' 題／共 '+wordQuiz.length+' 題';
+ wordCard.innerHTML='';
+ const heading=document.createElement('h2');heading.style.cssText='font-size:30px;text-align:center;margin:16px 0 22px;color:#68452e';heading.textContent='「'+q.word+'」的正確注音是？';wordCard.appendChild(heading);
+ const choices=document.createElement('div');choices.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
+ q.options.forEach((opt,k)=>{
+  const label=document.createElement('label');label.style.cssText='display:flex;align-items:center;gap:9px;background:#fff9ed;border:2px solid #d7bd91;border-radius:9px;padding:13px;cursor:pointer;font-size:18px';
+  const radio=document.createElement('input');radio.type='radio';radio.name='wordPronunciation';radio.value=String(k);radio.checked=wordAnswers[wordIndex]===k;radio.disabled=wordFinished;radio.style.transform='scale(1.2)';
+  radio.addEventListener('change',()=>{wordAnswers[wordIndex]=k;});
+  const span=document.createElement('span');span.textContent=wordLetters[k]+'．'+opt;
   label.appendChild(radio);label.appendChild(span);choices.appendChild(label);
  });
- card.appendChild(choices);const feedback=document.createElement('p');feedback.className='zyFeedback';feedback.style.marginBottom='0';card.appendChild(feedback);zyHost.appendChild(card);
+ wordCard.appendChild(choices);
+ if(wordFinished){const p=document.createElement('p');p.textContent='正確答案：'+wordLetters[q.answer]+'．'+q.options[q.answer];p.style.color=wordAnswers[wordIndex]===q.answer?'#26734d':'#a33d2e';wordCard.appendChild(p);}
+ zy.querySelector('#wordPrev').disabled=wordIndex===0;
+ zy.querySelector('#wordNext').disabled=wordIndex===wordQuiz.length-1||wordFinished;
+ zy.querySelector('#wordFinish').disabled=wordFinished;
+}
+zy.querySelector('#wordPrev').addEventListener('click',()=>{if(wordIndex>0){wordIndex--;renderWordQuestion();}});
+zy.querySelector('#wordNext').addEventListener('click',()=>{if(wordIndex<wordQuiz.length-1){wordIndex++;renderWordQuestion();}});
+zy.querySelector('#wordFinish').addEventListener('click',()=>{
+ if(wordAnswers.some(a=>a===null)){zy.querySelector('#wordResult').textContent='還有題目尚未作答，請逐題完成後再交卷。';return;}
+ wordFinished=true;
+ const score=wordQuiz.filter((q,i)=>wordAnswers[i]===q.answer).length;
+ zy.querySelector('#wordResult').textContent='本次得分：'+score+'／'+wordQuiz.length+'。可逐題查看正確注音。';
+ renderWordQuestion();
 });
-quiz.querySelector('#zySubmit').addEventListener('click',()=>{
- let score=0;
- zyQuestions.forEach((q,i)=>{
-  const card=zyHost.children[i];const chosen=card.querySelector('input:checked');const feedback=card.querySelector('.zyFeedback');
-  card.querySelectorAll('input').forEach(r=>r.disabled=true);
-  if(chosen&&Number(chosen.value)===q.answer){score++;feedback.textContent='答對了！';feedback.style.color='#26734d';}
-  else{feedback.textContent='正確答案：'+zyLetters[q.answer]+'．'+q.opts[q.answer];feedback.style.color='#a33d2e';}
- });
- quiz.querySelector('#zyScore').textContent='練習得分：'+score+' / 12';
- quiz.querySelector('#zyResult').textContent=score===12?'太棒了！全部答對！':'訂正錯題後，再把不熟悉的字讀一遍。';
- quiz.querySelector('#zySubmit').disabled=true;
-});
+renderWordQuestion();
 
 if(!isAilian){
  // 學習中心版本：不顯示長篇課文，只保留題目與圖像提示

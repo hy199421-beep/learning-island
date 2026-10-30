@@ -58,9 +58,34 @@ button.village-label{border-style:solid}
 .adventure-tip{margin:14px 0 0;padding:12px 14px;background:#e4f3d8;border:2px solid #a5c98d;border-radius:14px;font-weight:800;color:#45653d}
 @media(max-width:700px){.character-row{gap:8px;margin:5px auto 0}.hero{width:50px;height:58px;font-size:27px}.center{flex-wrap:wrap}.center-note{max-width:160px}.center-note:before{display:none}.quest-banner{font-size:13px;margin-top:20px}}
 
+
+/* Low-poly 3D island scene */
+.island{background:transparent;filter:none;clip-path:none;overflow:hidden}
+.island:before{inset:2% 1% 0;border:14px solid #e9cf91;box-shadow:inset 0 0 0 7px #c99b5c;pointer-events:none}
+#world3d{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.header,.welcome,.villages,.character-row,.quest-banner,.bottom{position:relative;z-index:2}
+.villages{z-index:3}
+.village{background:transparent;border:0;box-shadow:none;transform:none;border-radius:0;min-width:0;height:215px;z-index:3}
+.village:before,.village:after,.village .trees,.village .buildings{display:none}
+.village:hover{transform:none;filter:none}
+.village-label{bottom:0}
+.v-cn{top:3%;left:3%}.v-math{top:3%;right:3%}.v-en{bottom:4%;left:3%}.v-special{bottom:4%;right:3%}
+.center{z-index:4}
+.center .mascot{border:6px solid #f5e7b4}
+.character-row,.quest-banner,.bottom{z-index:4}
+@media(max-width:700px){
+ .island{padding:18px 14px 30px;min-height:100vh}
+ .island:before{inset:2px;border-width:8px}
+ #world3d{height:100%;opacity:.95}
+ .villages{height:auto;display:grid;grid-template-columns:1fr 1fr;gap:48px 14px;margin:35px auto 30px}
+ .village{position:relative;inset:auto;width:100%;height:150px;min-width:0}
+ .v-cn,.v-math,.v-en,.v-special{grid-column:auto;margin:0}
+ .village-label{bottom:-30px}
+ .center{position:relative;top:auto;left:auto;transform:none;justify-content:center;grid-column:1/-1;grid-row:2;order:5;margin:0}
+}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
-<div class="island">
+<div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
 <header class="header"><div class="brand"><span class="brand-icon">🏝️</span><div><h1>學習島</h1><p>每天一小步，能力大冒險！</p></div></div><div class="stats">⭐ <span id="stars">0</span> 星星　🏅 <span id="done">0</span> 次練習</div></header>
 <section class="welcome"><h2>嗨！小小探險家，今天想去哪一村？</h2><p>選一座學習村莊，開始你的知識冒險吧！</p></section>
 <div class="villages">
@@ -97,4 +122,41 @@ function renderQuestion(){const q=quiz[activeQuiz];document.getElementById('ques
 function checkAnswer(i,btn){if(answered)return;answered=true;const q=quiz[activeQuiz];const buttons=[...document.querySelectorAll('.answer')];buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add('correct')});if(i===q.c){store.stars+=1;store.done+=1;store.today+=1;document.getElementById('feedback').textContent='🎉 答對了！'+q.why}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='再想一想！正確答案已標示。'+q.why}if(i!==q.c){store.done+=1;store.today+=1}localStorage.setItem('learningIsland',JSON.stringify(store));sync();document.getElementById('bar').style.width='100%'}
 function nextQuestion(){if(!answered){document.getElementById('feedback').textContent='先選一個答案再繼續喔！';return}activeQuiz=(activeQuiz+1)%quiz.length;renderQuestion()}
 sync();document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+</script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+const canvas=document.getElementById('world3d');
+if(canvas){
+ const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ renderer.outputColorSpace=THREE.SRGBColorSpace;
+ const scene=new THREE.Scene();scene.background=null;
+ const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.set(0,18,24);camera.lookAt(0,0,0);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x65834d,2.1));
+ const sun=new THREE.DirectionalLight(0xfff3d6,3.2);sun.position.set(-8,16,10);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
+ const mat=(color,roughness=1)=>new THREE.MeshStandardMaterial({color,roughness,flatShading:true});
+ const green=mat(0x9fc77b),sand=mat(0xe9d39b),path=mat(0xe8d4a0),dark=mat(0x765038),leaf=[mat(0x34864a),mat(0x55a653),mat(0x267344)];
+ const island=new THREE.Mesh(new THREE.CylinderGeometry(12.8,13.4,.7,10),green);island.position.y=-.45;island.receiveShadow=true;island.castShadow=true;scene.add(island);
+ const rim=new THREE.Mesh(new THREE.CylinderGeometry(13.2,13.5,.35,10),sand);rim.position.y=-.78;scene.add(rim);
+ function box(x,y,z,sx,sy,sz,m,rot=0){const o=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),m);o.position.set(x,y,z);o.rotation.y=rot;o.castShadow=true;o.receiveShadow=true;scene.add(o);return o}
+ function tree(x,z,k=1){const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.12*k,.2*k,.8*k,5),dark);trunk.position.set(x,.35*k,z);trunk.castShadow=true;scene.add(trunk);for(let j=0;j<3;j++){const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(.62*k-j*.08,0),leaf[(j+Math.round(x+z))%3]);crown.position.set(x,(.8+j*.43)*k,z);crown.scale.set(1,1.05,1);crown.castShadow=true;scene.add(crown)}}
+ function house(x,z,color,roof){box(x,.65,z,1.15,1.3,1,mat(color));const r=new THREE.Mesh(new THREE.ConeGeometry(.9,.8,4),mat(roof));r.position.set(x,1.68,z);r.rotation.y=Math.PI/4;r.castShadow=true;scene.add(r);box(x,.38,z+.52,.28,.75,.06,mat(0x8b5635));for(const dx of [-.34,.34])box(x+dx,.9,z+.515,.2,.22,.04,mat(0xffe7a0))}
+ function cart(x,z){box(x,.3,z,.65,.35,.42,mat(0xb73d2c));box(x,.55,z,.64,.12,.43,mat(0xf8eee0));for(let i=0;i<3;i++)box(x-.2+i*.2,.63,z,.09,.12,.44,mat(0xc83d32));for(const dx of [-.22,.22]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.08,8),mat(0x332d29));w.rotation.z=Math.PI/2;w.position.set(x+dx,.12,z);scene.add(w)}}
+ const zones=[{x:-6,z:-5,c:0x24796a,wall:0xe5f2e8,roof:0x175f56},{x:6,z:-5,c:0x315fbd,wall:0xe5ebf7,roof:0x2459b4},{x:-6,z:5,c:0x7040b6,wall:0xe8e0f4,roof:0x6337a4},{x:6,z:5,c:0xb95032,wall:0xf3dfbd,roof:0xb94c2e}];
+ zones.forEach((q,i)=>{const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.5,.48,8),mat(q.c));platform.position.set(q.x,.03,q.z);platform.rotation.y=Math.PI/8;platform.castShadow=true;platform.receiveShadow=true;scene.add(platform);const top=new THREE.Mesh(new THREE.CylinderGeometry(3.15,3.15,.12,8),mat(q.wall));top.position.set(q.x,.32,q.z);top.rotation.y=Math.PI/8;scene.add(top);house(q.x-.85,.55+q.z,q.wall,q.roof);house(q.x+.85,.45+q.z,q.wall,q.roof);cart(q.x-.1,q.z+1.55);tree(q.x-2.65,q.z-1.9,.8);tree(q.x+2.6,q.z+1.7,.75)});
+ // central plaza, winding stepping stones and gacha machine
+ const plaza=new THREE.Mesh(new THREE.CylinderGeometry(2.65,2.8,.18,12),mat(0xe9d6aa));plaza.position.y=.25;scene.add(plaza);
+ for(let i=0;i<19;i++){const a=i/19*Math.PI*2;const x=Math.cos(a)*4.1,z=Math.sin(a)*3.4;const stone=new THREE.Mesh(new THREE.DodecahedronGeometry(.38,0),path);stone.position.set(x,.18,z);stone.scale.y=.48;stone.rotation.y=i;stone.castShadow=true;scene.add(stone)}
+ // colorful capsule machine
+ const base=new THREE.Mesh(new THREE.CylinderGeometry(.55,.7,.85,8),mat(0xe5a52d));base.position.set(-.8,.7,.2);scene.add(base);
+ const globe=new THREE.Mesh(new THREE.SphereGeometry(.58,10,8),new THREE.MeshPhysicalMaterial({color:0x8de1ec,transparent:true,opacity:.72,roughness:.12}));globe.position.set(-.8,1.55,.2);scene.add(globe);
+ for(let i=0;i<7;i++){const ball=new THREE.Mesh(new THREE.SphereGeometry(.13,7,6),mat([0xf05b56,0xffd34e,0x58b8e5,0x8dca69][i%4]));ball.position.set(-.8+Math.cos(i*2.4)*.3,1.35+(i%3)*.17,.2+Math.sin(i*2.4)*.3);scene.add(ball)}
+ // little robot
+ const body=box(.9,1,.25,.72,.9,.55,mat(0x58bfc5));box(.9,1.57,.25,.62,.48,.52,mat(0x287f91));box(.76,1.62,.53,.1,.1,.04,mat(0xffffff));box(1.04,1.62,.53,.1,.1,.04,mat(0xffffff));
+ for(let i=0;i<16;i++){const x=(Math.random()-.5)*22,z=(Math.random()-.5)*21;if(Math.abs(x)>8||Math.abs(z)>8)tree(x,z,.45+Math.random()*.35)}
+ function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+ new ResizeObserver(resize).observe(canvas);resize();
+ function animate(t){requestAnimationFrame(animate);body.position.y=1+Math.sin(t*.0018)*.07;renderer.render(scene,camera)}animate(0);
+}
 </script></body></html>

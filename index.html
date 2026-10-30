@@ -456,6 +456,29 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 .mascot,.hero{will-change:transform}
 @media(prefers-reduced-motion:reduce){.village-label,.village-label:hover{transition:none!important}}
 
+/* 擬真港口場景：海面、木棧橋、繫船柱與靠岸小船 */
+.harbor-scene{position:relative;width:clamp(210px,23vw,270px);height:178px;flex:0 0 auto;isolation:isolate;overflow:visible}
+.harbor-water{position:absolute;left:-10px;right:-10px;bottom:0;height:76px;border-radius:48% 52% 12px 12px;background:repeating-linear-gradient(176deg,transparent 0 12px,#d7f5e9aa 13px 15px,transparent 16px 25px),linear-gradient(180deg,#73c8d2,#23899c 75%,#176b7d);box-shadow:inset 0 8px 0 #b7e9e2aa,0 5px 0 #175c6c;z-index:-1}
+.harbor-water i{position:absolute;width:38px;height:5px;border-radius:50%;background:#e0fff1aa;animation:waterRipple 3.4s ease-in-out infinite}
+.harbor-water i:nth-child(1){left:8%;top:22px}.harbor-water i:nth-child(2){left:66%;top:39px;animation-delay:-1.2s}.harbor-water i:nth-child(3){left:39%;top:12px;animation-delay:-2s}.harbor-water i:nth-child(4){right:2%;top:58px;animation-delay:-.7s}
+@keyframes waterRipple{0%,100%{transform:scaleX(.65);opacity:.4}50%{transform:scaleX(1.25);opacity:1}}
+.harbor-pier{position:absolute;left:17%;right:17%;bottom:28px;height:77px;border:5px solid #70482d;border-radius:8px 8px 3px 3px;background:repeating-linear-gradient(90deg,#b77a43 0 26px,#8c592f 27px 30px);box-shadow:0 8px 0 #563923,0 13px 13px #173d4666;transform:perspective(230px) rotateX(13deg);z-index:2}
+.harbor-pier:before{content:"";position:absolute;left:-12px;right:-12px;top:-8px;height:13px;border-radius:5px;background:linear-gradient(#e1b578,#a66b39);border:2px solid #71482c}
+.pier-post{position:absolute;top:-20px;width:12px;height:25px;border-radius:4px;background:linear-gradient(90deg,#70472c,#c18b51,#71482d);box-shadow:0 2px 2px #402b1b66}
+.post-a{left:8px}.post-b{right:8px}
+.pier-lamp{position:absolute;right:-28px;top:-61px;font-size:29px;filter:drop-shadow(0 3px 1px #4b3825)}
+.author-port-link{position:absolute;inset:12px 28px 9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 8px;text-decoration:none;text-align:center;color:#fff8e8;background:linear-gradient(155deg,#3e8580ee,#245b5dee);border:2px solid #e5c38c;border-radius:9px;box-shadow:inset 0 0 0 2px #ffffff33;transition:filter .2s,transform .2s;z-index:3}
+.author-port-link:hover{filter:brightness(1.15);transform:translateY(-3px)}
+.author-port-title{font-size:clamp(16px,1.6vw,19px);font-weight:1000;letter-spacing:.04em}
+.author-port-subtitle{font-size:12px;font-weight:800;color:#e5f8e8}
+.author-port-arrow{margin-top:2px;padding:4px 10px;border-radius:20px;background:#f5d99e;color:#654126;font-size:12px;font-weight:1000;box-shadow:0 2px 0 #a97942}
+.harbor-boat{position:absolute;right:4%;top:16px;width:67px;height:53px;z-index:1;animation:mooredBoat 3.5s ease-in-out infinite}
+.boat-sail{position:absolute;left:10px;top:-7px;font-size:39px;filter:drop-shadow(0 3px 1px #31545a66)}
+.boat-hull{position:absolute;left:5px;bottom:0;width:54px;height:12px;background:linear-gradient(#9c5935,#633b2a);clip-path:polygon(0 0,100% 0,82% 100%,18% 100%);border-bottom:2px solid #e1b77c}
+@keyframes mooredBoat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(4px) rotate(2deg)}}
+.harbor-rope{position:absolute;left:8%;bottom:33px;width:33px;height:18px;border:2px dashed #f4d59d;border-right:0;border-radius:50%;transform:rotate(-15deg);z-index:1}
+@media(max-width:700px){.center{gap:10px}.harbor-scene{width:220px;height:160px}.harbor-pier{bottom:24px;height:70px}.harbor-water{height:68px}}
+@media(prefers-reduced-motion:reduce){.harbor-water i,.harbor-boat{animation:none}}
 /* 學習島中央新增作者島港口入口 */
 .author-port-link{width:clamp(150px,16vw,190px);min-height:154px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:14px 12px;text-decoration:none;text-align:center;color:#fff9e9;background:linear-gradient(155deg,#4c9eaa,#286f70);border:5px solid #d7f3eb;border-radius:25px;box-shadow:0 8px 0 #245b54,0 13px 22px #31513c66,inset 0 0 0 2px #9ed7c8;transition:transform .22s,filter .22s;position:relative}
 .author-port-link:before{content:"";position:absolute;inset:7px;border:2px dashed #c5e8d7;border-radius:16px;pointer-events:none}
@@ -491,7 +514,7 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 <section class="village v-math"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🔢</div><div class="house">📐</div></div><button class="village-label" onclick="openVillage('math')">🔢 數學村</button></section>
 <section class="village v-en"><span class="trees">🌲 🌳</span><div class="buildings"><div class="house">🔤</div><div class="house">🗣️</div></div><button class="village-label" onclick="openVillage('en')">🔤 英文村</button></section>
 <section class="village v-special"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🤝</div><div class="house">💡</div></div><button class="village-label" onclick="openVillage('special')">🤝 特需村</button></section>
-<div class="center"><a class="author-port-link" href="author-island.html" aria-label="搭船前往作者島"><span class="author-port-boat">⛵</span><span class="author-port-title">作者島港口</span><span class="author-port-subtitle">搭船探索周敦頤</span><span class="author-port-arrow">登島出發 ➜</span></a><a class="attendance-link" href="https://hy199421-beep.github.io/classroom/gemini-code-1789099846515.html" target="_blank" rel="noopener noreferrer" aria-label="開啟學生每日登入打卡與出缺席紀錄"><span class="attendance-icon">📋</span><span class="attendance-title">每日登入打卡</span><span class="attendance-subtitle">學生出缺席紀錄</span><span class="attendance-arrow">點我進入 ➜</span></a><span id="buddyLine" aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></span></div>
+<div class="center"><div class="harbor-scene" aria-label="作者島港口，有海面、木棧橋與停靠的小船"><div class="harbor-water"><i></i><i></i><i></i><i></i></div><div class="harbor-boat" aria-hidden="true"><span class="boat-sail">⛵</span><span class="boat-hull"></span></div><div class="harbor-pier"><span class="pier-post post-a"></span><span class="pier-post post-b"></span><span class="pier-lamp">🏮</span><a class="author-port-link" href="author-island.html" aria-label="從港口搭船前往作者島"><span class="author-port-title">作者島港口</span><span class="author-port-subtitle">搭船探索周敦頤</span><span class="author-port-arrow">登船出發 ➜</span></a></div><span class="harbor-rope" aria-hidden="true"></span></div><a class="attendance-link" href="https://hy199421-beep.github.io/classroom/gemini-code-1789099846515.html" target="_blank" rel="noopener noreferrer" aria-label="開啟學生每日登入打卡與出缺席紀錄"><span class="attendance-icon">📋</span><span class="attendance-title">每日登入打卡</span><span class="attendance-subtitle">學生出缺席紀錄</span><span class="attendance-arrow">點我進入 ➜</span></a><span id="buddyLine" aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></span></div>
 </div>
 <div class="character-row" aria-label="冒險夥伴小隊"><div class="hero" data-name="島島隊長">🤖</div><div class="hero" data-name="語文精靈">🦊</div><div class="hero" data-name="數學博士">🐼</div><div class="hero" data-name="勇氣夥伴">🐰</div></div>
 <div class="quest-banner"><span class="quest-icon">🗺️</span><span>今日任務：挑選一座村莊，完成一個挑戰！</span></div>

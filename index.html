@@ -103,21 +103,23 @@ button.village-label{border-style:solid}
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>
 <script>
 const data={
-cn:{title:'📘 國文村',desc:'讀一讀、想一想，讓文字變成你的超能力！',topics:[['📖','閱讀理解','找出文章重點與線索'],['🈶','識字與詞語','認識常用字詞與意思'],['✍️','造句與表達','練習完整說出自己的想法'],['📚','成語小學堂','理解成語並用在生活中']]},
+cn:{title:'📘 國文村',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命中的碎珠','課文閱讀｜重要片段與生命體會']]},
 math:{title:'🔢 數學村',desc:'動動腦、找方法，數學任務等你來解鎖！',topics:[['➕','數與計算','整數、小數與四則運算'],['🧩','代數入門','認識符號與簡單算式'],['📐','幾何世界','圖形、角度與周長面積'],['🛒','生活數學','時間、金錢與數量應用']]},
 en:{title:'🔤 英文村',desc:'Say hello! 從字母、單字到簡單對話。',topics:[['🔠','字母與發音','認識英文字母與基本發音'],['🍎','生活單字','累積常見生活英語單字'],['💬','基礎句型','練習日常問候與句子'],['📗','簡易閱讀','讀懂短句與生活情境']]},
 special:{title:'🤝 特需村',desc:'練習生活中的重要能力，讓每天都更有自信！',topics:[['🤝','社會技巧','打招呼、輪流、合作與交友'],['🧠','學習策略','訂目標、整理步驟與記憶'],['💬','溝通表達','表達需求、傾聽與適當回應'],['🌈','情緒管理','辨認情緒並找到調節方法'],['🎒','自我管理','時間安排、物品整理與負責']]}}
 const quiz=[
+{q:'《愛蓮說》中，作者藉由蓮花主要想表達什麼？',a:['君子的高尚品格','秋天景色的美麗','種植花草的方法','對富貴生活的嚮往'],c:0,why:'作者以蓮花象徵潔身自好、不隨俗浮沉的君子品格。'},
+{q:'閱讀《生命中的碎珠》時，哪一種方式最能幫助理解課文？',a:['找出重要片段並思考帶來的體會','只背第一句','跳過不懂的段落','只計算文章有幾個字'],c:0,why:'閱讀時可以整理重要片段、事件與作者想傳達的感受。'},
 {q:'看到一篇文章的標題，最適合先做什麼？',a:['猜猜文章可能談什麼','直接跳到最後一段','只看標點符號','把書本合起來'],c:0,why:'先從標題預測內容，可以幫助理解文章。'},
 {q:'下列哪一個數字最大？',a:['0.8','0.65','0.75','0.5'],c:0,why:'0.8 等於 0.80，比 0.75 大。'},
 {q:'「Good morning!」通常是在什麼時候說？',a:['早上','晚上睡前','道別時','生日當天'],c:0,why:'Good morning 是早安，通常在上午使用。'},
 {q:'同學正在說話時，友善的做法是？',a:['先聽對方說完','大聲打斷','轉身走掉','嘲笑對方'],c:0,why:'先聆聽對方說完，再輪流表達想法。'}
 ];
-let activeQuiz=0,answered=false;const store=JSON.parse(localStorage.getItem('learningIsland')||'{"stars":0,"done":0,"today":0}');
+let activeQuiz=0,answered=false,currentVillage='';const store=JSON.parse(localStorage.getItem('learningIsland')||'{"stars":0,"done":0,"today":0}');
 function sync(){document.getElementById('stars').textContent=store.stars;document.getElementById('done').textContent=store.done;document.getElementById('today').textContent=store.today}
-function openVillage(key){const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};document.getElementById('buddyLine').innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>startPractice(i);box.appendChild(b)});document.getElementById('modal').classList.add('show')}
+function openVillage(key){currentVillage=key;const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};document.getElementById('buddyLine').innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>startPractice(i);box.appendChild(b)});document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show')}
-function startPractice(i){activeQuiz=i%quiz.length;document.getElementById('buddyLine').innerHTML='島島隊長：勇者任務開始！仔細想一想，你一定做得到！';answered=false;document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion()}
+function startPractice(i){activeQuiz=currentVillage==='cn'?i%2:(i+2)%quiz.length;document.getElementById('buddyLine').innerHTML='島島隊長：勇者任務開始！仔細想一想，你一定做得到！';answered=false;document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion()}
 function renderQuestion(){const q=quiz[activeQuiz];document.getElementById('question').textContent=q.q;const box=document.getElementById('answers');box.innerHTML='';q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>checkAnswer(i,b);box.appendChild(b)});document.getElementById('bar').style.width='0%';answered=false}
 function checkAnswer(i,btn){if(answered)return;answered=true;const q=quiz[activeQuiz];const buttons=[...document.querySelectorAll('.answer')];buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add('correct')});if(i===q.c){store.stars+=1;store.done+=1;store.today+=1;document.getElementById('feedback').textContent='🎉 答對了！'+q.why}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='再想一想！正確答案已標示。'+q.why}if(i!==q.c){store.done+=1;store.today+=1}localStorage.setItem('learningIsland',JSON.stringify(store));sync();document.getElementById('bar').style.width='100%'}
 function nextQuestion(){if(!answered){document.getElementById('feedback').textContent='先選一個答案再繼續喔！';return}activeQuiz=(activeQuiz+1)%quiz.length;renderQuestion()}
@@ -142,9 +144,21 @@ if(canvas){
  function box(x,y,z,sx,sy,sz,m,rot=0){const o=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),m);o.position.set(x,y,z);o.rotation.y=rot;o.castShadow=true;o.receiveShadow=true;scene.add(o);return o}
  function tree(x,z,k=1){const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.12*k,.2*k,.8*k,5),dark);trunk.position.set(x,.35*k,z);trunk.castShadow=true;scene.add(trunk);for(let j=0;j<3;j++){const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(.62*k-j*.08,0),leaf[(j+Math.round(x+z))%3]);crown.position.set(x,(.8+j*.43)*k,z);crown.scale.set(1,1.05,1);crown.castShadow=true;scene.add(crown)}}
  function house(x,z,color,roof){box(x,.65,z,1.15,1.3,1,mat(color));const r=new THREE.Mesh(new THREE.ConeGeometry(.9,.8,4),mat(roof));r.position.set(x,1.68,z);r.rotation.y=Math.PI/4;r.castShadow=true;scene.add(r);box(x,.38,z+.52,.28,.75,.06,mat(0x8b5635));for(const dx of [-.34,.34])box(x+dx,.9,z+.515,.2,.22,.04,mat(0xffe7a0))}
+ function traditionalAcademy(x,z){
+  const plaster=mat(0xe8d9bd),vermilion=mat(0x9d4938),wood=mat(0x70452f),tile=mat(0x31534e),gold=mat(0xd5ad65);
+  box(x,.38,z,2.8,.42,2.05,mat(0xaaa49a));
+  box(x,.95,z,2.35,1.05,1.62,plaster);
+  for(const dx of [-1,-.34,.34,1]){box(x+dx,.98,z+.86,.14,1.55,.14,vermilion);box(x+dx,.98,z-.86,.14,1.55,.14,vermilion)}
+  box(x,.82,z+.88,.62,.9,.08,wood);
+  for(const dx of [-.7,.7])box(x+dx,1.05,z+.81,.36,.48,.08,gold);
+  const roof=new THREE.Mesh(new THREE.ConeGeometry(1.9,.72,4),tile);roof.position.set(x,1.86,z);roof.rotation.y=Math.PI/4;roof.scale.set(1.32,1,1.12);roof.castShadow=true;scene.add(roof);
+  const upper=new THREE.Mesh(new THREE.ConeGeometry(1.18,.48,4),mat(0x42645a));upper.position.set(x,2.28,z);upper.rotation.y=Math.PI/4;upper.scale.set(1.35,1,1.12);upper.castShadow=true;scene.add(upper);
+  box(x,2.36,z+.02,1.15,.22,.12,wood);
+  box(x-1.62,.65,z+1.12,.3,.72,.3,mat(0x89877c));box(x-1.62,1.1,z+1.12,.46,.12,.46,gold);
+ }
  function cart(x,z){box(x,.3,z,.65,.35,.42,mat(0xb73d2c));box(x,.55,z,.64,.12,.43,mat(0xf8eee0));for(let i=0;i<3;i++)box(x-.2+i*.2,.63,z,.09,.12,.44,mat(0xc83d32));for(const dx of [-.22,.22]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.08,8),mat(0x332d29));w.rotation.z=Math.PI/2;w.position.set(x+dx,.12,z);scene.add(w)}}
  const zones=[{x:-6,z:-5,c:0x24796a,wall:0xe5f2e8,roof:0x175f56},{x:6,z:-5,c:0x315fbd,wall:0xe5ebf7,roof:0x2459b4},{x:-6,z:5,c:0x7040b6,wall:0xe8e0f4,roof:0x6337a4},{x:6,z:5,c:0xb95032,wall:0xf3dfbd,roof:0xb94c2e}];
- zones.forEach((q,i)=>{const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.5,.48,8),mat(q.c));platform.position.set(q.x,.03,q.z);platform.rotation.y=Math.PI/8;platform.castShadow=true;platform.receiveShadow=true;scene.add(platform);const top=new THREE.Mesh(new THREE.CylinderGeometry(3.15,3.15,.12,8),mat(q.wall));top.position.set(q.x,.32,q.z);top.rotation.y=Math.PI/8;scene.add(top);house(q.x-.85,.55+q.z,q.wall,q.roof);house(q.x+.85,.45+q.z,q.wall,q.roof);cart(q.x-.1,q.z+1.55);tree(q.x-2.65,q.z-1.9,.8);tree(q.x+2.6,q.z+1.7,.75)});
+ zones.forEach((q,i)=>{const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.5,.48,8),mat(q.c));platform.position.set(q.x,.03,q.z);platform.rotation.y=Math.PI/8;platform.castShadow=true;platform.receiveShadow=true;scene.add(platform);const top=new THREE.Mesh(new THREE.CylinderGeometry(3.15,3.15,.12,8),mat(q.wall));top.position.set(q.x,.32,q.z);top.rotation.y=Math.PI/8;scene.add(top);if(i===0){traditionalAcademy(q.x,.55+q.z)}else{house(q.x-.85,.55+q.z,q.wall,q.roof);house(q.x+.85,.45+q.z,q.wall,q.roof)}cart(q.x-.1,q.z+1.55);tree(q.x-2.65,q.z-1.9,.8);tree(q.x+2.6,q.z+1.7,.75)});
  // central plaza, winding stepping stones and gacha machine
  const plaza=new THREE.Mesh(new THREE.CylinderGeometry(2.65,2.8,.18,12),mat(0xe9d6aa));plaza.position.y=.25;scene.add(plaza);
  for(let i=0;i<19;i++){const a=i/19*Math.PI*2;const x=Math.cos(a)*4.1,z=Math.sin(a)*3.4;const stone=new THREE.Mesh(new THREE.DodecahedronGeometry(.38,0),path);stone.position.set(x,.18,z);stone.scale.y=.48;stone.rotation.y=i;stone.castShadow=true;scene.add(stone)}

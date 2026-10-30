@@ -423,6 +423,16 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 
 /* 全站統一使用標楷體 */
 *,*::before,*::after{font-family:"標楷體","DFKai-SB","BiauKai",serif !important}
+
+/* 村莊入口牌移到建築前方的空地，避免遮擋 3D 建築 */
+.village-label{bottom:-42px!important;z-index:6;padding:9px 22px;border-radius:15px;box-shadow:0 5px 0 #704528,0 8px 12px #38552c66;transition:transform .2s,filter .2s,box-shadow .2s}
+.village:hover .village-label{transform:translate(-50%,-5px);filter:brightness(1.08);box-shadow:0 7px 0 #704528,0 12px 15px #38552c66}
+.village-label:focus-visible{outline:4px solid #fff7c9;outline-offset:4px}
+@media(max-width:700px){.village-label{bottom:-30px!important;padding:8px 12px;font-size:15px}.village:hover .village-label{transform:translate(-50%,-3px)}}
+/* 柔和的環境動態，保留原本輕快的玩具島風格 */
+.cloud{will-change:transform}
+.mascot,.hero{will-change:transform}
+@media(prefers-reduced-motion:reduce){.village-label,.village-label:hover{transition:none!important}}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
@@ -510,6 +520,50 @@ if(canvas){
  function cart(x,z){box(x,.3,z,.65,.35,.42,mat(0xb73d2c));box(x,.55,z,.64,.12,.43,mat(0xf8eee0));for(let i=0;i<3;i++)box(x-.2+i*.2,.63,z,.09,.12,.44,mat(0xc83d32));for(const dx of [-.22,.22]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.08,8),mat(0x332d29));w.rotation.z=Math.PI/2;w.position.set(x+dx,.12,z);scene.add(w)}}
  const zones=[{x:-6,z:-5,c:0x24796a,wall:0xe5f2e8,roof:0x175f56},{x:6,z:-5,c:0x315fbd,wall:0xe5ebf7,roof:0x2459b4},{x:-6,z:5,c:0x7040b6,wall:0xe8e0f4,roof:0x6337a4},{x:6,z:5,c:0xb95032,wall:0xf3dfbd,roof:0xb94c2e}];
  zones.forEach((q,i)=>{const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.5,.48,8),mat(q.c));platform.position.set(q.x,.03,q.z);platform.rotation.y=Math.PI/8;platform.castShadow=true;platform.receiveShadow=true;scene.add(platform);const top=new THREE.Mesh(new THREE.CylinderGeometry(3.15,3.15,.12,8),mat(q.wall));top.position.set(q.x,.32,q.z);top.rotation.y=Math.PI/8;scene.add(top);if(i===0){traditionalAcademy(q.x,.55+q.z)}else{house(q.x-.85,.55+q.z,q.wall,q.roof);house(q.x+.85,.45+q.z,q.wall,q.roof)}cart(q.x-.1,q.z+1.55);tree(q.x-2.65,q.z-1.9,.8);tree(q.x+2.6,q.z+1.7,.75)});
+ // 四座村莊各加入一位低多邊形 3D 可愛島民
+ const islandResidents=[];
+ function addResident(x,z,bodyColor,bellyColor,accent,kind){
+  const root=new THREE.Group();root.position.set(x,.42,z);scene.add(root);
+  const sphere=(parent,r,color,pos,scale=[1,1,1])=>{const m=new THREE.Mesh(new THREE.SphereGeometry(r,12,10),mat(color));m.position.set(...pos);m.scale.set(...scale);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m};
+  const limb=(parent,r,color,pos,scale,rotation=[0,0,0])=>{const m=sphere(parent,r,color,pos,scale);m.rotation.set(...rotation);return m};
+  // 小腳與圓滾滾身體
+  sphere(root,.18,accent,[-.2,.12,.08],[1.1,.7,1.25]);sphere(root,.18,accent,[.2,.12,.08],[1.1,.7,1.25]);
+  sphere(root,.47,bodyColor,[0,.58,0],[.9,1.08,.78]);
+  sphere(root,.29,bellyColor,[0,.53,.315],[.82,.92,.34]);
+  // 頭部、眼睛、臉頰與鼻口
+  sphere(root,.39,bodyColor,[0,1.23,.04],[1,.96,.82]);
+  sphere(root,.055,0x302b2b,[-.145,1.27,.365],[.82,1.15,.7]);
+  sphere(root,.055,0x302b2b,[.145,1.27,.365],[.82,1.15,.7]);
+  sphere(root,.075,0xf08d86,[-.255,1.08,.27],[1,.65,.5]);
+  sphere(root,.075,0xf08d86,[.255,1.08,.27],[1,.65,.5]);
+  sphere(root,.07,accent,[0,1.105,.39],[1,.75,.7]);
+  // 兩隻短手會在動畫中輕輕揮動
+  const leftArm=limb(root,.16,bodyColor,[-.43,.66,0],[.72,1.55,.72],[0,0,-.48]);
+  const rightArm=limb(root,.16,bodyColor,[.43,.66,0],[.72,1.55,.72],[0,0,.48]);
+  // 每位島民有不同耳朵與小配件
+  if(kind==='fox'){
+   for(const dx of [-.24,.24]){const ear=new THREE.Mesh(new THREE.ConeGeometry(.15,.48,5),mat(bodyColor));ear.position.set(dx,1.68,0);ear.rotation.z=dx<0?.16:-.16;ear.castShadow=true;root.add(ear);sphere(root,.07,0xffe8cf,[dx,1.62,.115],[.8,1.25,.5]);}
+   const tail=sphere(root,.24,bodyColor,[0,.37,-.48],[.82,.78,1.8]);tail.rotation.x=-.55;sphere(root,.13,bellyColor,[0,.25,-.78],[.9,.9,1.1]);
+  }else if(kind==='bear'){
+   for(const dx of [-.29,.29]){sphere(root,.16,bodyColor,[dx,1.54,.01]);sphere(root,.085,accent,[dx,1.55,.14]);}
+   // 蜜蜂小翅膀
+   for(const dx of [-.48,.48]){const wing=sphere(root,.2,0xf8f1db,[dx,.91,-.16],[.72,1.15,.3]);wing.rotation.z=dx<0?-.5:.5;}
+   sphere(root,.13,0xf0c34e,[0,1.69,-.02],[1,.75,.8]);
+  }else if(kind==='bunny'){
+   for(const dx of [-.22,.22]){const ear=sphere(root,.13,bodyColor,[dx,1.72,-.01],[.8,2.25,.65]);ear.rotation.z=dx<0?-.14:.14;sphere(root,.065,accent,[dx,1.73,.09],[.8,2,.35]);}
+  }else{
+   for(const dx of [-.34,.34]){sphere(root,.23,bodyColor,[dx,1.36,-.005],[1,1,.62]);sphere(root,.135,accent,[dx,1.36,.12],[1,1,.5]);}
+   sphere(root,.16,accent,[0,1.67,.02],[1,.7,.9]);
+  }
+  // 彩色小領巾
+  const scarf=new THREE.Mesh(new THREE.TorusGeometry(.27,.065,7,16),mat(accent));scarf.position.set(0,.87,.02);root.add(scarf);
+  islandResidents.push({root,leftArm,rightArm,phase:islandResidents.length*1.7});
+ }
+ addResident(-8.4,-2.7,0xe28b45,0xffe8c7,0xb75d39,'fox');
+ addResident(8.35,-2.7,0xb9824e,0xf6d58c,0xe4aa3e,'bear');
+ addResident(-8.4,6.6,0x78b9de,0xeaf7ff,0xd881a2,'bunny');
+ addResident(8.35,6.6,0x9aaf88,0xe3edcf,0x6f9b80,'koala');
+
  // central plaza, winding stepping stones and gacha machine
  const plaza=new THREE.Mesh(new THREE.CylinderGeometry(2.65,2.8,.18,12),mat(0xe9d6aa));plaza.position.y=.25;scene.add(plaza);
  for(let i=0;i<19;i++){const a=i/19*Math.PI*2;const x=Math.cos(a)*4.1,z=Math.sin(a)*3.4;const stone=new THREE.Mesh(new THREE.DodecahedronGeometry(.38,0),path);stone.position.set(x,.18,z);stone.scale.y=.48;stone.rotation.y=i;stone.castShadow=true;scene.add(stone)}
@@ -522,6 +576,17 @@ if(canvas){
  for(let i=0;i<16;i++){const x=(Math.random()-.5)*22,z=(Math.random()-.5)*21;if(Math.abs(x)>8||Math.abs(z)>8)tree(x,z,.45+Math.random()*.35)}
  function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
  new ResizeObserver(resize).observe(canvas);resize();
- function animate(t){requestAnimationFrame(animate);body.position.y=1+Math.sin(t*.0018)*.07;renderer.render(scene,camera)}animate(0);
+ function animate(t){
+  requestAnimationFrame(animate);
+  body.position.y=1+Math.sin(t*.0018)*.07;
+  islandResidents.forEach((r,i)=>{
+   const wave=t*.0017+r.phase;
+   r.root.position.y=.42+Math.sin(wave)*.065;
+   r.root.rotation.y=Math.sin(wave*.65)*.11;
+   r.leftArm.rotation.z=-.48+Math.sin(wave*1.8)*.18;
+   r.rightArm.rotation.z=.48-Math.sin(wave*1.8)*.18;
+  });
+  renderer.render(scene,camera)
+ }animate(0);
 }
 </script></body></html>

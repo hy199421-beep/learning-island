@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>國文書坊｜課文學習</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3e8d4;color:#493321;font-family:"Noto Serif TC","Microsoft JhengHei",serif}
+header{padding:24px 18px;text-align:center;background:linear-gradient(135deg,#62412b,#321d14);color:#f8dda0;border-bottom:5px double #d5ad65;box-shadow:0 5px 14px #4b2b1d33}
+header h1{margin:0;font-size:clamp(25px,4vw,38px);letter-spacing:.2em}header p{margin:8px 0 0;color:#f5dfb3}
+main{width:min(980px,calc(100% - 28px));margin:28px auto 60px}
+.back{display:inline-block;margin-bottom:18px;color:#765034;text-decoration:none;font-weight:700}
+h2{text-align:center;font-size:clamp(25px,4vw,34px);margin:8px 0 22px;color:#68452e}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 18px}
+.tabs button{padding:15px 8px;border:2px solid #c39a5d;border-radius:12px;background:#fff8e9;color:#704b2c;font-size:18px;font-weight:800;cursor:pointer}
+.tabs button.active{background:linear-gradient(#a96e38,#754323);color:#fff3d8;border-color:#8e5c2e}
+.panel{display:none;padding:clamp(18px,4vw,34px);border:5px double #bd9253;background:#fff9ed;box-shadow:0 8px 20px #52331f20;border-radius:8px;line-height:2;font-size:18px}
+.panel.active{display:block}.panel h3{margin-top:0;color:#80522f}.poem{font-size:21px;line-height:2.2;white-space:pre-line;text-align:center}
+.note{padding:13px 16px;background:#f5ead7;border-left:4px solid #bd9253;border-radius:4px;margin:14px 0}
+ruby rt{font-size:.65em;color:#a04d36} .muted{color:#806f5c;font-size:15px}
+@media(max-width:560px){.tabs{gap:6px}.tabs button{font-size:15px;padding:12px 4px}.panel{font-size:16px}.poem{font-size:18px}}
+</style>
+</head>
+<body>
+<header><h1>國 文 書 坊</h1><p>靜心閱讀・認識文字・理解文意</p></header>
+<main>
+<a class="back" href="javascript:window.close()">← 關閉課文分頁</a>
+<h2 id="lessonTitle">課文學習</h2>
+<nav class="tabs" aria-label="課文學習區塊">
+<button class="active" data-tab="text">📖 課文</button>
+<button data-tab="zhuyin">🔤 國字注音</button>
+<button data-tab="meaning">📚 解釋</button>
+</nav>
+<section class="panel active" id="text"></section>
+<section class="panel" id="zhuyin"></section>
+<section class="panel" id="meaning"></section>
+</main>
+<script>
+const params=new URLSearchParams(location.search);
+const key=params.get('lesson')||'ailian';
+const isAilian=key==='ailian';
+document.getElementById('lessonTitle').textContent=isAilian?'愛蓮說':'生命的碎珠';
+const sections=isAilian?{
+text:`<h3>《愛蓮說》｜周敦頤</h3><div class="poem">水陸草木之花，可愛者甚蕃。
+晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹。
+予獨愛蓮之出淤泥而不染，濯清漣而不妖，
+中通外直，不蔓不枝，香遠益清，亭亭淨植，
+可遠觀而不可褻玩焉。
+
+予謂菊，花之隱逸者也；
+牡丹，花之富貴者也；
+蓮，花之君子者也。
+噫！菊之愛，陶後鮮有聞。
+蓮之愛，同予者何人？
+牡丹之愛，宜乎眾矣。</div><p class="muted">※ 課文標點與用字請以學校使用的課本版本為準。</p>`,
+zhuyin:`<h3>重要國字注音</h3><p>以下整理課文中較容易讀錯的字：</p>
+<div class="note"><ruby>蕃<rt>ㄈㄢˊ</rt></ruby>：多。　<ruby>濯<rt>ㄓㄨㄛˊ</rt></ruby>：洗滌。　<ruby>漣<rt>ㄌㄧㄢˊ</rt></ruby>：水面細小的波紋。</div>
+<div class="note"><ruby>蔓<rt>ㄇㄢˋ</rt></ruby>：細長、延伸的莖。　<ruby>褻<rt>ㄒㄧㄝˋ</rt></ruby>：不莊重、不尊敬。　<ruby>鮮<rt>ㄒㄧㄢˇ</rt></ruby>：少。</div>
+<div class="note"><ruby>逸<rt>ㄧˋ</rt></ruby>：安閒、隱居。　<ruby>宜<rt>ㄧˊ</rt></ruby>：應當、理所當然。</div>`,
+meaning:`<h3>語句解釋</h3>
+<div class="note"><b>出淤泥而不染：</b>蓮花從污泥中長出，卻不被污泥沾染。比喻身處不良環境，仍能保持純潔。</div>
+<div class="note"><b>濯清漣而不妖：</b>經過清水洗滌，卻不顯得過分艷麗。形容端莊而不媚俗。</div>
+<div class="note"><b>中通外直：</b>蓮的內部通透、外形挺直，比喻胸襟通達、行為正直。</div>
+<div class="note"><b>不蔓不枝：</b>不牽牽連連，也不旁生枝節，比喻處事簡潔、不攀附。</div>
+<div class="note"><b>香遠益清，亭亭淨植：</b>香氣傳得越遠越清幽，蓮花潔淨地挺立著。</div>
+<div class="note"><b>花之君子者也：</b>蓮是花中的君子，作者藉蓮花讚美正直、清廉、自持的品格。</div>
+<div class="note"><b>全文主旨：</b>作者以菊、牡丹、蓮象徵不同的人生態度，藉愛蓮表達對君子品格的推崇。</div>`
+}:{
+text:`<h3>《生命的碎珠》｜課文</h3><div class="note">請依照學校課本版本，在此閱讀《生命的碎珠》全文。</div><p>目前尚未取得你使用的課文版本，因此先保留課文位置，不會自行編造原文。你可以提供課文照片或文字，我就能幫你完整排入這個頁面。</p>`,
+zhuyin:`<h3>國字注音</h3><p>這個區塊會依照課文原文整理生難字、注音與詞語讀音。</p><div class="note">提供《生命的碎珠》課文內容後，即可逐段整理正確注音，避免與課本版本不一致。</div>`,
+meaning:`<h3>詞語與句意解釋</h3><p>這個區塊會依照課文段落，整理重要詞語、句子意思及段落大意。</p><div class="note">目前先保留整理欄位；收到課文後會補上逐段解釋與文章主旨。</div>`
+};
+for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
+document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.tab));}));
+</script>
+</body></html>

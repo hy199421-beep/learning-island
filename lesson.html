@@ -238,7 +238,7 @@ function renderWordQuestion(){
  wordCard.innerHTML='';
  const heading=document.createElement('h2');
  heading.style.cssText='font-size:30px;text-align:center;margin:16px 0 22px;color:#68452e';
- heading.textContent=q.display||((q.askZhuyin?'注音：':'國字：')+q.stimulus);
+ heading.textContent=(q.display||((q.askZhuyin?'注音：':'國字：')+q.stimulus)).replace(/（　　　　）/g,'');
  wordCard.appendChild(heading);
  if(q.hint){
   const hint=document.createElement('p');
@@ -246,10 +246,6 @@ function renderWordQuestion(){
   hint.textContent=q.hint;
   wordCard.appendChild(hint);
  }
- const ask=document.createElement('p');
- ask.style.cssText='font-weight:bold;text-align:center';
- ask.textContent=q.prompt;
- wordCard.appendChild(ask);
  const choices=document.createElement('div');
  choices.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
  q.options.forEach((opt,k)=>{

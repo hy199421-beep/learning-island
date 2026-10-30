@@ -405,7 +405,7 @@ function closeModal(){document.getElementById('modal').classList.remove('show');
 
 function openLesson(i){
  const lesson=data.cn.topics[i], detail=document.getElementById('cnDetail');
- document.getElementById('topics').style.display='none';
+ document.getElementById('topics').style.display='grid';
  detail.classList.add('show');
  const texts=i===0
  ? '<p>作者：周敦頤　｜　主旨：藉蓮花的生長特質，寄託對君子品格的讚美。</p><p>「出淤泥而不染，濯清漣而不妖。」蓮花生長在污泥中，卻保持潔淨，象徵君子潔身自愛、不隨波逐流。</p>'
@@ -471,3 +471,10 @@ if(canvas){
  function animate(t){requestAnimationFrame(animate);body.position.y=1+Math.sin(t*.0018)*.07;renderer.render(scene,camera)}animate(0);
 }
 </script></body></html>
+/* Chinese academy layout: keep lesson scroll cards visible with selected lesson panel */
+body.cn-open #modal .panel{display:flex!important;flex-direction:column!important;}
+body.cn-open #modal #topics.topic-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;flex:0 0 auto!important;}
+body.cn-open #modal #cnDetail.cn-detail.show{display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr)!important;gap:18px!important;margin-top:20px!important;}
+body.cn-open #modal #cnDetail .cn-back{grid-column:1/-1!important;justify-self:start!important;}
+body.cn-open #modal #cnDetail #cnExtra{grid-column:1/-1!important;}
+@media(max-width:760px){body.cn-open #modal #cnDetail.cn-detail.show{grid-template-columns:1fr!important;}body.cn-open #modal #topics.topic-grid{grid-template-columns:1fr!important;}}

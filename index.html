@@ -149,6 +149,58 @@ body.cn-open .cn-actions button{font-size:17px;padding:15px 18px}
  body.cn-open .topic-grid{grid-template-columns:1fr;gap:15px}
  body.cn-open .topic{min-height:145px}
 }
+
+/* 國文書院高清中國風背景優化 */
+body.cn-open .modal{
+  background-color:#2b180f !important;
+  background-image:
+    linear-gradient(180deg,rgba(28,13,7,.12),rgba(28,13,7,.38)),
+    url('./assets/chinese-academy-bg.webp') !important;
+  background-position:center center !important;
+  background-size:cover !important;
+  background-repeat:no-repeat !important;
+  background-attachment:scroll !important;
+  image-rendering:auto;
+  padding:clamp(8px,2vw,28px);
+}
+body.cn-open .panel{
+  width:min(1240px,96vw);
+  max-height:94vh;
+  overflow-y:auto;
+  background:linear-gradient(135deg,rgba(255,250,236,.97),rgba(247,230,194,.96)) !important;
+  border:10px solid #603a22;
+  outline:3px solid #d9b66e;
+  box-shadow:0 0 0 6px rgba(35,17,9,.58),0 24px 60px rgba(15,7,3,.55);
+}
+body.cn-open .panel:before{
+  content:"國 文 書 院";
+  display:block;text-align:center;
+  margin:-24px -30px 18px;padding:12px 8px;
+  color:#f8dda0;font:900 clamp(26px,4vw,42px) Georgia,"Noto Serif TC",serif;
+  letter-spacing:.24em;
+  background:linear-gradient(180deg,#754626,#32190f);
+  border-bottom:5px double #d5ae63;
+  text-shadow:0 2px 3px #211008;
+}
+body.cn-open .topic-grid{max-width:980px;margin:24px auto;gap:20px}
+body.cn-open .topic{
+  min-height:165px;
+  border:8px solid #75472a;
+  border-top-width:12px;border-bottom-width:12px;
+  border-radius:5px;
+  background:
+   radial-gradient(ellipse at 12% 90%,rgba(172,133,75,.14),transparent 35%),
+   linear-gradient(135deg,#fffaf0,#f0dfbb);
+  box-shadow:inset 0 0 0 2px #d6b875,0 8px 0 #3a2114,0 13px 22px rgba(43,22,10,.3);
+}
+body.cn-open .topic strong{font-family:"Noto Serif TC","Songti TC",serif;font-size:clamp(20px,2.2vw,27px);color:#452719}
+body.cn-open .cn-detail{background:rgba(255,249,235,.98);border-color:#bd914d}
+body.cn-open .cn-actions button{border-color:#c49a55;color:#59351e}
+@media(max-width:700px){
+ body.cn-open .modal{background-position:center top!important;background-size:auto 100%!important;padding:7px}
+ body.cn-open .panel:before{margin:-14px -12px 14px}
+ body.cn-open .topic-grid{grid-template-columns:1fr}
+}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>

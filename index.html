@@ -581,7 +581,7 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 }
 
 </style></head>
-<body><div class="sailing-transition" id="sailingTransition" aria-hidden="true"><div class="sailing-sky"></div><div class="sailing-horizon"></div><div class="sailing-title">⛵ 正在航向作者島…</div><div class="sailing-wake"></div><div class="sailing-boat">⛵</div></div><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
+<body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
 <header class="header"><div class="brand"><span class="brand-icon">🏝️</span><div><h1>學習島</h1><p>每天一小步，能力大冒險！</p></div></div><div class="stats">⭐ <span id="stars">0</span> 星星　🏅 <span id="done">0</span> 次練習</div></header>
 <section class="welcome"><h2>嗨！小小探險家，今天想去哪一村？</h2><p>選一座學習村莊，開始你的知識冒險吧！</p></section>
@@ -591,7 +591,7 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 <section class="village v-math"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🔢</div><div class="house">📐</div></div><button class="village-label" onclick="openVillage('math')">🔢 數學村</button></section>
 <section class="village v-en"><span class="trees">🌲 🌳</span><div class="buildings"><div class="house">🔤</div><div class="house">🗣️</div></div><button class="village-label" onclick="openVillage('en')">🔤 英文村</button></section>
 <section class="village v-special"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🤝</div><div class="house">💡</div></div><button class="village-label" onclick="openVillage('special')">🤝 特需村</button></section>
-<div class="harbor-scene" aria-label="作者島港口，有海面、木棧橋與停靠的小船"><div class="harbor-water"><i></i><i></i><i></i><i></i></div><div class="harbor-boat" aria-hidden="true"><span class="boat-sail">⛵</span><span class="boat-hull"></span><a class="boat-destination" href="author-island.html" aria-label="前往作者島">前往作者島</a></div><div class="harbor-pier"><span class="pier-post post-a"></span><span class="pier-post post-b"></span><span class="pier-lamp">🏮</span><a class="author-port-link" href="author-island.html" aria-label="從港口搭船前往作者島"></a></div><span class="harbor-rope" aria-hidden="true"></span></div><div class="center"><a class="attendance-link" href="https://hy199421-beep.github.io/classroom/gemini-code-1789099846515.html" target="_blank" rel="noopener noreferrer" aria-label="開啟學生每日登入打卡與出缺席紀錄"><span class="attendance-icon">📋</span><span class="attendance-title">每日登入打卡</span><span class="attendance-subtitle">學生出缺席紀錄</span><span class="attendance-arrow">點我進入 ➜</span></a><span id="buddyLine" aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></span></div>
+<div class="center"><a class="attendance-link" href="https://hy199421-beep.github.io/classroom/gemini-code-1789099846515.html" target="_blank" rel="noopener noreferrer" aria-label="開啟學生每日登入打卡與出缺席紀錄"><span class="attendance-icon">📋</span><span class="attendance-title">每日登入打卡</span><span class="attendance-subtitle">學生出缺席紀錄</span><span class="attendance-arrow">點我進入 ➜</span></a><span id="buddyLine" aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></span></div>
 </div>
 <div class="character-row" aria-label="冒險夥伴小隊"><div class="hero" data-name="島島隊長">🤖</div><div class="hero" data-name="語文精靈">🦊</div><div class="hero" data-name="數學博士">🐼</div><div class="hero" data-name="勇氣夥伴">🐰</div></div>
 <div class="quest-banner"><span class="quest-icon">🗺️</span><span>今日任務：挑選一座村莊，完成一個挑戰！</span></div>
@@ -601,7 +601,7 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="cn-detail" id="cnDetail"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>
 <script>
 const data={
-cn:{title:'國文書坊',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命的碎珠','課文閱讀｜重要片段與生命體會'],['⛵','作者島港口','搭船前往作者島｜認識周敦頤']]},
+cn:{title:'國文書坊',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命的碎珠','課文閱讀｜重要片段與生命體會']]},
 math:{title:'🔢 數學村',desc:'動動腦、找方法，數學任務等你來解鎖！',topics:[['➕','數與計算','整數、小數與四則運算'],['🧩','代數入門','認識符號與簡單算式'],['📐','幾何世界','圖形、角度與周長面積'],['🛒','生活數學','時間、金錢與數量應用']]},
 en:{title:'🔤 英文村',desc:'Say hello! 從字母、單字到簡單對話。',topics:[['🔠','字母與發音','認識英文字母與基本發音'],['🍎','生活單字','累積常見生活英語單字'],['💬','基礎句型','練習日常問候與句子'],['📗','簡易閱讀','讀懂短句與生活情境']]},
 special:{title:'🤝 特需村',desc:'練習生活中的重要能力，讓每天都更有自信！',topics:[['🤝','社會技巧','打招呼、輪流、合作與交友'],['🧠','學習策略','訂目標、整理步驟與記憶'],['💬','溝通表達','表達需求、傾聽與適當回應'],['🌈','情緒管理','辨認情緒並找到調節方法'],['🎒','自我管理','時間安排、物品整理與負責']]}}
@@ -615,7 +615,7 @@ const quiz=[
 ];
 let activeQuiz=0,answered=false,currentVillage='';const store=JSON.parse(localStorage.getItem('learningIsland')||'{"stars":0,"done":0,"today":0}');
 function sync(){document.getElementById('stars').textContent=store.stars;document.getElementById('done').textContent=store.done;document.getElementById('today').textContent=store.today}
-function openVillage(key){currentVillage=key;document.body.classList.toggle('cn-open',key==='cn');document.getElementById('cnDetail').classList.remove('show');const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};const buddyLineElement=document.getElementById('buddyLine');if(buddyLineElement)buddyLineElement.innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>key==='cn'?(i===2?window.location.href='author-island.html':openLesson(i)):startPractice(i);if(key==='cn'){b.innerHTML='<span class="cn-code">L0'+(i+1)+'</span><span class="emoji">'+t[0]+'</span><strong>'+t[1]+'</strong><span class="cn-status">● ● ● ●<br>未修練</span>'}box.appendChild(b)});document.getElementById('modal').classList.add('show')}
+function openVillage(key){currentVillage=key;document.body.classList.toggle('cn-open',key==='cn');document.getElementById('cnDetail').classList.remove('show');const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};const buddyLineElement=document.getElementById('buddyLine');if(buddyLineElement)buddyLineElement.innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>key==='cn'?openLesson(i):startPractice(i);if(key==='cn'){b.innerHTML='<span class="cn-code">L0'+(i+1)+'</span><span class="emoji">'+t[0]+'</span><strong>'+t[1]+'</strong><span class="cn-status">● ● ● ●<br>未修練</span>'}box.appendChild(b)});document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show');document.body.classList.remove('cn-open');document.getElementById('topics').style.display='grid';document.getElementById('cnDetail').classList.remove('show')}
 
 function openLesson(i){
@@ -624,35 +624,6 @@ function openLesson(i){
  window.open(url,'_blank','noopener');
 }
 
-function openAuthorIsland(){
- const detail=document.getElementById('cnDetail');
- document.getElementById('topics').style.display='none';
- detail.innerHTML=`
-  <div class="author-island-scene">
-   <div class="author-island-art" aria-hidden="true">🏝️<span>⛵</span><i>🌳</i><b>🪷</b></div>
-   <span class="cn-tag">國文村・作者島</span>
-   <h3>周敦頤</h3>
-   <p class="author-subtitle">字茂叔・號濂溪｜北宋文學家、哲學家</p>
-   <p>周敦頤（1017－1073），北宋道州營道（今湖南道縣）人，是宋代理學的重要先驅。他為人清正淡泊，重視品格修養，常以自然萬物寄託人生道理。</p>
-   <div class="author-facts">
-    <div><strong>代表作品</strong><span>《愛蓮說》、《太極圖說》、《通書》</span></div>
-    <div><strong>重要思想</strong><span>重視修身養性，追求正直、清明的品格</span></div>
-    <div><strong>與課文的連結</strong><span>在《愛蓮說》中以蓮花比喻君子，讚美出淤泥而不染、不媚俗的高潔品格</span></div>
-   </div>
-   <p class="author-quote">「出淤泥而不染，濯清漣而不妖。」</p>
-   <p class="author-note">想一想：你覺得蓮花的哪一種特質，最值得我們學習？</p>
-  </div>
-  <div class="author-actions">
-   <div class="author-seal">濂溪先生</div>
-   <h3>作者島探索任務</h3>
-   <p>認識作者後，回到《愛蓮說》，找找作者如何用蓮花表達自己的理想。</p>
-   <button type="button" onclick="window.open('lesson.html?lesson=ailian','_blank','noopener')">📖 前往《愛蓮說》課文</button>
-   <button type="button" onclick="backToLessons()">↩ 回到國文村課程</button>
-   <a href="https://share.gemini.google/uRfudm6Fkmvm" target="_blank" rel="noopener noreferrer">🔗 開啟補充作者介紹資料</a>
-  </div>`;
- detail.classList.add('show');
-}
-function backToLessons(){document.getElementById('cnDetail').classList.remove('show');document.getElementById('topics').style.display='grid'}
 function showLessonText(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>愛蓮說｜課文導讀</h3><p>水陸草木之花，可愛者甚蕃。晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹。予獨愛蓮之出淤泥而不染，濯清漣而不妖……</p><p>（課文全文可依學校採用版本補齊。）</p>':'<h3>生命的碎珠｜閱讀課文</h3><p>請依照課本版本閱讀本文，並找出讓你印象深刻的片段。</p>'}
 function showLessonNotes(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>重點整理</h3><p>① 蓮：出淤泥而不染，象徵潔身自愛。<br>② 菊：隱逸者的象徵。<br>③ 牡丹：富貴者的象徵。<br>④ 本文以花喻人，表達作者對君子品格的推崇。</p>':'<h3>重點整理</h3><p>① 找出文章中的重要片段。<br>② 整理片段中的人物、事件與感受。<br>③ 思考作者想傳達的生命體會。<br>④ 練習用自己的話說出閱讀心得。</p>'}
 
@@ -766,7 +737,4 @@ if(canvas){
  }animate(0);
 }
 
-// 點選船上的目的地後，先播放搭船航行過場，再前往作者島
-const boatDestination=document.querySelector('.boat-destination');
-if(boatDestination){boatDestination.addEventListener('click',function(event){event.preventDefault();const screen=document.getElementById('sailingTransition');screen.classList.add('show');screen.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';window.setTimeout(()=>{window.location.href=boatDestination.href},1900)})}
 </script></body></html>

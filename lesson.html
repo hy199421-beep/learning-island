@@ -120,21 +120,7 @@ if(!isAilian){
  visualBox.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:18px 0 26px;';
  visuals.forEach(v=>{const c=document.createElement('div');c.style.cssText='background:#fff0d4;border:2px solid #d4b27a;border-radius:14px;padding:14px 8px;text-align:center;';c.innerHTML='<div style="font-size:48px;line-height:1.4" role="img" aria-label="'+v[1]+'">'+v[0]+'</div><b>'+v[1]+'</b><div style="font-size:14px;color:#806f5c;margin-top:5px">'+v[3]+'</div>';visualBox.appendChild(c);});
  document.getElementById('text').appendChild(visualBox);
- const oral=document.createElement('section');
- oral.innerHTML='<h3>🗣️ 朗讀題目</h3><p class="muted">請學生先聽老師念題目，再自己朗讀一次。可慢慢念，也可以重複練習。</p>';
- const oralItems=[
-  '第一題：現代人做事情很快，時間一分一秒都很寶貴。',
-  '第二題：短短的零碎時間，也可以拿來學習。',
-  '第三題：胡適先生做事從容自如，不慌不忙。',
-  '第四題：甘迺迪先生利用空檔閱讀書籍。',
-  '第五題：歐陽脩利用枕上、廁上、馬上的時間構思文章。',
-  '第六題：箱子裡先放大石頭，再放小石頭、細沙和清水。',
-  '第七題：我們可以利用每天的空隙，讓生活更充實。',
-  '第八題：零碎時間就像生命中的碎珠，累積起來很珍貴。'
- ];
- oralItems.forEach((sentence,i)=>{const row=document.createElement('div');row.className='note';row.innerHTML='<b>朗讀題目 '+(i+1)+'</b><p style="font-size:19px;margin:8px 0">'+sentence+'</p>';const speak=document.createElement('button');speak.textContent='🔊 聽題目';speak.style.cssText='padding:9px 14px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';speak.addEventListener('click',()=>{if(!('speechSynthesis' in window)){row.querySelector('.oralStatus').textContent='此裝置暫不支援語音播放，請由老師帶讀。';return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(sentence);u.lang='zh-TW';u.rate=0.78;speechSynthesis.speak(u);row.querySelector('.oralStatus').textContent='請跟著朗讀題目念一次！';});const status=document.createElement('span');status.className='oralStatus';status.style.cssText='display:block;margin-top:8px;color:#806f5c;font-size:14px';row.appendChild(speak);row.appendChild(status);oral.appendChild(row);});
- document.getElementById('text').appendChild(oral);
-  const gameTitle=document.createElement('h3');gameTitle.textContent='🎯 分段詞語填空';document.getElementById('text').appendChild(gameTitle);
+ const gameTitle=document.createElement('h3');gameTitle.textContent='🎯 分段詞語填空';document.getElementById('text').appendChild(gameTitle);
 }
 if(!isAilian){
  const paragraphs=[
@@ -154,6 +140,8 @@ if(!isAilian){
  const host=game.querySelector('#gameQuestions');
  paragraphs.forEach((item,index)=>{
   const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
+  const readBtn=document.createElement('button');readBtn.textContent='🔊 報讀題目';readBtn.style.cssText='padding:9px 14px;margin:0 0 10px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';readBtn.addEventListener('click',()=>{if(!('speechSynthesis' in window)){feedback.textContent='此裝置暫不支援語音報讀，請由老師協助念題。';return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(item.p.replace(/[｜]/g,'。')+'。'+item.q);utterance.lang='zh-TW';utterance.rate=0.78;speechSynthesis.speak(utterance);feedback.textContent='正在報讀題目，請仔細聆聽。';});
+  card.appendChild(readBtn);
   const select=document.createElement('select');select.setAttribute('aria-label','第'+(index+1)+'題答案');select.style.cssText='padding:10px 12px;border:1px solid #bd9253;border-radius:8px;background:#fffdf7;color:#493321;font-size:16px;max-width:100%;';
   const empty=document.createElement('option');empty.value='';empty.textContent='請選擇答案';select.appendChild(empty);
   item.opts.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;select.appendChild(o);});

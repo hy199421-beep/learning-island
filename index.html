@@ -28,6 +28,36 @@ button.village-label{border-style:solid}
 .practice{display:none;margin-top:18px;padding:18px;background:#f2e5cb;border-radius:16px}.practice.show{display:block}.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.answer{border:2px solid #c79d6d;border-radius:12px;padding:12px;background:white;color:#553d2b;font-weight:800}.answer.correct{background:#d9f1d7;border-color:#4e9b5a}.answer.wrong{background:#ffe0d8;border-color:#d46c5c}.feedback{font-weight:900;min-height:28px;margin-top:10px}.progress{height:12px;background:#e6d4b7;border-radius:20px;overflow:hidden;margin:12px 0}.progress span{display:block;height:100%;background:#5c9b69;width:0;transition:width .3s}
 @media(max-width:700px){.island{clip-path:none;padding:18px 14px 30px}.header{align-items:flex-start}.stats{font-size:12px;padding:9px 12px}.welcome{margin-top:22px}.villages{height:auto;display:grid;grid-template-columns:1fr 1fr;gap:48px 14px;margin:35px auto 30px}.village{position:relative;inset:auto;width:100%;min-width:0;height:150px;border-width:8px}.house{width:45px;height:61px;font-size:22px}.house:before{width:52px;height:27px;left:-7px;top:-18px}.buildings{gap:8px}.village-label{font-size:16px;padding:8px 13px;bottom:-30px}.center{position:relative;top:auto;left:auto;transform:none;justify-content:center;grid-column:1/-1;grid-row:2;order:5;margin:0}.mascot{width:76px;height:76px;font-size:42px}.center-note{font-size:13px}.v-en,.v-special{margin-top:0}.v-cn{grid-column:1}.v-math{grid-column:2}.v-en{grid-column:1}.v-special{grid-column:2}.tree-deco{display:none}.bottom{margin-top:15px}.topic-grid{grid-template-columns:1fr}.brand p{display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* 3D冒險角色與島嶼細節 */
+.game{background:linear-gradient(#55b8df 0 18%,#a5ce80 18% 100%);background-attachment:fixed}
+.island{filter:drop-shadow(0 18px 0 #69995b)}
+.village{transform:perspective(850px) rotateX(10deg) translateZ(0);transition:transform .25s,filter .25s}
+.village:hover{transform:perspective(850px) rotateX(7deg) translateY(-7px);filter:brightness(1.04)}
+.village:after{content:"";position:absolute;bottom:9px;left:12%;width:76%;height:12px;border-radius:50%;background:#927b5a33;filter:blur(5px)}
+.house{border-radius:9px 9px 4px 4px;box-shadow:6px 7px 0 #79573a, inset 5px 0 8px #ffffff66}
+.house:after{box-shadow:inset 0 0 0 3px #b9854e}
+.center{gap:10px}
+.mascot{position:relative;isolation:isolate;animation:buddy-float 2.8s ease-in-out infinite;box-shadow:0 10px 0 #468c80,0 16px 20px #486c4b66,inset -8px -8px 0 #3d9c9b33}
+.mascot:before{content:"";position:absolute;z-index:-1;inset:-10px;border-radius:50%;background:linear-gradient(145deg,#fff9c9,#ffd56b);box-shadow:0 7px 0 #c68a43}
+.mascot:after{content:"✦";position:absolute;right:-16px;top:-14px;color:#fff4a4;font-size:26px;text-shadow:0 2px #d89d40}
+@keyframes buddy-float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.center-note{position:relative;max-width:185px;line-height:1.55;background:linear-gradient(145deg,#fffdf0,#ffe5a9);border:3px solid #c99c5e}
+.center-note:before{content:"";position:absolute;left:-10px;top:24px;border-width:9px 11px 9px 0;border-style:solid;border-color:transparent #c99c5e transparent transparent}
+.character-row{display:flex;justify-content:center;gap:12px;position:relative;z-index:3;margin:-4px auto 0}
+.hero{width:62px;height:72px;border:3px solid #fff4d7;border-radius:24px 24px 19px 19px;display:grid;place-items:center;font-size:34px;box-shadow:0 6px 0 #76533a,0 10px 13px #466a3e55;position:relative;animation:hero-bob 3s ease-in-out infinite}
+.hero:nth-child(2){animation-delay:-.7s}.hero:nth-child(3){animation-delay:-1.4s}.hero:nth-child(4){animation-delay:-2.1s}
+.hero:after{content:attr(data-name);position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:11px;white-space:nowrap;background:#fff4d7;padding:2px 7px;border-radius:9px;font-weight:900;color:#60452e}
+.hero:nth-child(1){background:linear-gradient(145deg,#ffe6ad,#d98e4c)}.hero:nth-child(2){background:linear-gradient(145deg,#d5f1ff,#68b9dc)}.hero:nth-child(3){background:linear-gradient(145deg,#e6d9ff,#9b79d6)}.hero:nth-child(4){background:linear-gradient(145deg,#ffe0e4,#ed8e9d)}
+@keyframes hero-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.quest-banner{display:flex;align-items:center;justify-content:center;gap:10px;margin:24px auto 10px;max-width:520px;background:#fff5d9;border:3px solid #c99c5e;border-radius:18px;padding:10px 16px;box-shadow:0 6px 0 #98663e;color:#67482d;font-weight:900}
+.quest-banner .quest-icon{font-size:26px}
+.panel{background:linear-gradient(145deg,#fff9eb,#f4e1bf)}
+.panel-head h2{color:#68472c}
+.topic{transition:transform .18s,box-shadow .18s}.topic:active{transform:translateY(3px);box-shadow:0 1px 0 #c59b6d}
+.adventure-tip{margin:14px 0 0;padding:12px 14px;background:#e4f3d8;border:2px solid #a5c98d;border-radius:14px;font-weight:800;color:#45653d}
+@media(max-width:700px){.character-row{gap:8px;margin:5px auto 0}.hero{width:50px;height:58px;font-size:27px}.center{flex-wrap:wrap}.center-note{max-width:160px}.center-note:before{display:none}.quest-banner{font-size:13px;margin-top:20px}}
+
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island">
@@ -38,8 +68,10 @@ button.village-label{border-style:solid}
 <section class="village v-math"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🔢</div><div class="house">📐</div></div><button class="village-label" onclick="openVillage('math')">🔢 數學村</button></section>
 <section class="village v-en"><span class="trees">🌲 🌳</span><div class="buildings"><div class="house">🔤</div><div class="house">🗣️</div></div><button class="village-label" onclick="openVillage('en')">🔤 英文村</button></section>
 <section class="village v-special"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🤝</div><div class="house">💡</div></div><button class="village-label" onclick="openVillage('special')">🤝 特需村</button></section>
-<div class="center"><div class="mascot" aria-label="學習夥伴">🤖</div><div class="center-note">跟著小島夥伴<br>一起練習、收集星星！</div></div>
+<div class="center"><div class="mascot" aria-label="學習夥伴">🤖</div><div class="center-note" id="buddyLine">嗨！我是島島隊長<br>今天一起完成冒險任務！</div></div>
 </div>
+<div class="character-row" aria-label="冒險夥伴小隊"><div class="hero" data-name="島島隊長">🤖</div><div class="hero" data-name="語文精靈">🦊</div><div class="hero" data-name="數學博士">🐼</div><div class="hero" data-name="勇氣夥伴">🐰</div></div>
+<div class="quest-banner"><span class="quest-icon">🗺️</span><span>今日任務：挑選一座村莊，完成一個挑戰！</span></div>
 <div class="bottom"><div class="daily">📌 今日練了 <span id="today">0</span> 回・點村莊出發</div></div>
 <span class="tree-deco t1">🌳</span><span class="tree-deco t2">🌲</span><span class="tree-deco t3">🌳</span><span class="tree-deco t4">🌲</span>
 </div></main>
@@ -58,9 +90,9 @@ const quiz=[
 ];
 let activeQuiz=0,answered=false;const store=JSON.parse(localStorage.getItem('learningIsland')||'{"stars":0,"done":0,"today":0}');
 function sync(){document.getElementById('stars').textContent=store.stars;document.getElementById('done').textContent=store.done;document.getElementById('today').textContent=store.today}
-function openVillage(key){const d=data[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>startPractice(i);box.appendChild(b)});document.getElementById('modal').classList.add('show')}
+function openVillage(key){const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};document.getElementById('buddyLine').innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>startPractice(i);box.appendChild(b)});document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show')}
-function startPractice(i){activeQuiz=i%quiz.length;answered=false;document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion()}
+function startPractice(i){activeQuiz=i%quiz.length;document.getElementById('buddyLine').innerHTML='島島隊長：勇者任務開始！仔細想一想，你一定做得到！';answered=false;document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion()}
 function renderQuestion(){const q=quiz[activeQuiz];document.getElementById('question').textContent=q.q;const box=document.getElementById('answers');box.innerHTML='';q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>checkAnswer(i,b);box.appendChild(b)});document.getElementById('bar').style.width='0%';answered=false}
 function checkAnswer(i,btn){if(answered)return;answered=true;const q=quiz[activeQuiz];const buttons=[...document.querySelectorAll('.answer')];buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add('correct')});if(i===q.c){store.stars+=1;store.done+=1;store.today+=1;document.getElementById('feedback').textContent='🎉 答對了！'+q.why}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='再想一想！正確答案已標示。'+q.why}if(i!==q.c){store.done+=1;store.today+=1}localStorage.setItem('learningIsland',JSON.stringify(store));sync();document.getElementById('bar').style.width='100%'}
 function nextQuestion(){if(!answered){document.getElementById('feedback').textContent='先選一個答案再繼續喔！';return}activeQuiz=(activeQuiz+1)%quiz.length;renderQuestion()}

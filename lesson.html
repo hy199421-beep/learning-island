@@ -173,16 +173,18 @@ const wordPronunciations={
   ['清漣','ㄑㄧㄥ ㄌㄧㄢˊ'],['香遠益清','ㄒㄧㄤ ㄩㄢˇ ㄧˋ ㄑㄧㄥ'],['宜乎','ㄧˊ ㄏㄨ']
  ],
  life:[
-  ['著書立說','ㄓㄨˋ ㄕㄨ ㄌㄧˋ ㄕㄨㄛ','透過寫作以表述自己的學說理論。著，音ㄓㄨˋ。'],
-  ['從容自如','ㄘㄨㄥˊ ㄖㄨㄥˊ ㄗˋ ㄖㄨˊ','不慌不忙，自由自在。'],
-  ['溫藹','ㄨㄣ ㄞˇ','溫和親切。藹，音ㄞˇ。'],
-  ['不敷','ㄅㄨˋ ㄈㄨ','不夠。敷，音ㄈㄨ，足夠。'],
-  ['撇開','ㄆㄧㄝ ㄎㄞ','丟開不管。撇，音ㄆㄧㄝ。'],
-  ['「盛年」四句','ㄕㄥˋ ㄋㄧㄢˊ','指人生短暫，必須珍惜光陰。盛年，壯年。語出陶淵明《雜詩》十二首之一。'],
-  ['千字文','ㄑㄧㄢ ㄗˋ ㄨㄣˊ','南朝梁周興嗣撰。收錄一千個常用字，撰寫成四言韻文，是舊時兒童啟蒙識字的讀本。'],
-  ['「尺璧」二句','ㄔˇ ㄅㄧˋ','指直徑一尺長的璧玉算不上寶物，片刻的光陰卻值得去爭取。'],
-  ['積沙能夠成塔','ㄐㄧ ㄕㄚ ㄋㄥˊ ㄍㄡˋ ㄔㄥˊ ㄊㄚˇ','比喻積少成多。語出《妙法蓮華經》。'],
-  ['集腋可以成裘','ㄐㄧˊ ㄧㄝˋ ㄎㄜˇ ㄧˇ ㄔㄥˊ ㄑㄧㄡˊ','狐狸腋下的毛皮雖不多，但聚集起來就可縫製成一件皮衣。比喻積少成多。腋，音ㄧㄝˋ。裘，皮衣。']
+  ['秒','ㄇㄧㄠˇ','課文詞語：分秒必爭。'],
+  ['爭','ㄓㄥ','課文詞語：分秒必爭。'],
+  ['珍','ㄓㄣ','課文詞語：珍惜時間。'],
+  ['惜','ㄒㄧˊ','課文詞語：珍惜時間。'],
+  ['碎','ㄙㄨㄟˋ','課文詞語：零碎時間。'],
+  ['閒','ㄒㄧㄢˊ','課文詞語：悠閒。'],
+  ['讀','ㄉㄨˊ','課文詞語：閱讀。'],
+  ['書','ㄕㄨ','課文詞語：書籍。'],
+  ['間','ㄐㄧㄢ','課文詞語：時間。'],
+  ['等','ㄉㄥˇ','課文詞語：等待。'],
+  ['勉','ㄇㄧㄢˇ','課文詞語：勉勵。'],
+  ['勵','ㄌㄧˋ','課文詞語：勉勵。']
  ]
 };
 const wordBank=wordPronunciations[isAilian?'ailian':'life'];
@@ -199,7 +201,7 @@ const wordQuiz=wordBank.map((entry,i)=>{
  return {word:entry[0],stimulus:askZhuyin?entry[1]:entry[0],hint:entry[2]||'請仔細辨認這個語詞。',askZhuyin,prompt:askZhuyin?'請依照注音選出正確的國字：':'請依照國字選出正確的注音：',answer:correct,options};
 });
 const zy=document.getElementById('zhuyin');
-zy.innerHTML='<h3>🔤 課文生難詞語注音挑戰</h3><p class="muted">每次只考一題，交替練習看注音選國字、看國字選注音。每題選完立即公布正確答案。</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
+zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文常用字注音練習')+'</h3><p class="muted">'+(isAilian?'每次只考一題，交替練習看注音選國字、看國字選注音。每題選完立即公布正確答案。':'一次練習一個字，搭配課文詞語提示。題目以常見字為主，交替練習看注音選國字、看國字選注音；選完立即公布答案。')+'</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
 let wordIndex=0;
 const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');

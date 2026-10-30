@@ -81,6 +81,17 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 #zhuyin #wordCard .zhuyin-choice:disabled{opacity:.85;cursor:default}
 #zhuyin #wordCard .zhuyin-choice:focus-visible{outline:3px solid #8b6ac0;outline-offset:3px}
 #zhuyin #wordCard>div{gap:16px!important}
+#meaning #matchProgress{max-width:820px;margin:18px auto 8px;text-align:center;border:0;border-radius:12px;font-weight:800}
+#meaning #matchCard{max-width:900px;margin:18px auto 22px;padding:clamp(22px,4vw,38px);border:2px solid #d7c392;border-radius:24px;background:linear-gradient(145deg,#fffaf0,#f8efd9);box-shadow:0 6px 0 #d3c097}
+#meaning #matchCard h2{font-size:clamp(22px,3.5vw,30px);line-height:1.6;margin:10px 0 18px}
+#meaning #matchCard .match-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:780px;margin:18px auto}
+#meaning #matchCard .match-choice{min-height:78px;padding:15px;border:2px solid #cbb47f;border-radius:16px;background:linear-gradient(110deg,#fff9e9,#f1e4bf);color:#39291e;font-size:clamp(16px,2vw,19px);font-weight:700;text-align:left;box-shadow:0 4px 0 #d3c092;cursor:pointer}
+#meaning #matchCard .match-choice:disabled{opacity:.9;cursor:default}
+#meaning #matchPrev,#meaning #matchNext,#meaning #matchFinish{padding:12px 20px;border:0;border-radius:12px;background:#765034;color:white;font-weight:800;cursor:pointer}
+#meaning #matchFinish{background:linear-gradient(#b52d2b,#8d1d1b);box-shadow:0 4px 0 #5c1715}
+#meaning #matchPrev:disabled,#meaning #matchNext:disabled,#meaning #matchFinish:disabled{opacity:.45;cursor:default}
+#meaning #matchResult{text-align:center;font-size:19px;font-weight:800}
+@media(max-width:620px){#meaning #matchCard .match-options{grid-template-columns:1fr}#meaning #matchCard{padding:20px 14px}}
 
 </style>
 </head>
@@ -105,6 +116,7 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
+document.querySelector('.tabs button[data-tab="meaning"]').textContent=isAilian?'📚 解釋':'🧩 配段練習題';
 document.getElementById('lessonTitle').textContent=isAilian?'愛蓮說':'生命中的碎珠';
 const sections=isAilian?{
 text:`<h3>《愛蓮說》｜周敦頤</h3><div class="poem">水陸草木之花，可愛者甚蕃。
@@ -150,27 +162,76 @@ zhuyin:`<h3>國字注音</h3>
 <div class="note"><ruby>撇<rt>ㄆㄧㄝ</rt></ruby>開　悠<ruby>閒<rt>ㄒㄧㄢˊ</rt></ruby>　瑣<ruby>碎<rt>ㄙㄨㄟˋ</rt></ruby>　哲<ruby>人<rt>ㄖㄣˊ</rt></ruby>　勉<ruby>勵<rt>ㄌㄧˋ</rt></ruby></div>
 <div class="note">尺<ruby>璧<rt>ㄅㄧˋ</rt></ruby>　<ruby>脩<rt>ㄒㄧㄡ</rt></ruby>（歐陽脩）　<ruby>廁<rt>ㄘㄜˋ</rt></ruby>上　<ruby>腋<rt>ㄧㄝˋ</rt></ruby>下　成<ruby>裘<rt>ㄑㄧㄡˊ</rt></ruby></div>
 <div class="note">撿<ruby>拾<rt>ㄕˊ</rt></ruby>　<ruby>宗<rt>ㄗㄨㄥ</rt></ruby>　<ruby>藹<rt>ㄞˇ</rt></ruby>（溫藹）　<ruby>勵<rt>ㄌㄧˋ</rt></ruby>（勉勵）</div>`,
-meaning:`<h3>詞語、典故與句意解釋</h3>
-<div class="note"><b>1. 著書立說：</b>寫作書籍，建立自己的學說或主張。</div>
-<div class="note"><b>2. 從容自如：</b>沉著、不慌張，能自在地處理事情。</div>
-<div class="note"><b>3. 溫藹：</b>溫和親切。形容待人和善、態度親切。</div>
-<div class="note"><b>4. 不敷：</b>不夠、不足以應付所需。</div>
-<div class="note"><b>5. 撇開：</b>暫時不談、不把某件事列入考慮。</div>
-<div class="note"><b>6. 歲月不待人：</b>時間不會停下來等待任何人，提醒人要珍惜光陰、及時努力。</div>
-<div class="note"><b>7. 《千字文》：</b>中國古代的啟蒙讀物，全文由一千個不重複的漢字組成。</div>
-<div class="note"><b>8. 尺璧非寶，寸陰是競：</b>珍貴的玉璧不算真正的寶物，短暫的光陰才值得珍惜、努力爭取。</div>
-<div class="note"><b>9. 積沙成塔：</b>一粒粒沙子累積起來，也能形成高塔。比喻小量累積，終能成就大事。</div>
-<div class="note"><b>10. 集腋成裘：</b>把許多狐狸腋下的小塊皮毛集合起來，就能縫成皮衣。比喻聚少成多。</div>
-<div class="note"><b>11. 一宗：</b>一項、一件；此處指一筆可觀的財富。</div>
-<h3>段落大意與文章主旨</h3>
-<div class="note"><b>第一至二段：</b>說明現代生活步調快速，零碎時間也值得珍惜與把握。</div>
-<div class="note"><b>第三至五段：</b>以胡適、甘迺迪、陶淵明、歐陽脩為例，說明善用零碎時間的重要。</div>
-<div class="note"><b>第六至七段：</b>以石頭、細沙和清水的比喻，說明妥善安排時間能讓生活更充實。</div>
-<div class="note"><b>第八段：</b>總結零碎時間如同生命中的珍珠，只要勤於累積，就能成為珍貴的財富。</div>
-<div class="note"><b>全文主旨：</b>提醒我們珍惜並善用零碎時間，持之以恆地累積知識與能力，讓生命更加充實。</div>`
+meaning:`<h3>🧩 配段練習題</h3><p class="muted">依照每一段的內容，選出最適合的段落大意。每題選完會立即顯示正確答案。</p><div id="matchProgress" class="note"></div><div id="matchCard" class="note" style="min-height:250px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="matchPrev" type="button">上一題</button><button id="matchNext" type="button">下一題</button><button id="matchFinish" type="button">查看成績</button></div><p id="matchResult" aria-live="polite"></p>`
 
 };
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
+
+if(!isAilian){
+ const paragraphMatchQuestions=[
+  {prompt:'第一段主要在說什麼？',answer:0,options:['現代生活步調很快，時間一分一秒都很寶貴。','電話轉盤比按鍵電話方便。','大家都喜歡慢慢等待。','現代人不需要使用電話。']},
+  {prompt:'第二段提醒我們什麼？',answer:1,options:['成功只靠運氣。','零碎時間也很重要，應該好好珍惜。','只有很長的時間才能做事。','時間不會影響學習。']},
+  {prompt:'第三段用胡適的例子說明什麼？',answer:2,options:['胡適不喜歡處理事情。','胡適每天都在休息。','善用零碎時間，就能工作充實、生活從容。','胡適只在晚上讀書。']},
+  {prompt:'第四段主要介紹甘迺迪怎麼利用時間？',answer:3,options:['他把客人都請到家裡。','他常常忘記接見客人。','他只在假日閱讀。','他利用接見客人的空檔閱讀，充實學識。']},
+  {prompt:'第五段提到古人珍惜時間的例子，主要想說明什麼？',answer:0,options:['古人也懂得利用短暫時間讀書、思考。','古人每天都不用工作。','只有古人才需要珍惜時間。','讀書一定要在書桌前進行。']},
+  {prompt:'第六段用大石頭、小石頭、細沙和清水比喻什麼？',answer:1,options:['箱子只能裝一種東西。','安排事情有先後，空出的地方還能放進其他事物。','清水比石頭更重要。','每天都要收集石頭。']},
+  {prompt:'第七段把一天的二十四小時比喻成什麼？',answer:2,options:['一本課本。','一條很長的道路。','一個大箱子，提醒我們利用零碎空隙。','一座裝滿黃金的山。']},
+  {prompt:'第八段「生命中的碎珠」想表達什麼？',answer:3,options:['珍珠越大越有價值。','時間太短，沒有辦法做事。','只有有錢人才能累積財富。','零碎時間像珍珠，勤於累積就會成為珍貴財富。']}
+ ];
+ const matchLetters=['A','B','C','D'];
+ const matchAnswers=Array(paragraphMatchQuestions.length).fill(null);
+ let matchIndex=0;
+ const matchCard=document.getElementById('matchCard');
+ function renderParagraphMatch(){
+  const q=paragraphMatchQuestions[matchIndex];
+  document.getElementById('matchProgress').textContent='第 '+(matchIndex+1)+' 題／共 '+paragraphMatchQuestions.length+' 題　｜　已答 '+matchAnswers.filter(x=>x!==null).length+' 題';
+  matchCard.innerHTML='';
+  const heading=document.createElement('h2');
+  heading.textContent=q.prompt;
+  matchCard.appendChild(heading);
+  const read=document.createElement('button');
+  read.type='button';read.className='read-aloud-btn';read.textContent='🔊';read.title='報讀題目';read.setAttribute('aria-label','報讀題目');
+  read.addEventListener('click',()=>{
+   if(!('speechSynthesis' in window))return;
+   speechSynthesis.cancel();
+   const speech=new SpeechSynthesisUtterance(q.prompt+'。'+q.options.map((o,i)=>matchLetters[i]+'。'+o).join('。'));
+   speech.lang='zh-TW';speech.rate=0.78;speechSynthesis.speak(speech);
+  });
+  matchCard.appendChild(read);
+  const choices=document.createElement('div');choices.className='match-options';
+  q.options.forEach((option,index)=>{
+   const button=document.createElement('button');
+   button.type='button';button.className='match-choice';
+   button.textContent=matchLetters[index]+'．'+option;
+   button.disabled=matchAnswers[matchIndex]!==null;
+   button.addEventListener('click',()=>{
+    if(matchAnswers[matchIndex]!==null)return;
+    matchAnswers[matchIndex]=index;renderParagraphMatch();
+   });
+   choices.appendChild(button);
+  });
+  matchCard.appendChild(choices);
+  if(matchAnswers[matchIndex]!==null){
+   const correct=matchAnswers[matchIndex]===q.answer;
+   const feedback=document.createElement('p');
+   feedback.style.cssText='margin:20px auto 0;padding:15px;border-radius:14px;text-align:center;font-size:19px;font-weight:800;background:'+(correct?'#e7f2df':'#f8e5dc')+';color:'+(correct?'#356b38':'#9b332b');
+   feedback.textContent=(correct?'🎉 答對了！':'再加油！')+' 正確答案：'+matchLetters[q.answer]+'．'+q.options[q.answer];
+   matchCard.appendChild(feedback);
+  }
+  document.getElementById('matchPrev').disabled=matchIndex===0;
+  document.getElementById('matchNext').disabled=matchIndex===paragraphMatchQuestions.length-1;
+  document.getElementById('matchFinish').disabled=matchAnswers.some(x=>x===null);
+ }
+ document.getElementById('matchPrev').addEventListener('click',()=>{if(matchIndex>0){matchIndex--;renderParagraphMatch();}});
+ document.getElementById('matchNext').addEventListener('click',()=>{if(matchIndex<paragraphMatchQuestions.length-1){matchIndex++;renderParagraphMatch();}});
+ document.getElementById('matchFinish').addEventListener('click',()=>{
+  if(matchAnswers.some(x=>x===null))return;
+  const score=paragraphMatchQuestions.filter((q,i)=>matchAnswers[i]===q.answer).length;
+  document.getElementById('matchResult').textContent='🎊 練習完成！答對 '+score+'／'+paragraphMatchQuestions.length+' 題。';
+ });
+ renderParagraphMatch();
+}
+
 
 /* 課文生難詞語注音四選一：逐題呈現，A～D 正確答案各 3 題 */
 const wordPronunciations={

@@ -83,6 +83,28 @@ button.village-label{border-style:solid}
  .village-label{bottom:-30px}
  .center{position:relative;top:auto;left:auto;transform:none;justify-content:center;grid-column:1/-1;grid-row:2;order:5;margin:0}
 }
+
+/* 國文書院：仿古典木造書院與卷軸課文選單 */
+body.cn-open .modal{background:radial-gradient(ellipse at center,#8a5738dd,#24150fee);backdrop-filter:blur(3px)}
+body.cn-open .panel{width:min(1240px,96vw);max-height:94vh;border:12px solid #4a2818;border-radius:8px;padding:24px 30px;background:linear-gradient(90deg,#5b351f 0 1%,#f8edcf 1% 99%,#5b351f 99%),#f8edcf;box-shadow:0 0 0 4px #d7ad58,0 18px 35px #160d08;color:#40291b}
+body.cn-open .panel:before{content:"國 文 書 院";display:block;text-align:center;font-family:serif;font-weight:900;letter-spacing:.22em;font-size:clamp(25px,4vw,42px);color:#f7d98c;background:linear-gradient(#57331e,#26150e);border:5px double #c99b48;padding:8px;margin:-24px -30px 20px;text-shadow:0 2px #24150e}
+body.cn-open .panel-head{justify-content:center;position:relative;border-bottom:3px solid #c9a66e;padding:4px 0 14px}
+body.cn-open .panel-head h2{font-family:serif;color:#7c2e20;font-size:26px}
+body.cn-open .panel-head .close{position:absolute;right:0;top:0;border-radius:6px;background:#8e2d20;color:#fff;border:2px solid #d9b46b}
+body.cn-open .subline{text-align:center;color:#8a6b48;font-family:serif;font-weight:800}
+body.cn-open .topic-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:13px;margin:18px 0}
+body.cn-open .topic{min-height:190px;display:flex;flex-direction:column;justify-content:center;text-align:center;gap:9px;border:7px solid #6b3d23;border-top-width:12px;border-bottom-width:12px;border-radius:4px;background:linear-gradient(135deg,#fff9e9,#eee0bd);box-shadow:inset 0 0 0 2px #d4b878,0 8px 0 #301a10,0 12px 15px #2b160d66;position:relative;padding:14px 7px;color:#38251b}
+body.cn-open .topic:before,body.cn-open .topic:after{content:"";position:absolute;left:-9px;right:-9px;height:13px;background:linear-gradient(90deg,#d9ae53,#f4d98b,#b98537);border-radius:8px}
+body.cn-open .topic:before{top:-13px}body.cn-open .topic:after{bottom:-13px}
+body.cn-open .topic .emoji{font-size:32px}.cn-code{font-family:Georgia,serif;color:#9a3024;border:2px solid #9a3024;padding:4px 12px;font-weight:900;background:#fff8e8}
+body.cn-open .topic strong{font-family:serif;font-size:18px}.cn-status{font-size:12px;color:#927b58;font-weight:800}
+body.cn-open .practice{background:#f5e7c9;border:1px solid #c8a66b}
+.cn-detail{display:none;background:#fff8e9;border:8px double #c49a57;padding:22px;margin:18px 0 4px;grid-template-columns:1.15fr .85fr;gap:24px;box-shadow:0 6px 0 #70472b}
+.cn-detail.show{display:grid}.cn-detail h3{font:900 28px serif;margin:0 0 8px;color:#572d20}.cn-detail p{line-height:1.9;color:#674c35}
+.cn-tag{display:inline-block;background:#9d3025;color:#fff6dc;padding:6px 12px;font-weight:900;margin-right:10px}
+.cn-actions{display:grid;gap:10px;align-content:center}.cn-actions button{border:2px solid #d4b477;border-radius:24px;background:linear-gradient(#fff8e8,#f1d8a5);padding:13px 18px;color:#573820;font-weight:900;text-align:left;box-shadow:0 4px 0 #c29b5b}
+.cn-actions button:hover{background:#f8d58b}.cn-back{margin:0 0 10px;border:1px solid #9a6b3c;background:#71462b;color:#fff2d2;border-radius:8px;padding:8px 15px;font-weight:900}
+@media(max-width:760px){body.cn-open .panel{padding:16px 12px}body.cn-open .topic-grid{grid-template-columns:repeat(2,minmax(0,1fr))}body.cn-open .topic{min-height:140px}.cn-detail.show{grid-template-columns:1fr}.cn-detail{padding:14px}}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
@@ -100,7 +122,7 @@ button.village-label{border-style:solid}
 <div class="bottom"><div class="daily">📌 今日練了 <span id="today">0</span> 回・點村莊出發</div></div>
 <span class="tree-deco t1">🌳</span><span class="tree-deco t2">🌲</span><span class="tree-deco t3">🌳</span><span class="tree-deco t4">🌲</span>
 </div></main>
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="cn-detail" id="cnDetail"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>
 <script>
 const data={
 cn:{title:'📘 國文村',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命中的碎珠','課文閱讀｜重要片段與生命體會']]},
@@ -117,8 +139,22 @@ const quiz=[
 ];
 let activeQuiz=0,answered=false,currentVillage='';const store=JSON.parse(localStorage.getItem('learningIsland')||'{"stars":0,"done":0,"today":0}');
 function sync(){document.getElementById('stars').textContent=store.stars;document.getElementById('done').textContent=store.done;document.getElementById('today').textContent=store.today}
-function openVillage(key){currentVillage=key;const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};document.getElementById('buddyLine').innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>startPractice(i);box.appendChild(b)});document.getElementById('modal').classList.add('show')}
-function closeModal(){document.getElementById('modal').classList.remove('show')}
+function openVillage(key){currentVillage=key;document.body.classList.toggle('cn-open',key==='cn');document.getElementById('cnDetail').classList.remove('show');const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};document.getElementById('buddyLine').innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>key==='cn'?openLesson(i):startPractice(i);if(key==='cn'){b.innerHTML='<span class="cn-code">L0'+(i+1)+'</span><span class="emoji">'+t[0]+'</span><strong>'+t[1]+'</strong><span class="cn-status">● ● ● ●<br>未修練</span>'}box.appendChild(b)});document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show');document.body.classList.remove('cn-open');document.getElementById('topics').style.display='grid';document.getElementById('cnDetail').classList.remove('show')}
+
+function openLesson(i){
+ const lesson=data.cn.topics[i], detail=document.getElementById('cnDetail');
+ document.getElementById('topics').style.display='none';
+ detail.classList.add('show');
+ const texts=i===0
+ ? '<p>作者：周敦頤　｜　主旨：藉蓮花的生長特質，寄託對君子品格的讚美。</p><p>「出淤泥而不染，濯清漣而不妖。」蓮花生長在污泥中，卻保持潔淨，象徵君子潔身自愛、不隨波逐流。</p>'
+ : '<p>課文主題：從生活中的細微片段，看見值得珍惜的人事物與生命體會。</p><p>閱讀時可以留意作者如何描寫片段、串連回憶，以及這些經驗帶來的感受。實際課文內容可再依課本版本補入。</p>';
+ detail.innerHTML='<button class="cn-back" onclick="backToLessons()">← 返回課文卷軸</button><div><span class="cn-tag">L0'+(i+1)+'</span><h3>'+lesson[1]+'</h3>'+texts+'</div><div class="cn-actions"><h3>課文選項</h3><button onclick="showLessonText('+i+')">📖　閱讀課文　›</button><button onclick="showLessonNotes('+i+')">▤　重點整理　›</button><button onclick="startPractice('+i+')">✎　闖關練習　›</button></div><div id="cnExtra" style="grid-column:1/-1"></div>';
+}
+function backToLessons(){document.getElementById('cnDetail').classList.remove('show');document.getElementById('topics').style.display='grid'}
+function showLessonText(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>愛蓮說｜課文導讀</h3><p>水陸草木之花，可愛者甚蕃。晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹。予獨愛蓮之出淤泥而不染，濯清漣而不妖……</p><p>（課文全文可依學校採用版本補齊。）</p>':'<h3>生命中的碎珠｜閱讀課文</h3><p>請依照課本版本閱讀本文，並找出讓你印象深刻的片段。</p>'}
+function showLessonNotes(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>重點整理</h3><p>① 蓮：出淤泥而不染，象徵潔身自愛。<br>② 菊：隱逸者的象徵。<br>③ 牡丹：富貴者的象徵。<br>④ 本文以花喻人，表達作者對君子品格的推崇。</p>':'<h3>重點整理</h3><p>① 找出文章中的重要片段。<br>② 整理片段中的人物、事件與感受。<br>③ 思考作者想傳達的生命體會。<br>④ 練習用自己的話說出閱讀心得。</p>'}
+
 function startPractice(i){activeQuiz=currentVillage==='cn'?i%2:(i+2)%quiz.length;document.getElementById('buddyLine').innerHTML='島島隊長：勇者任務開始！仔細想一想，你一定做得到！';answered=false;document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion()}
 function renderQuestion(){const q=quiz[activeQuiz];document.getElementById('question').textContent=q.q;const box=document.getElementById('answers');box.innerHTML='';q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>checkAnswer(i,b);box.appendChild(b)});document.getElementById('bar').style.width='0%';answered=false}
 function checkAnswer(i,btn){if(answered)return;answered=true;const q=quiz[activeQuiz];const buttons=[...document.querySelectorAll('.answer')];buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add('correct')});if(i===q.c){store.stars+=1;store.done+=1;store.today+=1;document.getElementById('feedback').textContent='🎉 答對了！'+q.why}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='再想一想！正確答案已標示。'+q.why}if(i!==q.c){store.done+=1;store.today+=1}localStorage.setItem('learningIsland',JSON.stringify(store));sync();document.getElementById('bar').style.width='100%'}

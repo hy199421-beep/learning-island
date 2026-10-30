@@ -510,8 +510,30 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 .boat-destination:hover{transform:translateY(-2px);filter:brightness(1.06)}
 .author-port-link{display:none}
 @media(max-width:700px){.harbor-scene{position:relative;left:auto;top:auto;grid-column:1/-1;grid-row:1;justify-self:center;margin:0 0 4px}.center{grid-row:3}}
+
+/* 國文村左側海岸：沙灘、淺灘、礁石與海草，讓村莊自然臨海 */
+.villages{isolation:isolate}
+.harbor-scene{left:-190px;top:2%;width:205px;height:190px}
+.harbor-scene:before{content:"";position:absolute;left:-28px;right:-5px;bottom:8px;height:65px;border-radius:48% 55% 35% 28%;background:linear-gradient(180deg,#f5dfaa 0 35%,#d8c18c 36% 62%,#8abf9b 63%);transform:rotate(-7deg);z-index:-2;box-shadow:0 7px 0 #9d9367}
+.harbor-scene:after{content:"🪨　🪸　🌾";position:absolute;left:-22px;bottom:9px;font-size:20px;letter-spacing:4px;filter:drop-shadow(0 2px 1px #526d4a);z-index:1;pointer-events:none}
+.harbor-water{left:-22px;right:-20px;height:92px;border-radius:55% 45% 18px 22px;background:repeating-linear-gradient(176deg,transparent 0 12px,#d7f5e9aa 13px 15px,transparent 16px 25px),linear-gradient(180deg,#9adbd4 0%,#48b4c1 42%,#197b91 100%);box-shadow:inset 0 8px 0 #d8fff0aa,0 5px 0 #175c6c}
+.boat-destination{left:2px;top:-22px;padding:6px 12px;font-size:13px}
+.harbor-boat{right:-1px;top:25px}
+.harbor-scene .harbor-pier{left:20%;right:10%}
+@media(max-width:700px){.harbor-scene{left:auto;top:auto;width:220px;height:170px;margin:0 auto 4px}.harbor-scene:before{left:-12px;right:-12px}.harbor-scene:after{left:0}.harbor-water{left:-10px;right:-10px;height:75px}}
+/* 登船過場：船從港口駛向畫面遠方後再進入作者島 */
+.sailing-transition{position:fixed;inset:0;display:none;align-items:center;justify-content:center;overflow:hidden;z-index:100;background:linear-gradient(#91d5e7 0 42%,#d7e8c2 42% 47%,#238fa5 47% 100%)}
+.sailing-transition.show{display:flex}
+.sailing-sky{position:absolute;inset:0 0 53%;background:linear-gradient(#83cde5,#d5f0e9)}
+.sailing-horizon{position:absolute;left:0;right:0;top:44%;height:13%;background:linear-gradient(180deg,#9bcf9d,#e5d6a3 30%,#3c9eaa 31%,#167b91)}
+.sailing-title{position:absolute;top:18%;padding:12px 22px;border:3px solid #fff0c5;border-radius:24px;background:#fff8df;color:#634629;font-weight:1000;font-size:clamp(20px,4vw,30px);box-shadow:0 5px 0 #b18a58}
+.sailing-boat{position:absolute;left:calc(50% - 40px);top:48%;font-size:76px;filter:drop-shadow(0 8px 3px #174b5366);animation:sailAway 1.9s cubic-bezier(.35,.05,.7,.95) forwards}
+.sailing-wake{position:absolute;left:calc(50% - 100px);top:62%;width:200px;height:12px;border-radius:50%;background:#d5fff0aa;filter:blur(3px);animation:wakeAway 1.9s ease-out forwards}
+@keyframes sailAway{0%{transform:translate(0,0) scale(1) rotate(-2deg)}35%{transform:translate(45px,-15px) scale(.82) rotate(3deg)}100%{transform:translate(170px,-100px) scale(.12) rotate(5deg);opacity:.2}}
+@keyframes wakeAway{0%{transform:scaleX(1);opacity:.8}100%{transform:translate(110px,-60px) scaleX(.1);opacity:0}}
+@media(prefers-reduced-motion:reduce){.sailing-boat,.sailing-wake{animation-duration:.01ms}}
 </style></head>
-<body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
+<body><div class="sailing-transition" id="sailingTransition" aria-hidden="true"><div class="sailing-sky"></div><div class="sailing-horizon"></div><div class="sailing-title">⛵ 正在航向作者島…</div><div class="sailing-wake"></div><div class="sailing-boat">⛵</div></div><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
 <header class="header"><div class="brand"><span class="brand-icon">🏝️</span><div><h1>學習島</h1><p>每天一小步，能力大冒險！</p></div></div><div class="stats">⭐ <span id="stars">0</span> 星星　🏅 <span id="done">0</span> 次練習</div></header>
 <section class="welcome"><h2>嗨！小小探險家，今天想去哪一村？</h2><p>選一座學習村莊，開始你的知識冒險吧！</p></section>
@@ -695,4 +717,8 @@ if(canvas){
   renderer.render(scene,camera)
  }animate(0);
 }
+
+// 點選船上的目的地後，先播放搭船航行過場，再前往作者島
+const boatDestination=document.querySelector('.boat-destination');
+if(boatDestination){boatDestination.addEventListener('click',function(event){event.preventDefault();const screen=document.getElementById('sailingTransition');screen.classList.add('show');screen.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';window.setTimeout(()=>{window.location.href=boatDestination.href},1900)})}
 </script></body></html>

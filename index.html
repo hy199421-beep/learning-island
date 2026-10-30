@@ -433,6 +433,19 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 .cloud{will-change:transform}
 .mascot,.hero{will-change:transform}
 @media(prefers-reduced-motion:reduce){.village-label,.village-label:hover{transition:none!important}}
+
+/* 島中央：每日登入打卡入口 */
+.center{z-index:8!important;display:flex;align-items:center;justify-content:center}
+.attendance-link{width:clamp(150px,17vw,205px);min-height:154px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:14px 12px;text-decoration:none;text-align:center;color:#59401f;background:linear-gradient(155deg,#fff9dc,#f5cf75);border:5px solid #fff1bd;border-radius:25px;box-shadow:0 8px 0 #a96d37,0 13px 22px #31513c66,inset 0 0 0 2px #d5a34e;transform:translateY(0) rotate(-2deg);transition:transform .22s,box-shadow .22s,filter .22s;position:relative}
+.attendance-link:before{content:"";position:absolute;inset:7px;border:2px dashed #d4a04c;border-radius:16px;pointer-events:none}
+.attendance-link:hover{transform:translateY(-6px) rotate(0);filter:brightness(1.06);box-shadow:0 12px 0 #a96d37,0 18px 25px #31513c66}
+.attendance-link:focus-visible{outline:4px solid #fff;outline-offset:5px}
+.attendance-icon{font-size:clamp(34px,4vw,48px);line-height:1.1;filter:drop-shadow(0 3px 1px #a96d3755)}
+.attendance-title{font-size:clamp(17px,1.8vw,21px);font-weight:1000;letter-spacing:.04em}
+.attendance-subtitle{font-size:13px;font-weight:800;color:#76562e}
+.attendance-arrow{margin-top:3px;padding:5px 13px;border-radius:20px;background:#fff0b5;color:#70451f;font-size:13px;font-weight:900;box-shadow:0 2px 0 #d6a04b}
+@media(max-width:700px){.center{grid-column:1/-1;grid-row:2;order:5;margin:2px 0 8px}.attendance-link{width:190px;min-height:138px}.attendance-icon{font-size:38px}}
+@media(prefers-reduced-motion:reduce){.attendance-link{transition:none}}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
@@ -444,7 +457,7 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 <section class="village v-math"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🔢</div><div class="house">📐</div></div><button class="village-label" onclick="openVillage('math')">🔢 數學村</button></section>
 <section class="village v-en"><span class="trees">🌲 🌳</span><div class="buildings"><div class="house">🔤</div><div class="house">🗣️</div></div><button class="village-label" onclick="openVillage('en')">🔤 英文村</button></section>
 <section class="village v-special"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🤝</div><div class="house">💡</div></div><button class="village-label" onclick="openVillage('special')">🤝 特需村</button></section>
-<div class="center"><div class="mascot" aria-label="學習夥伴">🤖</div><div class="center-note" id="buddyLine">嗨！我是島島隊長<br>今天一起完成冒險任務！</div></div>
+<div class="center"><a class="attendance-link" href="https://hy199421-beep.github.io/classroom/gemini-code-1789099846515.html" target="_blank" rel="noopener noreferrer" aria-label="開啟學生每日登入打卡與出缺席紀錄"><span class="attendance-icon">📋</span><span class="attendance-title">每日登入打卡</span><span class="attendance-subtitle">學生出缺席紀錄</span><span class="attendance-arrow">點我進入 ➜</span></a></div>
 </div>
 <div class="character-row" aria-label="冒險夥伴小隊"><div class="hero" data-name="島島隊長">🤖</div><div class="hero" data-name="語文精靈">🦊</div><div class="hero" data-name="數學博士">🐼</div><div class="hero" data-name="勇氣夥伴">🐰</div></div>
 <div class="quest-banner"><span class="quest-icon">🗺️</span><span>今日任務：挑選一座村莊，完成一個挑戰！</span></div>

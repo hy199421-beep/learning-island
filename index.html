@@ -532,6 +532,22 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 @keyframes sailAway{0%{transform:translate(0,0) scale(1) rotate(-2deg)}35%{transform:translate(45px,-15px) scale(.82) rotate(3deg)}100%{transform:translate(170px,-100px) scale(.12) rotate(5deg);opacity:.2}}
 @keyframes wakeAway{0%{transform:scaleX(1);opacity:.8}100%{transform:translate(110px,-60px) scaleX(.1);opacity:0}}
 @media(prefers-reduced-motion:reduce){.sailing-boat,.sailing-wake{animation-duration:.01ms}}
+
+/* 改為實體登船港口造景：不再繪製模擬海面、沙灘或礁石 */
+.harbor-scene{left:-190px;top:2%;width:220px;height:190px;overflow:visible}
+.harbor-scene:before{content:"";position:absolute;left:-10px;right:-10px;bottom:5px;height:72px;border:5px solid #765033;border-radius:10px 10px 5px 5px;background:repeating-linear-gradient(90deg,#c18a52 0 25px,#a66f3e 26px 29px);box-shadow:0 9px 0 #65452f,0 14px 12px #493d2c55;transform:perspective(260px) rotateX(12deg);z-index:-1}
+.harbor-scene:after{content:"登船候船區";position:absolute;left:15px;top:7px;padding:5px 11px;border:2px solid #e8c98e;border-radius:7px;background:linear-gradient(#fff0c9,#d6a45f);color:#67472d;font-size:12px;font-weight:1000;letter-spacing:.08em;box-shadow:0 3px 0 #80552f;z-index:4;pointer-events:none}
+.harbor-water{display:none}
+.harbor-scene .harbor-pier{left:5%;right:5%;bottom:12px;height:82px;border:5px solid #70482d;border-radius:8px;background:repeating-linear-gradient(90deg,#bd854b 0 26px,#966137 27px 30px);box-shadow:0 8px 0 #563923,0 13px 13px #493d2c55;transform:perspective(230px) rotateX(13deg);z-index:2}
+.harbor-scene .harbor-pier:before{left:-12px;right:-12px;top:-8px;height:13px}
+.harbor-scene .pier-post{top:-21px;height:28px}
+.harbor-scene .pier-lamp{right:-26px;top:-57px}
+.harbor-boat{right:4px;top:65px;width:86px;height:65px;z-index:5;animation:mooredBoat 3.5s ease-in-out infinite}
+.boat-sail{left:16px;top:-12px;font-size:43px}
+.boat-hull{left:7px;bottom:0;width:67px;height:15px}
+.boat-destination{left:-42px;top:-29px;padding:6px 11px;font-size:13px;z-index:8}
+.harbor-rope{left:4%;bottom:25px;width:34px;z-index:6}
+@media(max-width:700px){.harbor-scene{left:auto;top:auto;width:220px;height:170px;margin:0 auto 4px}.harbor-scene:before{left:-8px;right:-8px;height:62px}.harbor-scene:after{left:12px;top:4px}.harbor-scene .harbor-pier{bottom:9px;height:72px}.harbor-boat{top:59px;right:5px}}
 </style></head>
 <body><div class="sailing-transition" id="sailingTransition" aria-hidden="true"><div class="sailing-sky"></div><div class="sailing-horizon"></div><div class="sailing-title">⛵ 正在航向作者島…</div><div class="sailing-wake"></div><div class="sailing-boat">⛵</div></div><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>

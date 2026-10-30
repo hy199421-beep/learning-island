@@ -109,6 +109,46 @@ body.cn-open .practice{background:#f5e7c9;border:1px solid #c8a66b}
 /* User-provided academy artwork as the Chinese village backdrop */
 body.cn-open .modal{background:linear-gradient(#24150d66,#24150d99),url('./assets/chinese-academy-bg.webp') center center/cover fixed no-repeat!important;backdrop-filter:none}
 body.cn-open .panel{background:linear-gradient(90deg,#fff5e9ee,#fff8e9f2);backdrop-filter:blur(2px)}
+
+/* 書院背景正式套用：以使用者提供的書院圖作為整個國文頁場景 */
+body.cn-open .modal{
+  background:
+    linear-gradient(180deg,rgba(32,17,10,.18),rgba(32,17,10,.48)),
+    url('./assets/chinese-academy-bg.webp') center center / cover no-repeat fixed !important;
+  padding:clamp(8px,2vw,24px);
+}
+body.cn-open .panel{
+  width:min(1180px,96vw);
+  max-height:94vh;
+  overflow-y:auto;
+  border:clamp(5px,1vw,12px) solid #59351f;
+  outline:2px solid #d6ad65;
+  border-radius:8px;
+  background:linear-gradient(135deg,rgba(255,248,230,.96),rgba(250,235,204,.94));
+  box-shadow:0 0 0 5px rgba(41,22,13,.65),0 22px 50px rgba(18,9,4,.6);
+}
+body.cn-open .topic-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:900px;margin:24px auto}
+body.cn-open .topic{
+  min-height:190px;
+  padding:22px 16px;
+  border:7px solid #704329;
+  border-top-width:12px;border-bottom-width:12px;
+  border-radius:5px;
+  background:
+    radial-gradient(ellipse at 12% 90%,rgba(192,158,104,.16),transparent 30%),
+    linear-gradient(135deg,#fff9e9,#f1e2c2);
+  box-shadow:inset 0 0 0 2px #d7bd88,0 8px 0 #352014,0 12px 18px #2b160d55;
+}
+body.cn-open .topic strong{font-size:clamp(19px,2vw,25px);color:#44291b}
+body.cn-open .topic small{font-size:14px;line-height:1.6}
+body.cn-open .cn-detail{background:rgba(255,249,235,.97)}
+body.cn-open .cn-actions button{font-size:17px;padding:15px 18px}
+@media(max-width:700px){
+ body.cn-open .modal{padding:8px;background-position:center;background-attachment:scroll}
+ body.cn-open .panel{width:100%;max-height:96vh;padding:14px 12px}
+ body.cn-open .topic-grid{grid-template-columns:1fr;gap:15px}
+ body.cn-open .topic{min-height:145px}
+}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
@@ -129,13 +169,13 @@ body.cn-open .panel{background:linear-gradient(90deg,#fff5e9ee,#fff8e9f2);backdr
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="cn-detail" id="cnDetail"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>
 <script>
 const data={
-cn:{title:'📘 國文村',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命中的碎珠','課文閱讀｜重要片段與生命體會']]},
+cn:{title:'📘 國文村',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命的碎珠','課文閱讀｜重要片段與生命體會']]},
 math:{title:'🔢 數學村',desc:'動動腦、找方法，數學任務等你來解鎖！',topics:[['➕','數與計算','整數、小數與四則運算'],['🧩','代數入門','認識符號與簡單算式'],['📐','幾何世界','圖形、角度與周長面積'],['🛒','生活數學','時間、金錢與數量應用']]},
 en:{title:'🔤 英文村',desc:'Say hello! 從字母、單字到簡單對話。',topics:[['🔠','字母與發音','認識英文字母與基本發音'],['🍎','生活單字','累積常見生活英語單字'],['💬','基礎句型','練習日常問候與句子'],['📗','簡易閱讀','讀懂短句與生活情境']]},
 special:{title:'🤝 特需村',desc:'練習生活中的重要能力，讓每天都更有自信！',topics:[['🤝','社會技巧','打招呼、輪流、合作與交友'],['🧠','學習策略','訂目標、整理步驟與記憶'],['💬','溝通表達','表達需求、傾聽與適當回應'],['🌈','情緒管理','辨認情緒並找到調節方法'],['🎒','自我管理','時間安排、物品整理與負責']]}}
 const quiz=[
 {q:'《愛蓮說》中，作者藉由蓮花主要想表達什麼？',a:['君子的高尚品格','秋天景色的美麗','種植花草的方法','對富貴生活的嚮往'],c:0,why:'作者以蓮花象徵潔身自好、不隨俗浮沉的君子品格。'},
-{q:'閱讀《生命中的碎珠》時，哪一種方式最能幫助理解課文？',a:['找出重要片段並思考帶來的體會','只背第一句','跳過不懂的段落','只計算文章有幾個字'],c:0,why:'閱讀時可以整理重要片段、事件與作者想傳達的感受。'},
+{q:'閱讀《生命的碎珠》時，哪一種方式最能幫助理解課文？',a:['找出重要片段並思考帶來的體會','只背第一句','跳過不懂的段落','只計算文章有幾個字'],c:0,why:'閱讀時可以整理重要片段、事件與作者想傳達的感受。'},
 {q:'看到一篇文章的標題，最適合先做什麼？',a:['猜猜文章可能談什麼','直接跳到最後一段','只看標點符號','把書本合起來'],c:0,why:'先從標題預測內容，可以幫助理解文章。'},
 {q:'下列哪一個數字最大？',a:['0.8','0.65','0.75','0.5'],c:0,why:'0.8 等於 0.80，比 0.75 大。'},
 {q:'「Good morning!」通常是在什麼時候說？',a:['早上','晚上睡前','道別時','生日當天'],c:0,why:'Good morning 是早安，通常在上午使用。'},
@@ -156,7 +196,7 @@ function openLesson(i){
  detail.innerHTML='<button class="cn-back" onclick="backToLessons()">← 返回課文卷軸</button><div><span class="cn-tag">L0'+(i+1)+'</span><h3>'+lesson[1]+'</h3>'+texts+'</div><div class="cn-actions"><h3>課文選項</h3><button onclick="showLessonText('+i+')">📖　閱讀課文　›</button><button onclick="showLessonNotes('+i+')">▤　重點整理　›</button><button onclick="startPractice('+i+')">✎　闖關練習　›</button></div><div id="cnExtra" style="grid-column:1/-1"></div>';
 }
 function backToLessons(){document.getElementById('cnDetail').classList.remove('show');document.getElementById('topics').style.display='grid'}
-function showLessonText(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>愛蓮說｜課文導讀</h3><p>水陸草木之花，可愛者甚蕃。晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹。予獨愛蓮之出淤泥而不染，濯清漣而不妖……</p><p>（課文全文可依學校採用版本補齊。）</p>':'<h3>生命中的碎珠｜閱讀課文</h3><p>請依照課本版本閱讀本文，並找出讓你印象深刻的片段。</p>'}
+function showLessonText(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>愛蓮說｜課文導讀</h3><p>水陸草木之花，可愛者甚蕃。晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹。予獨愛蓮之出淤泥而不染，濯清漣而不妖……</p><p>（課文全文可依學校採用版本補齊。）</p>':'<h3>生命的碎珠｜閱讀課文</h3><p>請依照課本版本閱讀本文，並找出讓你印象深刻的片段。</p>'}
 function showLessonNotes(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>重點整理</h3><p>① 蓮：出淤泥而不染，象徵潔身自愛。<br>② 菊：隱逸者的象徵。<br>③ 牡丹：富貴者的象徵。<br>④ 本文以花喻人，表達作者對君子品格的推崇。</p>':'<h3>重點整理</h3><p>① 找出文章中的重要片段。<br>② 整理片段中的人物、事件與感受。<br>③ 思考作者想傳達的生命體會。<br>④ 練習用自己的話說出閱讀心得。</p>'}
 
 function startPractice(i){activeQuiz=currentVillage==='cn'?i%2:(i+2)%quiz.length;document.getElementById('buddyLine').innerHTML='島島隊長：勇者任務開始！仔細想一想，你一定做得到！';answered=false;document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion()}

@@ -423,346 +423,105 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 
 /* 全站統一使用標楷體 */
 *,*::before,*::after{font-family:"標楷體","DFKai-SB","BiauKai",serif !important}
-
-/* ===== 學習島群島：藍黃暖色微縮模型城市 ===== */
-.archipelago-app{min-height:100vh;position:relative;overflow:hidden;color:#3c352a;background:linear-gradient(180deg,#bce5f3 0%,#e5f0e3 52%,#dbead8 100%);font-family:"標楷體","DFKai-SB","BiauKai","Microsoft JhengHei",serif}
-.archipelago-app:before,.archipelago-app:after{content:"";position:absolute;z-index:0;pointer-events:none;border-radius:50%;filter:blur(2px)}
-.archipelago-app:before{width:520px;height:520px;top:70px;right:-200px;background:radial-gradient(circle,#fff3b888,transparent 70%)}
-.archipelago-app:after{width:460px;height:460px;bottom:30px;left:-180px;background:radial-gradient(circle,#8dd1df88,transparent 70%)}
-.arch-header{position:relative;z-index:2;max-width:1320px;margin:auto;padding:18px clamp(16px,4vw,48px);display:flex;align-items:center;justify-content:space-between;gap:16px}
-.arch-brand{display:flex;align-items:center;gap:14px}
-.arch-brand-icon{width:60px;height:60px;display:grid;place-items:center;border:3px solid #fff9e8;border-radius:20px;background:linear-gradient(145deg,#fff9df,#f1c65d);box-shadow:0 6px 0 #ba8d43,0 10px 18px #31566a33;font-size:34px}
-.arch-brand h1{margin:0;color:#194866;font-size:clamp(24px,3vw,36px);letter-spacing:.12em}
-.arch-brand p{margin:3px 0 0;color:#57768a;font-size:14px;font-weight:800}
-.arch-top-info{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-.arch-clock,.arch-stats{padding:10px 16px;border:2px solid #efd18a;border-radius:18px;background:#fff8e8e8;box-shadow:0 4px 0 #d9bd82;color:#36556c;font-weight:900}
-.arch-clock small{display:block;color:#7b715e;font-size:11px}
-.arch-stats{background:#174c70;color:#fff4d4;border-color:#91cadd;box-shadow:0 4px 0 #10354f}
-.arch-welcome{position:relative;z-index:2;max-width:1100px;margin:12px auto 0;padding:0 18px;text-align:center}
-.arch-eyebrow{display:inline-block;padding:7px 16px;border:2px solid #e9c56c;border-radius:999px;background:#fff6d9;color:#8c632b;font-weight:900;letter-spacing:.08em}
-.arch-welcome h2{margin:14px 0 7px;color:#194768;font-size:clamp(28px,4.2vw,48px);text-shadow:0 2px #fff}
-.arch-welcome p{margin:0 auto;color:#4b6e7d;font-size:clamp(15px,2vw,19px);font-weight:800;line-height:1.7}
-.arch-stage-wrap{position:relative;z-index:1;max-width:1380px;margin:22px auto 0;padding:0 22px}
-.arch-stage{position:relative;min-height:650px;overflow:hidden;border:5px solid #fff8e6;border-radius:38px;background:linear-gradient(180deg,#9ed8ec 0%,#b9e4e7 41%,#5daecb 42%,#287caa 100%);box-shadow:0 10px 0 #8baaa0,0 18px 34px #214c6030}
-.arch-stage:before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 22%,#fffbd877,transparent 35%)}
-.arch-stage:after{content:"";position:absolute;inset:auto 0 0;height:18%;z-index:0;background:repeating-linear-gradient(175deg,#ffffff16 0 2px,transparent 2px 30px)}
-#arch3d{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
-.arch-cloud{position:absolute;z-index:2;color:#fff8e8;opacity:.72;font-size:48px;filter:drop-shadow(0 5px 5px #5188a533);pointer-events:none;animation:archCloud 20s ease-in-out infinite alternate}
-.arch-cloud.one{top:38px;left:6%}.arch-cloud.two{top:100px;right:7%;animation-delay:-9s}.arch-cloud.three{top:245px;left:48%;font-size:34px}
-@keyframes archCloud{to{transform:translateX(28px)}}
-.arch-island-grid{position:relative;z-index:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,2.3vw,30px);align-items:center;max-width:1180px;margin:auto;padding:86px 26px 54px}
-.arch-island{position:relative;min-height:414px;overflow:hidden;border:3px solid #fff5d9;border-radius:30px;background:linear-gradient(145deg,#fff9e9ef,#f5e4c8ef);box-shadow:0 10px 0 #bd9c62,0 17px 26px #153d5555;transform:perspective(900px) rotateX(3deg);transition:transform .22s,box-shadow .22s,border-color .22s}
-.arch-island:nth-child(2){transform:perspective(900px) rotateX(3deg) translateY(-20px)}
-.arch-island:nth-child(3){transform:perspective(900px) rotateX(3deg) translateY(14px)}
-.arch-island:hover{transform:perspective(900px) rotateX(0) translateY(-8px);box-shadow:0 15px 0 #bd9c62,0 25px 32px #153d555e;border-color:#ffe18b}
-.arch-island-head{height:110px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(135deg,var(--island-a),var(--island-b))}
-.arch-island-head:before{content:"";position:absolute;inset:-40% -15%;background:repeating-linear-gradient(135deg,#ffffff19 0 7px,transparent 7px 20px);transform:rotate(-10deg)}
-.arch-emblem{position:relative;width:78px;height:78px;display:grid;place-items:center;border-radius:24px;background:#fff9e8ed;border:3px solid white;box-shadow:0 5px 0 #234b5c44;font-size:43px}
-.arch-island-tag{position:absolute;right:14px;top:13px;padding:5px 10px;border-radius:99px;background:#fff6db;color:#76552a;font-size:12px;font-weight:900}
-.arch-island.cn{--island-a:#72c3e3;--island-b:#317ea8}
-.arch-island.math{--island-a:#f7d676;--island-b:#d69d3f}
-.arch-island.special{--island-a:#a5cfad;--island-b:#5d9b91}
-.arch-island-body{padding:18px 20px 20px}
-.arch-island-body h3{margin:0;color:#234e68;font-size:clamp(21px,2.35vw,28px)}
-.arch-subtitle{margin:5px 0 13px;color:#776b55;font-size:14px;font-weight:800;line-height:1.55}
-.arch-chief{display:flex;align-items:center;gap:10px;padding:10px 12px;border:2px solid #c7d9bd;border-radius:17px;background:#eaf2e5}
-.arch-chief-avatar{width:56px;height:56px;flex:0 0 auto;display:grid;place-items:center;border:2px solid white;border-radius:18px;background:linear-gradient(145deg,#fff9e6,#f3d27c);box-shadow:0 4px 0 #c4a76e;font-size:30px}
-.arch-chief strong{display:block;color:#315c58;font-size:16px}
-.arch-chief small{display:block;margin-top:3px;color:#667568;font-size:12px;line-height:1.4}
-.arch-residents{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 14px}
-.arch-resident{padding:5px 8px;border:1px solid #e7d1a1;border-radius:999px;background:#fff7e5;color:#5d584a;font-size:12px;font-weight:800}
-.arch-enter{width:100%;padding:12px 14px;border:0;border-radius:15px;background:linear-gradient(180deg,#286f9c,#174b70);box-shadow:0 5px 0 #103b59;color:#fff7db;font-size:16px;font-weight:900;transition:transform .15s}
-.arch-enter:hover{transform:translateY(-2px)}
-.arch-caption{position:absolute;z-index:4;bottom:13px;left:50%;transform:translateX(-50%);padding:8px 16px;border:1px solid #a7d5de;border-radius:999px;background:#113e5dde;color:#fff3d5;font-size:13px;font-weight:900;white-space:nowrap}
-.arch-daily{position:relative;z-index:1;max-width:1080px;margin:23px auto 32px;padding:0 18px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
-.arch-daily-card{padding:12px 18px;border:2px solid #ebcb7e;border-radius:17px;background:#fff8e8;box-shadow:0 4px 0 #d5bb81;color:#66563b;font-weight:900}
-.arch-daily-card strong{color:#1c668b}
-.arch-footer{text-align:center;padding:0 16px 30px;color:#697b75;font-size:13px;font-weight:700}
-
-/* Island chief interaction dialog */
-.arch-modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:18px;background:#102f46bf;backdrop-filter:blur(7px)}
-.arch-modal.show{display:flex}
-.arch-dialog{width:min(920px,100%);max-height:92vh;overflow:auto;padding:clamp(18px,3vw,30px);border:5px solid #f4d17a;border-radius:30px;background:linear-gradient(145deg,#fff9e8,#f2e4c9);box-shadow:0 12px 0 #173d55,0 25px 60px #08233788}
-.arch-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px}
-.arch-dialog-head h2{margin:0;color:#17496b;font-size:clamp(25px,4vw,36px)}
-.arch-dialog-head p{margin:5px 0;color:#77664a;font-weight:700;line-height:1.6}
-.arch-close{width:42px;height:42px;flex:0 0 auto;border:0;border-radius:50%;background:#174e72;color:#fff5d8;font-size:25px;font-weight:900}
-.arch-profile{display:grid;grid-template-columns:106px 1fr;gap:18px;align-items:center;margin:18px 0;padding:17px;border:2px solid #d8d6ad;border-radius:22px;background:linear-gradient(110deg,#e8f4ed,#fff2d2)}
-.arch-profile-icon{width:96px;height:96px;display:grid;place-items:center;border:4px solid white;border-radius:28px;background:linear-gradient(145deg,#fff,#f2d47f);box-shadow:0 6px 0 #c3a66d;font-size:55px}
-.arch-profile h3{margin:0;color:#275a64;font-size:22px}
-.arch-profile p{margin:7px 0 0;color:#5f6757;line-height:1.7;font-weight:700}
-.arch-talk-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}
-.arch-talk-tabs button{padding:9px 15px;border:2px solid #d5b875;border-radius:999px;background:#fff8e6;color:#76572c;font-weight:900}
-.arch-talk-tabs button.active,.arch-talk-tabs button:hover{background:#f2c85f;color:#49351e}
-.arch-speech{min-height:58px;margin:12px 0 18px;padding:15px 17px;border-left:6px solid #e6b64d;border-radius:12px;background:#fffdf4;color:#4e584b;font-size:16px;line-height:1.7;font-weight:800}
-.arch-resident-list{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
-.arch-resident-list button{padding:7px 11px;border:1px solid #c7d8bf;border-radius:999px;background:#eff6eb;color:#45634e;font-weight:800}
-.arch-section-label{margin:18px 0 10px;color:#755a2d;font-size:18px;font-weight:900}
-.arch-topic-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.arch-topic{display:flex;align-items:center;gap:12px;padding:15px;border:2px solid #dfc894;border-radius:17px;background:#fffdf6;color:#4c4536;box-shadow:0 4px 0 #dfcb9b;text-align:left}
-.arch-topic:hover{background:#fff1c9;transform:translateY(-2px)}
-.arch-topic-icon{font-size:29px}
-.arch-topic strong{display:block;color:#31586c;font-size:16px}
-.arch-topic small{display:block;margin-top:3px;color:#83745b;line-height:1.4}
-.arch-practice{display:none;margin-top:18px;padding:18px;border:2px solid #d9c28e;border-radius:20px;background:#f6edd9}
-.arch-practice.show{display:block}
-.arch-practice h3{margin:0 0 12px;color:#28566d}
-.arch-practice-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.arch-practice-option{padding:12px;border:2px solid #cbb27e;border-radius:13px;background:white;color:#554632;font-weight:800;text-align:left}
-.arch-practice-option.correct{background:#e4f2db;border-color:#6a9c57}
-.arch-practice-option.wrong{background:#fae2d8;border-color:#c96d5b}
-.arch-practice-feedback{min-height:26px;margin-top:12px;font-weight:900;line-height:1.6}
-.arch-practice-next{margin-top:12px;padding:11px 18px;border:0;border-radius:12px;background:#1d658e;color:white;font-weight:900}
-.arch-dialog-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:20px}
-.arch-dialog-footer small{color:#8a795d;font-weight:700}
-.arch-back{padding:11px 18px;border:0;border-radius:12px;background:#174e72;color:#fff4d7;font-weight:900}
-@media(max-width:960px){.arch-island-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px;padding-top:54px}.arch-island:nth-child(2),.arch-island:nth-child(3){transform:none}.arch-island.special{grid-column:1/-1;max-width:380px;width:100%;justify-self:center}.arch-stage{min-height:0}}
-@media(max-width:620px){
- .arch-header{align-items:flex-start;flex-direction:column;padding:13px 15px}
- .arch-top-info{width:100%;justify-content:space-between}
- .arch-clock,.arch-stats{padding:8px 12px;font-size:13px}
- .arch-welcome{margin-top:5px}
- .arch-stage-wrap{padding:0 10px;margin-top:18px}
- .arch-stage{border-radius:23px}
- .arch-island-grid{grid-template-columns:1fr;max-width:410px;padding:25px 14px 60px;gap:17px}
- .arch-island,.arch-island.special{grid-column:auto;max-width:none;min-height:0}
- .arch-island-head{height:84px}.arch-island-body{padding:14px}
- .arch-caption{max-width:94%;font-size:11px;text-align:center;white-space:normal}
- .arch-daily{margin:16px auto 25px}
- .arch-profile{grid-template-columns:76px 1fr;gap:12px;padding:12px}
- .arch-profile-icon{width:70px;height:70px;border-radius:22px;font-size:42px}
- .arch-topic-grid,.arch-practice-options{grid-template-columns:1fr}
- .arch-dialog{border-radius:22px;padding:16px;max-height:94vh}
- .arch-dialog-footer{align-items:flex-start;flex-direction:column}
-}
-@media(prefers-reduced-motion:reduce){.archipelago-app *{animation:none!important;transition:none!important}}
 </style></head>
-<body>
-<div class="archipelago-app">
- <header class="arch-header">
-  <div class="arch-brand"><div class="arch-brand-icon">🏝️</div><div><h1>學習島群島</h1><p>登島探索・和精靈島民一起成長</p></div></div>
-  <div class="arch-top-info"><div class="arch-clock"><small id="todayDate">今日日期</small><span id="liveClock">--:--:--</span></div><div class="arch-stats">⭐ <span id="stars">0</span> 星　・　🏅 <span id="done">0</span> 次練習</div></div>
- </header>
- <section class="arch-welcome"><span class="arch-eyebrow">WELCOME TO LEARNING ARCHIPELAGO</span><h2>歡迎登島！今天想和哪位精靈一起學習？</h2><p>三座六角形知識小島漂浮在溫暖海灣，每座島都有自己的島長與夥伴，等你來探索。</p></section>
- <main class="arch-stage-wrap">
-  <section class="arch-stage" aria-label="3D 學習群島">
-   <span class="arch-cloud one">☁</span><span class="arch-cloud two">☁</span><span class="arch-cloud three">✦</span><canvas id="arch3d" aria-hidden="true"></canvas>
-   <div class="arch-island-grid">
-    <article class="arch-island cn">
-     <div class="arch-island-head"><span class="arch-emblem">📚</span><span class="arch-island-tag">閱讀・表達・思考</span></div>
-     <div class="arch-island-body"><h3>國文島・墨香灣</h3><p class="arch-subtitle">走進故事、課文與文字的世界</p><div class="arch-chief"><span class="arch-chief-avatar">🦊🦌</span><span><strong>島長：墨墨</strong><small>鹿角狐精靈｜文字森林的守護者</small></span></div><div class="arch-residents"><span class="arch-resident">🦉🐰 卷卷</span><span class="arch-resident">🐱🦋 字字</span></div><button class="arch-enter" onclick="openArchIsland('cn')">和墨墨打招呼・登島 ➜</button></div>
-    </article>
-    <article class="arch-island math">
-     <div class="arch-island-head"><span class="arch-emblem">🔢</span><span class="arch-island-tag">推理・計算・發現</span></div>
-     <div class="arch-island-body"><h3>數學島・星算丘</h3><p class="arch-subtitle">把數字變成看得見的生活線索</p><div class="arch-chief"><span class="arch-chief-avatar">🐻🐝</span><span><strong>島長：算算</strong><small>熊蜂精靈｜數字謎題的領航員</small></span></div><div class="arch-residents"><span class="arch-resident">🐢🐿️ 尺尺</span><span class="arch-resident">🦦🐧 數數</span></div><button class="arch-enter" onclick="openArchIsland('math')">和算算打招呼・登島 ➜</button></div>
-    </article>
-    <article class="arch-island special">
-     <div class="arch-island-head"><span class="arch-emblem">🌈</span><span class="arch-island-tag">溝通・情緒・生活</span></div>
-     <div class="arch-island-body"><h3>特需島・暖心港</h3><p class="arch-subtitle">練習生活能力，發現自己的閃亮之處</p><div class="arch-chief"><span class="arch-chief-avatar">🐰🐬</span><span><strong>島長：暖暖</strong><small>兔豚精靈｜勇氣與溫柔的陪伴者</small></span></div><div class="arch-residents"><span class="arch-resident">🦁🐶 勇勇</span><span class="arch-resident">🐨🦊 抱抱</span></div><button class="arch-enter" onclick="openArchIsland('special')">和暖暖打招呼・登島 ➜</button></div>
-    </article>
-   </div>
-   <div class="arch-caption">🌊 點選島長，聽聽島上的學習特色，再挑選今天的課程任務</div>
-  </section>
- </main>
- <section class="arch-daily"><div class="arch-daily-card">🧭 今日登島任務：<strong>選一座島，完成一個小挑戰</strong></div><div class="arch-daily-card">🌟 今日練習 <strong id="todayCount">0</strong> 回</div><div class="arch-daily-card">🏡 群島居民：<strong>9 位精靈夥伴</strong></div></section>
- <p class="arch-footer">每一次嘗試都值得被記錄。慢慢來，你正在累積自己的星星。</p>
-</div>
+<body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
+<div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
+<header class="header"><div class="brand"><span class="brand-icon">🏝️</span><div><h1>學習島</h1><p>每天一小步，能力大冒險！</p></div></div><div class="stats">⭐ <span id="stars">0</span> 星星　🏅 <span id="done">0</span> 次練習</div></header>
+<section class="welcome"><h2>嗨！小小探險家，今天想去哪一村？</h2><p>選一座學習村莊，開始你的知識冒險吧！</p></section>
+<div class="villages">
+<section class="village v-cn"><span class="trees">🌸 🌳</span><div class="buildings"><div class="house">📖</div><div class="house">🪷</div></div><button class="village-label" onclick="openVillage('cn')">📖 國文村</button></section>
 
-<div class="arch-modal" id="archModal" role="dialog" aria-modal="true" aria-labelledby="archDialogTitle" onclick="if(event.target===this)closeArchIsland()">
- <section class="arch-dialog">
-  <div class="arch-dialog-head"><div><h2 id="archDialogTitle">登島中</h2><p id="archDialogSub">島長正走來迎接你</p></div><button class="arch-close" onclick="closeArchIsland()" aria-label="關閉">×</button></div>
-  <div class="arch-profile"><div class="arch-profile-icon" id="archLeaderAvatar">🦊🦌</div><div><h3 id="archLeaderName">島長墨墨</h3><p id="archLeaderIntro">嗨！歡迎來到我的島。</p></div></div>
-  <div class="arch-talk-tabs"><button class="active" id="archTalkFeature" onclick="archLeaderTalk('feature')">✨ 認識島上的課程</button><button id="archTalkMission" onclick="archLeaderTalk('mission')">🧭 今日小任務</button><button id="archTalkResidents" onclick="archLeaderTalk('residents')">🐾 認識島民</button></div>
-  <div class="arch-speech" id="archLeaderSpeech" aria-live="polite">島長正在向你介紹這座島。</div>
-  <div class="arch-resident-list" id="archResidentList"></div>
-  <h3 class="arch-section-label">選擇一個學習小任務</h3><div class="arch-topic-grid" id="archTopicGrid"></div>
-  <section class="arch-practice" id="archPracticeBox"><h3 id="archPracticeTitle">小小挑戰</h3><p id="archPracticeQuestion"></p><div class="arch-practice-options" id="archPracticeOptions"></div><div class="arch-practice-feedback" id="archPracticeFeedback" aria-live="polite"></div><button class="arch-practice-next" id="archPracticeNext" onclick="nextArchPractice()">下一題 ➜</button></section>
-  <div class="arch-dialog-footer"><small>和島長一起學習，不用急，答錯也能再試一次。</small><button class="arch-back" onclick="closeArchIsland()">返回群島</button></div>
- </section>
+<section class="village v-math"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🔢</div><div class="house">📐</div></div><button class="village-label" onclick="openVillage('math')">🔢 數學村</button></section>
+<section class="village v-en"><span class="trees">🌲 🌳</span><div class="buildings"><div class="house">🔤</div><div class="house">🗣️</div></div><button class="village-label" onclick="openVillage('en')">🔤 英文村</button></section>
+<section class="village v-special"><span class="trees">🌳 🌲</span><div class="buildings"><div class="house">🤝</div><div class="house">💡</div></div><button class="village-label" onclick="openVillage('special')">🤝 特需村</button></section>
+<div class="center"><div class="mascot" aria-label="學習夥伴">🤖</div><div class="center-note" id="buddyLine">嗨！我是島島隊長<br>今天一起完成冒險任務！</div></div>
 </div>
-
+<div class="character-row" aria-label="冒險夥伴小隊"><div class="hero" data-name="島島隊長">🤖</div><div class="hero" data-name="語文精靈">🦊</div><div class="hero" data-name="數學博士">🐼</div><div class="hero" data-name="勇氣夥伴">🐰</div></div>
+<div class="quest-banner"><span class="quest-icon">🗺️</span><span>今日任務：挑選一座村莊，完成一個挑戰！</span></div>
+<div class="bottom"><div class="daily">📌 今日練了 <span id="today">0</span> 回・點村莊出發</div></div>
+<span class="tree-deco t1">🌳</span><span class="tree-deco t2">🌲</span><span class="tree-deco t3">🌳</span><span class="tree-deco t4">🌲</span>
+</div></main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="cn-detail" id="cnDetail"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>
 <script>
-const archData={
- cn:{
-  title:'國文島・墨香灣',subtitle:'閱讀・表達・思考',leader:'墨墨',avatar:'🦊🦌',species:'鹿角狐精靈',
-  intro:'嗨！我是墨墨，喜歡在文字森林裡尋找故事寶藏。讀課文時，我會陪你找重點、認識詞語，也練習說出自己的想法。',
-  feature:'國文島會陪你讀懂課文、認識國字注音、理解詞語意思，還能練習用自己的話說出文章重點。每次讀懂一小段，都是新的發現！',
-  mission:'今日任務：選一篇課文，完成一個閱讀挑戰，收集一顆知識星星！',
-  residents:[['🦉🐰','卷卷｜貓頭鷹兔','喜歡把課文重點整理成小卡片。'],['🐱🦋','字字｜蝶翼貓','擅長找出有趣的詞語和句子。']],
-  topics:[['🪷','愛蓮說','周敦頤｜閱讀古文，認識蓮花與君子品格。'],['💎','生命中的碎珠','閱讀課文，練習國字注音和詞語解釋。']],tasks:[]
- },
- math:{
-  title:'數學島・星算丘',subtitle:'推理・計算・發現',leader:'算算',avatar:'🐻🐝',species:'熊蜂精靈',
-  intro:'哈囉！我是算算！我喜歡把生活中的數字變成有趣的謎題。遇到難題別緊張，我們一起拆成小步驟。',
-  feature:'數學島有數與計算、代數入門、幾何觀察和生活數學。可以用圖像想一想、一步一步算，找到自己的解題方法。',
-  mission:'今日任務：解開一題生活數學謎題，看看你能不能找到不同的方法！',
-  residents:[['🐢🐿️','尺尺｜龜松鼠','喜歡量長度、找形狀。'],['🦦🐧','數數｜水獺企鵝','最會把大題目拆成小步驟。']],
-  topics:[['➕','數與計算','整數、小數與四則運算。'],['🧩','代數入門','認識符號與簡單算式。'],['📐','幾何世界','圖形、角度與周長面積。'],['🛒','生活數學','時間、金錢與數量應用。']],
-  tasks:[
-   [{q:'8 + 7 = ?',a:['13','14','15','16'],c:2,why:'8 加 7 等於 15。可以先把 8 加 2 變成 10，再加 5。'},{q:'哪一個數字最大？',a:['0.8','0.65','0.75','0.5'],c:0,why:'0.8 可以看成 0.80，比 0.75 大。'}],
-   [{q:'□ + 5 = 12，□ 是多少？',a:['5','6','7','8'],c:2,why:'12 減去 5 等於 7。'}],
-   [{q:'三角形有幾條邊？',a:['2','3','4','5'],c:1,why:'三角形有三條邊、三個角。'},{q:'正方形有幾個角？',a:['2','3','4','5'],c:2,why:'正方形有四個角。'}],
-   [{q:'現在 3 點，過 2 小時是幾點？',a:['4 點','5 點','6 點','7 點'],c:1,why:'3 點再過 2 小時就是 5 點。'},{q:'一支筆 12 元，買 2 支要多少元？',a:['14 元','20 元','22 元','24 元'],c:3,why:'12 + 12 = 24 元。'}]
-  ]
- },
- special:{
-  title:'特需島・暖心港',subtitle:'溝通・情緒・生活',leader:'暖暖',avatar:'🐰🐬',species:'兔豚精靈',
-  intro:'你好呀！我是暖暖。每個人的步調都不一樣，在這裡可以安心練習表達、交朋友、整理心情和照顧自己。',
-  feature:'特需島有社會技巧、溝通表達、情緒管理、學習策略和自我管理。會用生活情境練習，一次學會一個小方法。',
-  mission:'今日任務：練習說出自己的需要，或用一個好方法照顧今天的心情。',
-  residents:[['🦁🐶','勇勇｜獅子小狗','陪你練習勇敢開口、輪流和合作。'],['🐨🦊','抱抱｜無尾熊狐','陪你辨認心情，找一個舒服的方法。']],
-  topics:[['🤝','社會技巧','打招呼、輪流、合作與交友。'],['💬','溝通表達','表達需求、傾聽與適當回應。'],['🌦️','情緒管理','辨認情緒並找到調節方法。'],['🧠','學習策略','訂目標、整理步驟與記憶。'],['🎒','自我管理','時間安排、物品整理與負責。']],
-  tasks:[
-   [{q:'同學正在說話時，友善的做法是？',a:['先聽對方說完','大聲打斷','轉身走掉','嘲笑對方'],c:0,why:'先聆聽對方說完，再輪流表達想法。'},{q:'想請同學幫忙，可以怎麼說？',a:['你一定要幫我','可以請你幫我一下嗎？','不要理我','快點啦'],c:1,why:'用有禮貌又清楚的話表達需要。'}],
-   [{q:'想加入同學的遊戲，可以先說？',a:['走開！','我才不想玩','我可以一起玩嗎？','你們都不對'],c:2,why:'先詢問對方，是友善加入活動的方式。'},{q:'合作時，最重要的是？',a:['只聽自己的','搶先完成','不讓別人參加','輪流、溝通和分工'],c:3,why:'合作需要輪流、傾聽、溝通與分工。'}],
-   [{q:'覺得很生氣時，可以先做什麼？',a:['停一下，慢慢深呼吸','馬上大吼','丟東西','推別人'],c:0,why:'先停下來深呼吸，讓身體慢慢平靜。'}],
-   [{q:'開始做作業前，哪個方法有幫助？',a:['什麼都不整理','先看清楚題目和步驟','一直換事情做','把作業藏起來'],c:1,why:'先看清楚任務，再分成小步驟完成。'}],
-   [{q:'出門前，怎麼做比較不容易忘記東西？',a:['不看書包','等別人提醒','照清單檢查用品','把東西隨便放'],c:2,why:'使用清單逐項檢查，可以幫助自己管理物品。'}]
-  ]
- }
-};
-let archCurrent='cn',archTasks=[],archTaskIndex=0,archAnswered=false;
-const archStore=(()=>{try{return JSON.parse(localStorage.getItem('learningIsland')||'{"stars":0,"done":0,"today":0,"date":""}')}catch(e){return {stars:0,done:0,today:0,date:''}}})();
-function archLocalDate(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
-function updateArchClock(){
- const now=new Date();
- document.getElementById('todayDate').textContent=new Intl.DateTimeFormat('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'long'}).format(now);
- document.getElementById('liveClock').textContent=new Intl.DateTimeFormat('zh-TW',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
- if(archStore.date!==archLocalDate()){archStore.date=archLocalDate();archStore.today=0;saveArchStore()}
+const data={
+cn:{title:'國文書坊',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命的碎珠','課文閱讀｜重要片段與生命體會']]},
+math:{title:'🔢 數學村',desc:'動動腦、找方法，數學任務等你來解鎖！',topics:[['➕','數與計算','整數、小數與四則運算'],['🧩','代數入門','認識符號與簡單算式'],['📐','幾何世界','圖形、角度與周長面積'],['🛒','生活數學','時間、金錢與數量應用']]},
+en:{title:'🔤 英文村',desc:'Say hello! 從字母、單字到簡單對話。',topics:[['🔠','字母與發音','認識英文字母與基本發音'],['🍎','生活單字','累積常見生活英語單字'],['💬','基礎句型','練習日常問候與句子'],['📗','簡易閱讀','讀懂短句與生活情境']]},
+special:{title:'🤝 特需村',desc:'練習生活中的重要能力，讓每天都更有自信！',topics:[['🤝','社會技巧','打招呼、輪流、合作與交友'],['🧠','學習策略','訂目標、整理步驟與記憶'],['💬','溝通表達','表達需求、傾聽與適當回應'],['🌈','情緒管理','辨認情緒並找到調節方法'],['🎒','自我管理','時間安排、物品整理與負責']]}}
+const quiz=[
+{q:'《愛蓮說》中，作者藉由蓮花主要想表達什麼？',a:['君子的高尚品格','秋天景色的美麗','種植花草的方法','對富貴生活的嚮往'],c:0,why:'作者以蓮花象徵潔身自好、不隨俗浮沉的君子品格。'},
+{q:'閱讀《生命的碎珠》時，哪一種方式最能幫助理解課文？',a:['找出重要片段並思考帶來的體會','只背第一句','跳過不懂的段落','只計算文章有幾個字'],c:0,why:'閱讀時可以整理重要片段、事件與作者想傳達的感受。'},
+{q:'看到一篇文章的標題，最適合先做什麼？',a:['猜猜文章可能談什麼','直接跳到最後一段','只看標點符號','把書本合起來'],c:0,why:'先從標題預測內容，可以幫助理解文章。'},
+{q:'下列哪一個數字最大？',a:['0.8','0.65','0.75','0.5'],c:0,why:'0.8 等於 0.80，比 0.75 大。'},
+{q:'「Good morning!」通常是在什麼時候說？',a:['早上','晚上睡前','道別時','生日當天'],c:0,why:'Good morning 是早安，通常在上午使用。'},
+{q:'同學正在說話時，友善的做法是？',a:['先聽對方說完','大聲打斷','轉身走掉','嘲笑對方'],c:0,why:'先聆聽對方說完，再輪流表達想法。'}
+];
+let activeQuiz=0,answered=false,currentVillage='';const store=JSON.parse(localStorage.getItem('learningIsland')||'{"stars":0,"done":0,"today":0}');
+function sync(){document.getElementById('stars').textContent=store.stars;document.getElementById('done').textContent=store.done;document.getElementById('today').textContent=store.today}
+function openVillage(key){currentVillage=key;document.body.classList.toggle('cn-open',key==='cn');document.getElementById('cnDetail').classList.remove('show');const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};document.getElementById('buddyLine').innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>key==='cn'?openLesson(i):startPractice(i);if(key==='cn'){b.innerHTML='<span class="cn-code">L0'+(i+1)+'</span><span class="emoji">'+t[0]+'</span><strong>'+t[1]+'</strong><span class="cn-status">● ● ● ●<br>未修練</span>'}box.appendChild(b)});document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show');document.body.classList.remove('cn-open');document.getElementById('topics').style.display='grid';document.getElementById('cnDetail').classList.remove('show')}
+
+function openLesson(i){
+ const lesson=data.cn.topics[i];
+ const url='lesson.html?lesson='+encodeURIComponent(i===0?'ailian':'life-fragments');
+ window.open(url,'_blank','noopener');
 }
-function saveArchStore(){try{localStorage.setItem('learningIsland',JSON.stringify(archStore))}catch(e){}}
-function syncArchStats(){document.getElementById('stars').textContent=archStore.stars||0;document.getElementById('done').textContent=archStore.done||0;document.getElementById('todayCount').textContent=archStore.today||0}
-function openArchIsland(key){
- archCurrent=key;const d=archData[key];
- document.getElementById('archDialogTitle').textContent=d.title;
- document.getElementById('archDialogSub').textContent=d.subtitle+'｜和島長一起探索';
- document.getElementById('archLeaderAvatar').textContent=d.avatar;
- document.getElementById('archLeaderName').textContent='島長 '+d.leader+'・'+d.species;
- document.getElementById('archLeaderIntro').textContent=d.intro;
- document.getElementById('archLeaderSpeech').textContent=d.feature;
- document.querySelectorAll('.arch-talk-tabs button').forEach((b,i)=>b.classList.toggle('active',i===0));
- renderArchResidents();renderArchTopics();
- document.getElementById('archPracticeBox').classList.remove('show');
- document.getElementById('archPracticeNext').disabled=false;
- document.getElementById('archModal').classList.add('show');document.body.style.overflow='hidden';
-}
-function closeArchIsland(){document.getElementById('archModal').classList.remove('show');document.getElementById('archPracticeBox').classList.remove('show');document.body.style.overflow=''}
-function archLeaderTalk(kind){
- const d=archData[archCurrent];
- const text={feature:d.feature,mission:d.mission,residents:'島上的夥伴有：'+d.residents.map(r=>r[1]).join('、')+'。點選名字，聽聽他們最擅長的事！'};
- document.getElementById('archLeaderSpeech').textContent=text[kind];
- document.querySelectorAll('.arch-talk-tabs button').forEach(b=>b.classList.remove('active'));
- document.getElementById(kind==='feature'?'archTalkFeature':kind==='mission'?'archTalkMission':'archTalkResidents').classList.add('active');
-}
-function renderArchResidents(){
- const d=archData[archCurrent],box=document.getElementById('archResidentList');box.innerHTML='';
- d.residents.forEach(r=>{const b=document.createElement('button');b.type='button';b.textContent=r[0]+' '+r[1];b.onclick=()=>document.getElementById('archLeaderSpeech').textContent=r[2];box.appendChild(b)});
-}
-function renderArchTopics(){
- const d=archData[archCurrent],box=document.getElementById('archTopicGrid');box.innerHTML='';
- d.topics.forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.className='arch-topic';b.innerHTML='<span class="arch-topic-icon">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>startArchTopic(i);box.appendChild(b)});
-}
-function startArchTopic(index){
- if(archCurrent==='cn'){window.open('lesson.html?lesson='+(index===0?'ailian':'life-fragments'),'_blank','noopener');return}
- const topic=archData[archCurrent].topics[index];archTasks=archData[archCurrent].tasks[index]||[];archTaskIndex=0;
- document.getElementById('archPracticeTitle').textContent=topic[1]+'・島長小挑戰';
- document.getElementById('archPracticeBox').classList.add('show');
- if(!archTasks.length){document.getElementById('archPracticeQuestion').textContent='島長正在準備這個主題的任務，先和島長聊聊學習方法吧！';document.getElementById('archPracticeOptions').innerHTML='';document.getElementById('archPracticeFeedback').textContent='';document.getElementById('archPracticeNext').disabled=true;return}
- document.getElementById('archPracticeNext').disabled=false;renderArchTask();document.getElementById('archPracticeBox').scrollIntoView({behavior:'smooth',block:'nearest'});
-}
-function renderArchTask(){
- const q=archTasks[archTaskIndex];archAnswered=false;document.getElementById('archPracticeQuestion').textContent=q.q;document.getElementById('archPracticeFeedback').textContent='';
- const box=document.getElementById('archPracticeOptions');box.innerHTML='';
- q.a.forEach((answer,i)=>{const b=document.createElement('button');b.type='button';b.className='arch-practice-option';b.textContent=['A','B','C','D'][i]+'．'+answer;b.onclick=()=>answerArchTask(i,b);box.appendChild(b)});
- document.getElementById('archPracticeNext').textContent=archTaskIndex===archTasks.length-1?'完成任務':'下一題 ➜';
-}
-function answerArchTask(index,button){
- if(archAnswered)return;archAnswered=true;const q=archTasks[archTaskIndex];
- [...document.querySelectorAll('.arch-practice-option')].forEach((b,i)=>{b.disabled=true;if(i===q.c)b.classList.add('correct')});
- if(index===q.c){archStore.stars=(archStore.stars||0)+1;document.getElementById('archPracticeFeedback').textContent='🌟 答對了！'+q.why}
- else{button.classList.add('wrong');document.getElementById('archPracticeFeedback').textContent='再想一想！正確答案已標示。'+q.why}
- archStore.done=(archStore.done||0)+1;archStore.today=(archStore.today||0)+1;saveArchStore();syncArchStats();
-}
-function nextArchPractice(){
- if(!archAnswered){document.getElementById('archPracticeFeedback').textContent='先選一個答案再繼續喔！';return}
- if(archTaskIndex<archTasks.length-1){archTaskIndex++;renderArchTask()}
- else{document.getElementById('archPracticeFeedback').textContent='🎉 任務完成！你又累積了一次學習經驗。';document.getElementById('archPracticeNext').disabled=true}
-}
-updateArchClock();window.setInterval(updateArchClock,1000);syncArchStats();
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeArchIsland()});
+function backToLessons(){document.getElementById('cnDetail').classList.remove('show');document.getElementById('topics').style.display='grid'}
+function showLessonText(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>愛蓮說｜課文導讀</h3><p>水陸草木之花，可愛者甚蕃。晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹。予獨愛蓮之出淤泥而不染，濯清漣而不妖……</p><p>（課文全文可依學校採用版本補齊。）</p>':'<h3>生命的碎珠｜閱讀課文</h3><p>請依照課本版本閱讀本文，並找出讓你印象深刻的片段。</p>'}
+function showLessonNotes(i){document.getElementById('cnExtra').innerHTML=i===0?'<h3>重點整理</h3><p>① 蓮：出淤泥而不染，象徵潔身自愛。<br>② 菊：隱逸者的象徵。<br>③ 牡丹：富貴者的象徵。<br>④ 本文以花喻人，表達作者對君子品格的推崇。</p>':'<h3>重點整理</h3><p>① 找出文章中的重要片段。<br>② 整理片段中的人物、事件與感受。<br>③ 思考作者想傳達的生命體會。<br>④ 練習用自己的話說出閱讀心得。</p>'}
+
+function startPractice(i){activeQuiz=currentVillage==='cn'?i%2:(i+2)%quiz.length;document.getElementById('buddyLine').innerHTML='島島隊長：勇者任務開始！仔細想一想，你一定做得到！';answered=false;document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion()}
+function renderQuestion(){const q=quiz[activeQuiz];document.getElementById('question').textContent=q.q;const box=document.getElementById('answers');box.innerHTML='';q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>checkAnswer(i,b);box.appendChild(b)});document.getElementById('bar').style.width='0%';answered=false}
+function checkAnswer(i,btn){if(answered)return;answered=true;const q=quiz[activeQuiz];const buttons=[...document.querySelectorAll('.answer')];buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add('correct')});if(i===q.c){store.stars+=1;store.done+=1;store.today+=1;document.getElementById('feedback').textContent='🎉 答對了！'+q.why}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='再想一想！正確答案已標示。'+q.why}if(i!==q.c){store.done+=1;store.today+=1}localStorage.setItem('learningIsland',JSON.stringify(store));sync();document.getElementById('bar').style.width='100%'}
+function nextQuestion(){if(!answered){document.getElementById('feedback').textContent='先選一個答案再繼續喔！';return}activeQuiz=(activeQuiz+1)%quiz.length;renderQuestion()}
+sync();document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-const canvas=document.getElementById('arch3d');
+const canvas=document.getElementById('world3d');
 if(canvas){
- try{
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;
-  const scene=new THREE.Scene();const camera=new THREE.PerspectiveCamera(38,1,.1,120);camera.position.set(0,18,30);camera.lookAt(0,1,0);
-  scene.add(new THREE.HemisphereLight(0xffffff,0x416b7e,2.2));
-  const sun=new THREE.DirectionalLight(0xfff1cb,3.2);sun.position.set(-9,18,11);sun.castShadow=true;sun.shadow.mapSize.set(1536,1536);scene.add(sun);
-  const mat=(color)=>new THREE.MeshStandardMaterial({color,roughness:.92,flatShading:true});
-  const sea=new THREE.Mesh(new THREE.PlaneGeometry(120,120),mat(0x4ba7cb));sea.rotation.x=-Math.PI/2;sea.position.y=-1.35;scene.add(sea);
-  const sand=mat(0xf3d58a),grass=mat(0x94c77d),wood=mat(0x79543a),leaves=[mat(0x5c9b69),mat(0x79b879),mat(0x43845e)],root=new THREE.Group();scene.add(root);
-  function box(p,x,y,z,w,h,d,m){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;p.add(o);return o}
-  function tree(p,x,z,k){const t=new THREE.Mesh(new THREE.CylinderGeometry(.12*k,.18*k,.72*k,5),wood);t.position.set(x,1.15*k,z);t.castShadow=true;p.add(t);for(let i=0;i<3;i++){const c=new THREE.Mesh(new THREE.IcosahedronGeometry(.53*k-i*.06,0),leaves[i]);c.position.set(x,1.55*k+i*.33*k,z);c.castShadow=true;p.add(c)}}
-  function creature(p,x,z,bodyColor,accent,kind){
-   const g=new THREE.Group();g.position.set(x,1.05,z);p.add(g);
-   const body=new THREE.Mesh(new THREE.SphereGeometry(.5,10,8),mat(bodyColor));body.scale.set(1,1.12,.85);body.castShadow=true;g.add(body);
-   const face=new THREE.Mesh(new THREE.SphereGeometry(.36,10,8),mat(0xffebca));face.position.set(0,.08,.37);g.add(face);
-   for(const dx of [-.13,.13]){const eye=new THREE.Mesh(new THREE.SphereGeometry(.045,7,6),mat(0x302a2a));eye.position.set(dx,.13,.68);g.add(eye)}
-   if(kind===0){for(const dx of [-.28,.28]){const ear=new THREE.Mesh(new THREE.ConeGeometry(.14,.48,5),mat(accent));ear.position.set(dx,.65,.08);g.add(ear);const horn=new THREE.Mesh(new THREE.ConeGeometry(.07,.42,5),mat(0xd6b05c));horn.position.set(dx*.8,.86,-.02);g.add(horn)}}
-   else if(kind===1){for(const dx of [-.4,.4]){const wing=new THREE.Mesh(new THREE.SphereGeometry(.26,8,6),mat(accent));wing.position.set(dx,.02,-.1);wing.scale.set(.65,1,.35);g.add(wing)}}
-   else{for(const dx of [-.29,.29]){const ear=new THREE.Mesh(new THREE.SphereGeometry(.23,8,6),mat(accent));ear.position.set(dx,.46,.05);ear.scale.set(.7,1.4,.55);g.add(ear)}}
-   return g;
-  }
-  function building(p,x,z,wall,roof){
-   box(p,x,1.35,z,1.5,1.15,1.2,mat(wall));
-   const r=new THREE.Mesh(new THREE.ConeGeometry(1.02,.8,6),mat(roof));r.position.set(x,2.3,z);r.rotation.y=Math.PI/6;r.castShadow=true;p.add(r);
-   box(p,x,.98,z+.62,.27,.7,.06,wood);
-   for(const dx of [-.42,.42])box(p,x+dx,1.48,z+.62,.22,.22,.04,mat(0xffe7a5));
-  }
-  function academy(p){
-   const stone=mat(0xe9ddc4),red=mat(0x984b36),roof=mat(0x315e6a),gold=mat(0xd6ad58);
-   box(p,0,1.03,0,3.1,.3,2.2,mat(0xb6a88d));box(p,0,1.7,0,2.65,1.1,1.7,stone);
-   for(const x of [-1.05,-.35,.35,1.05])box(p,x,1.72,.92,.15,1.28,.15,red);
-   box(p,0,1.45,.94,.7,.82,.1,wood);for(const x of [-.68,.68])box(p,x,1.85,.94,.34,.4,.08,gold);
-   const r=new THREE.Mesh(new THREE.ConeGeometry(2.08,.78,6),roof);r.position.set(0,2.7,0);r.rotation.y=Math.PI/6;r.scale.z=.82;r.castShadow=true;p.add(r);
-   const cap=new THREE.Mesh(new THREE.ConeGeometry(1.32,.5,6),mat(0x436f73));cap.position.set(0,3.12,0);cap.rotation.y=Math.PI/6;cap.scale.z=.82;p.add(cap);
-  }
-  function hexIsland(x,z,edge){
-   const g=new THREE.Group();g.position.set(x,0,z);root.add(g);
-   const base=new THREE.Mesh(new THREE.CylinderGeometry(4.45,4.75,1.05,6),sand);base.rotation.y=Math.PI/6;base.position.y=-.12;base.castShadow=true;base.receiveShadow=true;g.add(base);
-   const side=new THREE.Mesh(new THREE.CylinderGeometry(4.3,4.4,.42,6),mat(edge));side.rotation.y=Math.PI/6;side.position.y=.52;side.castShadow=true;g.add(side);
-   const top=new THREE.Mesh(new THREE.CylinderGeometry(4.16,4.22,.16,6),grass);top.rotation.y=Math.PI/6;top.position.y=.8;g.add(top);
-   return g;
-  }
-  const configs=[
-   {x:-8,z:-1,edge:0x4a9ac0,leader:[0,3.8,0x9b633e,0x75502e,0],res:[[-2.7,-2,0x9a7651,0xc08d53,0],[2.8,1.8,0xbba3a0,0x9474b9,2]]},
-   {x:0,z:-4.2,edge:0xe2b34d,leader:[0,3.8,0x8b6841,0xe6bc43,1],res:[[-2.6,-1.9,0xa1a77a,0x7b935e,2],[2.7,1.8,0xb6a7a0,0x80aeb5,2]]},
-   {x:8,z:-1,edge:0x79b59b,leader:[0,3.8,0xd8b4a0,0x72b6ca,2],res:[[-2.6,-1.9,0xb87f53,0x9d573a,0],[2.8,1.8,0x9b8978,0xe4c49c,2]]}
-  ];
-  const floating=[];
-  configs.forEach((c,i)=>{
-   const g=hexIsland(c.x,c.z,c.edge);floating.push(g);
-   if(i===0)academy(g);else{building(g,-1.05,-.55,0xf0dfbd,i===1?0xb97831:0x639b8a);building(g,1.25,.72,0xf0dfbd,i===1?0xb97831:0x639b8a)}
-   creature(g,...c.leader);c.res.forEach(a=>creature(g,...a));
-   [[-3.2,2.2,.82],[3.2,-2.4,.74],[-3.25,-2.55,.66]].forEach(v=>tree(g,v[0],v[1],v[2]));
-   box(g,0,2.1,2.15,1.55,.55,.1,mat(0xfff0ca));
-  });
-  const bridgeMat=mat(0xd9c18c);
-  function bridge(a,b){const dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz);const o=new THREE.Mesh(new THREE.BoxGeometry(len,.18,.5),bridgeMat);o.position.set((a.x+b.x)/2,.48,(a.z+b.z)/2);o.rotation.y=Math.atan2(-dz,dx);o.castShadow=true;root.add(o);const count=Math.max(2,Math.floor(len/.85));for(let i=0;i<count;i++){const t=(i+.5)/count;const st=new THREE.Mesh(new THREE.BoxGeometry(.42,.1,.68),sand);st.position.set(a.x+dx*t,.61,a.z+dz*t);st.rotation.y=o.rotation.y;root.add(st)}}
-  bridge({x:-4.1,z:-1},{x:-3.5,z:-4.2});bridge({x:3.5,z:-4.2},{x:4.1,z:-1});
-  const harbor=new THREE.Mesh(new THREE.CylinderGeometry(2,2.2,.42,6),sand);harbor.rotation.y=Math.PI/6;harbor.position.set(0,.1,5.5);root.add(harbor);
-  const lighthouse=new THREE.Mesh(new THREE.CylinderGeometry(.48,.7,2.45,6),mat(0xfff0cf));lighthouse.position.set(0,1.52,5.5);lighthouse.castShadow=true;root.add(lighthouse);
-  const lightCap=new THREE.Mesh(new THREE.ConeGeometry(.72,.75,6),mat(0x2e7191));lightCap.position.set(0,3.12,5.5);root.add(lightCap);
-  const clouds=[];for(let i=0;i<5;i++){const g=new THREE.Group();g.position.set((i-2)*6,5.3,-10+(i%2)*7);for(let j=0;j<3;j++){const puff=new THREE.Mesh(new THREE.SphereGeometry(.62,8,7),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.7}));puff.position.set((j-1)*.55,Math.sin(j)*.12,0);g.add(puff)}scene.add(g);clouds.push(g)}
-  function resize(){const w=Math.max(1,canvas.clientWidth),h=Math.max(1,canvas.clientHeight);renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
-  if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);else window.addEventListener('resize',resize);resize();
-  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function draw(t){floating.forEach((g,i)=>{g.position.y=reduced?0:.045*Math.sin(t*1.1+i*.9);g.rotation.y=reduced?0:.015*Math.sin(t*.45+i)});clouds.forEach((g,i)=>{if(!reduced){g.position.x+=.0012*(i%2?1:-1);if(g.position.x>18)g.position.x=-18;if(g.position.x< -18)g.position.x=18}});renderer.render(scene,camera);if(!reduced)requestAnimationFrame(draw)}
-  draw(0);
- }catch(e){console.warn('3D場景載入失敗，仍可使用島嶼互動卡片。',e)}
+ const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+ renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+ renderer.outputColorSpace=THREE.SRGBColorSpace;
+ const scene=new THREE.Scene();scene.background=null;
+ const camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.set(0,18,24);camera.lookAt(0,0,0);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x65834d,2.1));
+ const sun=new THREE.DirectionalLight(0xfff3d6,3.2);sun.position.set(-8,16,10);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
+ const mat=(color,roughness=1)=>new THREE.MeshStandardMaterial({color,roughness,flatShading:true});
+ const green=mat(0x9fc77b),sand=mat(0xe9d39b),path=mat(0xe8d4a0),dark=mat(0x765038),leaf=[mat(0x34864a),mat(0x55a653),mat(0x267344)];
+ const island=new THREE.Mesh(new THREE.CylinderGeometry(12.8,13.4,.7,10),green);island.position.y=-.45;island.receiveShadow=true;island.castShadow=true;scene.add(island);
+ const rim=new THREE.Mesh(new THREE.CylinderGeometry(13.2,13.5,.35,10),sand);rim.position.y=-.78;scene.add(rim);
+ function box(x,y,z,sx,sy,sz,m,rot=0){const o=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),m);o.position.set(x,y,z);o.rotation.y=rot;o.castShadow=true;o.receiveShadow=true;scene.add(o);return o}
+ function tree(x,z,k=1){const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.12*k,.2*k,.8*k,5),dark);trunk.position.set(x,.35*k,z);trunk.castShadow=true;scene.add(trunk);for(let j=0;j<3;j++){const crown=new THREE.Mesh(new THREE.IcosahedronGeometry(.62*k-j*.08,0),leaf[(j+Math.round(x+z))%3]);crown.position.set(x,(.8+j*.43)*k,z);crown.scale.set(1,1.05,1);crown.castShadow=true;scene.add(crown)}}
+ function house(x,z,color,roof){box(x,.65,z,1.15,1.3,1,mat(color));const r=new THREE.Mesh(new THREE.ConeGeometry(.9,.8,4),mat(roof));r.position.set(x,1.68,z);r.rotation.y=Math.PI/4;r.castShadow=true;scene.add(r);box(x,.38,z+.52,.28,.75,.06,mat(0x8b5635));for(const dx of [-.34,.34])box(x+dx,.9,z+.515,.2,.22,.04,mat(0xffe7a0))}
+ function traditionalAcademy(x,z){
+  const plaster=mat(0xe8d9bd),vermilion=mat(0x9d4938),wood=mat(0x70452f),tile=mat(0x31534e),gold=mat(0xd5ad65);
+  box(x,.38,z,2.8,.42,2.05,mat(0xaaa49a));
+  box(x,.95,z,2.35,1.05,1.62,plaster);
+  for(const dx of [-1,-.34,.34,1]){box(x+dx,.98,z+.86,.14,1.55,.14,vermilion);box(x+dx,.98,z-.86,.14,1.55,.14,vermilion)}
+  box(x,.82,z+.88,.62,.9,.08,wood);
+  for(const dx of [-.7,.7])box(x+dx,1.05,z+.81,.36,.48,.08,gold);
+  const roof=new THREE.Mesh(new THREE.ConeGeometry(1.9,.72,4),tile);roof.position.set(x,1.86,z);roof.rotation.y=Math.PI/4;roof.scale.set(1.32,1,1.12);roof.castShadow=true;scene.add(roof);
+  const upper=new THREE.Mesh(new THREE.ConeGeometry(1.18,.48,4),mat(0x42645a));upper.position.set(x,2.28,z);upper.rotation.y=Math.PI/4;upper.scale.set(1.35,1,1.12);upper.castShadow=true;scene.add(upper);
+  box(x,2.36,z+.02,1.15,.22,.12,wood);
+  box(x-1.62,.65,z+1.12,.3,.72,.3,mat(0x89877c));box(x-1.62,1.1,z+1.12,.46,.12,.46,gold);
+ }
+ function cart(x,z){box(x,.3,z,.65,.35,.42,mat(0xb73d2c));box(x,.55,z,.64,.12,.43,mat(0xf8eee0));for(let i=0;i<3;i++)box(x-.2+i*.2,.63,z,.09,.12,.44,mat(0xc83d32));for(const dx of [-.22,.22]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.08,8),mat(0x332d29));w.rotation.z=Math.PI/2;w.position.set(x+dx,.12,z);scene.add(w)}}
+ const zones=[{x:-6,z:-5,c:0x24796a,wall:0xe5f2e8,roof:0x175f56},{x:6,z:-5,c:0x315fbd,wall:0xe5ebf7,roof:0x2459b4},{x:-6,z:5,c:0x7040b6,wall:0xe8e0f4,roof:0x6337a4},{x:6,z:5,c:0xb95032,wall:0xf3dfbd,roof:0xb94c2e}];
+ zones.forEach((q,i)=>{const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.5,.48,8),mat(q.c));platform.position.set(q.x,.03,q.z);platform.rotation.y=Math.PI/8;platform.castShadow=true;platform.receiveShadow=true;scene.add(platform);const top=new THREE.Mesh(new THREE.CylinderGeometry(3.15,3.15,.12,8),mat(q.wall));top.position.set(q.x,.32,q.z);top.rotation.y=Math.PI/8;scene.add(top);if(i===0){traditionalAcademy(q.x,.55+q.z)}else{house(q.x-.85,.55+q.z,q.wall,q.roof);house(q.x+.85,.45+q.z,q.wall,q.roof)}cart(q.x-.1,q.z+1.55);tree(q.x-2.65,q.z-1.9,.8);tree(q.x+2.6,q.z+1.7,.75)});
+ // central plaza, winding stepping stones and gacha machine
+ const plaza=new THREE.Mesh(new THREE.CylinderGeometry(2.65,2.8,.18,12),mat(0xe9d6aa));plaza.position.y=.25;scene.add(plaza);
+ for(let i=0;i<19;i++){const a=i/19*Math.PI*2;const x=Math.cos(a)*4.1,z=Math.sin(a)*3.4;const stone=new THREE.Mesh(new THREE.DodecahedronGeometry(.38,0),path);stone.position.set(x,.18,z);stone.scale.y=.48;stone.rotation.y=i;stone.castShadow=true;scene.add(stone)}
+ // colorful capsule machine
+ const base=new THREE.Mesh(new THREE.CylinderGeometry(.55,.7,.85,8),mat(0xe5a52d));base.position.set(-.8,.7,.2);scene.add(base);
+ const globe=new THREE.Mesh(new THREE.SphereGeometry(.58,10,8),new THREE.MeshPhysicalMaterial({color:0x8de1ec,transparent:true,opacity:.72,roughness:.12}));globe.position.set(-.8,1.55,.2);scene.add(globe);
+ for(let i=0;i<7;i++){const ball=new THREE.Mesh(new THREE.SphereGeometry(.13,7,6),mat([0xf05b56,0xffd34e,0x58b8e5,0x8dca69][i%4]));ball.position.set(-.8+Math.cos(i*2.4)*.3,1.35+(i%3)*.17,.2+Math.sin(i*2.4)*.3);scene.add(ball)}
+ // little robot
+ const body=box(.9,1,.25,.72,.9,.55,mat(0x58bfc5));box(.9,1.57,.25,.62,.48,.52,mat(0x287f91));box(.76,1.62,.53,.1,.1,.04,mat(0xffffff));box(1.04,1.62,.53,.1,.1,.04,mat(0xffffff));
+ for(let i=0;i<16;i++){const x=(Math.random()-.5)*22,z=(Math.random()-.5)*21;if(Math.abs(x)>8||Math.abs(z)>8)tree(x,z,.45+Math.random()*.35)}
+ function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
+ new ResizeObserver(resize).observe(canvas);resize();
+ function animate(t){requestAnimationFrame(animate);body.position.y=1+Math.sin(t*.0018)*.07;renderer.render(scene,camera)}animate(0);
 }
-</script>
-</body></html>
+</script></body></html>

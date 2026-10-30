@@ -162,21 +162,25 @@ zhuyin:`<h3>國字注音</h3>
 <div class="note"><ruby>撇<rt>ㄆㄧㄝ</rt></ruby>開　悠<ruby>閒<rt>ㄒㄧㄢˊ</rt></ruby>　瑣<ruby>碎<rt>ㄙㄨㄟˋ</rt></ruby>　哲<ruby>人<rt>ㄖㄣˊ</rt></ruby>　勉<ruby>勵<rt>ㄌㄧˋ</rt></ruby></div>
 <div class="note">尺<ruby>璧<rt>ㄅㄧˋ</rt></ruby>　<ruby>脩<rt>ㄒㄧㄡ</rt></ruby>（歐陽脩）　<ruby>廁<rt>ㄘㄜˋ</rt></ruby>上　<ruby>腋<rt>ㄧㄝˋ</rt></ruby>下　成<ruby>裘<rt>ㄑㄧㄡˊ</rt></ruby></div>
 <div class="note">撿<ruby>拾<rt>ㄕˊ</rt></ruby>　<ruby>宗<rt>ㄗㄨㄥ</rt></ruby>　<ruby>藹<rt>ㄞˇ</rt></ruby>（溫藹）　<ruby>勵<rt>ㄌㄧˋ</rt></ruby>（勉勵）</div>`,
-meaning:`<h3>🧩 配段練習題</h3><p class="muted">依照每一段的內容，選出最適合的段落大意。每題選完會立即顯示正確答案。</p><div id="matchProgress" class="note"></div><div id="matchCard" class="note" style="min-height:250px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="matchPrev" type="button">上一題</button><button id="matchNext" type="button">下一題</button><button id="matchFinish" type="button">查看成績</button></div><p id="matchResult" aria-live="polite"></p>`
+meaning:`<h3>📚 解釋配對練習</h3><p class="muted">閱讀課文詞語，選出正確的意思。每題作答後立即公布答案。</p><div id="matchProgress" class="note"></div><div id="matchCard" class="note" style="min-height:250px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="matchPrev" type="button">上一題</button><button id="matchNext" type="button">下一題</button><button id="matchFinish" type="button">查看成績</button></div><p id="matchResult" aria-live="polite"></p>`
 
 };
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
 
 if(!isAilian){
  const paragraphMatchQuestions=[
-  {prompt:'第一段主要在說什麼？',answer:0,options:['現代生活步調很快，時間一分一秒都很寶貴。','電話轉盤比按鍵電話方便。','大家都喜歡慢慢等待。','現代人不需要使用電話。']},
-  {prompt:'第二段提醒我們什麼？',answer:1,options:['成功只靠運氣。','零碎時間也很重要，應該好好珍惜。','只有很長的時間才能做事。','時間不會影響學習。']},
-  {prompt:'第三段用胡適的例子說明什麼？',answer:2,options:['胡適不喜歡處理事情。','胡適每天都在休息。','善用零碎時間，就能工作充實、生活從容。','胡適只在晚上讀書。']},
-  {prompt:'第四段主要介紹甘迺迪怎麼利用時間？',answer:3,options:['他把客人都請到家裡。','他常常忘記接見客人。','他只在假日閱讀。','他利用接見客人的空檔閱讀，充實學識。']},
-  {prompt:'第五段提到古人珍惜時間的例子，主要想說明什麼？',answer:0,options:['古人也懂得利用短暫時間讀書、思考。','古人每天都不用工作。','只有古人才需要珍惜時間。','讀書一定要在書桌前進行。']},
-  {prompt:'第六段用大石頭、小石頭、細沙和清水比喻什麼？',answer:1,options:['箱子只能裝一種東西。','安排事情有先後，空出的地方還能放進其他事物。','清水比石頭更重要。','每天都要收集石頭。']},
-  {prompt:'第七段把一天的二十四小時比喻成什麼？',answer:2,options:['一本課本。','一條很長的道路。','一個大箱子，提醒我們利用零碎空隙。','一座裝滿黃金的山。']},
-  {prompt:'第八段「生命中的碎珠」想表達什麼？',answer:3,options:['珍珠越大越有價值。','時間太短，沒有辦法做事。','只有有錢人才能累積財富。','零碎時間像珍珠，勤於累積就會成為珍貴財富。']}
+  {prompt:'「步履匆忙」的意思是？',answer:0,options:['腳步很急，形容事情很多、很忙。','走路很慢，完全不著急。','坐下來休息。','找不到回家的路。']},
+  {prompt:'「關鍵」的意思是？',answer:1,options:['不重要的小事情。','會影響事情結果的重要部分。','每天固定做的事情。','事情已經結束。']},
+  {prompt:'「欽佩仰慕」的意思是？',answer:2,options:['覺得別人很討厭。','對事情感到害怕。','敬重並羨慕一個人。','忘記別人的名字。']},
+  {prompt:'「自勉」的意思是？',answer:3,options:['請別人幫忙完成工作。','和朋友一起玩耍。','批評別人做得不好。','自己鼓勵、提醒自己努力。']},
+  {prompt:'「溫藹」的意思是？',answer:0,options:['態度溫和、親切。','說話很大聲、很兇。','做事粗心、不仔細。','心情緊張、不安。']},
+  {prompt:'「不敷」的意思是？',answer:1,options:['非常充足。','不夠、不足以應付需要。','剛剛好、不多不少。','完全不需要。']},
+  {prompt:'「撇開」的意思是？',answer:2,options:['拿起來仔細看。','放進袋子裡。','暫時放在一旁，先不談。','把東西整理整齊。']},
+  {prompt:'「盛年」指的是？',answer:3,options:['年紀很小的時候。','退休以後的年紀。','每天早上的時間。','人的壯年時期。']},
+  {prompt:'「尺璧」是指什麼？',answer:0,options:['一尺長的美玉。','一把可以量身高的尺。','一塊普通石頭。','一面鏡子。']},
+  {prompt:'「空隙」的意思是？',answer:1,options:['非常擁擠的地方。','空出來的地方或時間。','每天一定要做的工作。','很長的一段道路。']},
+  {prompt:'「集腋成裘」比喻什麼？',answer:2,options:['把東西全部丟掉。','做事一定要很快。','一點一點累積，最後就能成就很多。','只重視昂貴的物品。']},
+  {prompt:'「著書立說」的意思是？',answer:3,options:['把書本放回書架。','每天閱讀很多故事。','抄寫別人的文章。','寫作書籍，提出自己的學說或想法。']}
  ];
  const matchLetters=['A','B','C','D'];
  const matchAnswers=Array(paragraphMatchQuestions.length).fill(null);
@@ -297,7 +301,7 @@ const wordQuiz=isAilian
  ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,i%4))
  :lifeWordQuiz;
 const zy=document.getElementById('zhuyin');
-zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文指定字詞國字注音練習')+'</h3><p class="muted">'+(isAilian?'每次只考一題，交替練習看注音選國字、看國字選注音。每題選完立即公布正確答案。':'依照指定的15題課文題目練習國字與注音。看國字選注音、看注音選國字兩種題型都有；答案平均分配在A、B、C、D四個選項，每題作答後立即公布正確答案。')+'</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
+zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文指定字詞國字注音練習')+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
 let wordIndex=0;
 const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');

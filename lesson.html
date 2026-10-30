@@ -106,6 +106,34 @@ meaning:`<h3>詞語、典故與句意解釋</h3>
 };
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
 if(!isAilian){
+ // 學習中心版本：不顯示長篇課文，只保留題目與圖像提示
+ document.getElementById('text').innerHTML='<h3>🌟 看圖想一想・選一選</h3><p class="muted">不用先讀整篇課文，看看圖片、聽聽句子，再選出答案。</p>';
+ const visuals=[
+  ['⏱️','時間很寶貴','分秒必爭','看到時鐘，想到要珍惜時間。'],
+  ['📚','利用空檔','零碎時間','等候或休息的短短時間，也能閱讀。'],
+  ['🧘','不慌不忙','從容自如','做事情很自在，不急、不慌。'],
+  ['🪨','大石頭、小石頭','安排時間','先放大石頭，再放小石頭和細沙。'],
+  ['💧','清水','清水','箱子最後還能裝進清水。'],
+  ['💎','生命中的碎珠','碎珠','一點一點累積，就像收集珍珠。']
+ ];
+ const visualBox=document.createElement('div');
+ visualBox.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px;margin:18px 0 26px;';
+ visuals.forEach(v=>{const c=document.createElement('div');c.style.cssText='background:#fff0d4;border:2px solid #d4b27a;border-radius:14px;padding:14px 8px;text-align:center;';c.innerHTML='<div style="font-size:48px;line-height:1.4" role="img" aria-label="'+v[1]+'">'+v[0]+'</div><b>'+v[1]+'</b><div style="font-size:14px;color:#806f5c;margin-top:5px">'+v[3]+'</div>';visualBox.appendChild(c);});
+ document.getElementById('text').appendChild(visualBox);
+ const oral=document.createElement('section');
+ oral.innerHTML='<h3>🗣️ 朗讀練習</h3><p class="muted">請跟著老師或按下「聽句子」，慢慢念一次。可以重複練習，不用急。</p>';
+ const oralItems=[
+  '時間很寶貴，我要好好珍惜。',
+  '短短的空檔，也可以做有用的事。',
+  '我可以從容自如，不慌不忙。',
+  '積少成多，零碎時間也能累積成大收穫。',
+  '生命中的碎珠，就像一顆一顆珍貴的小珍珠。'
+ ];
+ oralItems.forEach((sentence,i)=>{const row=document.createElement('div');row.className='note';row.innerHTML='<b>朗讀第'+(i+1)+'題</b><p style="font-size:20px;margin:8px 0">'+sentence+'</p>';const speak=document.createElement('button');speak.textContent='🔊 聽句子';speak.style.cssText='padding:9px 14px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';speak.addEventListener('click',()=>{if(!('speechSynthesis' in window)){row.querySelector('.oralStatus').textContent='此裝置暫不支援語音播放，請由老師帶讀。';return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(sentence);u.lang='zh-TW';u.rate=0.8;speechSynthesis.speak(u);row.querySelector('.oralStatus').textContent='正在播放，請跟著念念看！';});const status=document.createElement('span');status.className='oralStatus';status.style.cssText='display:block;margin-top:8px;color:#806f5c;font-size:14px';row.appendChild(speak);row.appendChild(status);oral.appendChild(row);});
+ document.getElementById('text').appendChild(oral);
+ const gameTitle=document.createElement('h3');gameTitle.textContent='🎯 分段詞語填空';document.getElementById('text').appendChild(gameTitle);
+}
+if(!isAilian){
  const paragraphs=[
   {p:"第一段｜現代生活步調快速",q:"現代人連讓電話轉盤撥轉回來的一兩秒時間都不願等待，說明這是個＿＿＿＿的世界。",a:"分秒必爭",opts:["分秒必爭","從容自如","集腋成裘"]},
   {p:"第二段｜珍惜零碎時間",q:"能掌握時間，尤其是＿＿＿＿的人，往往是令人欽佩的智者、成功者。",a:"零碎時間",opts:["休閒時間","零碎時間","睡眠時間"]},

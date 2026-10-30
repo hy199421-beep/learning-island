@@ -300,6 +300,72 @@ body.cn-open .practice{background:#f5e8ce;border:2px solid #d0b174}
  body.cn-open .cn-detail{padding:14px}
  body.cn-open .cn-detail p{font-size:15px}
 }
+
+/* 強制套用國文書坊主題（高優先權，避免被通用彈窗樣式覆蓋） */
+body.cn-open #modal{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:18px!important;
+  background:
+    linear-gradient(180deg,rgba(35,17,9,.18),rgba(35,17,9,.56)),
+    url("./assets/chinese-academy-bg.webp?v=academy20261030") center/cover no-repeat!important;
+  backdrop-filter:none!important;
+}
+body.cn-open #modal .panel{
+  width:min(1420px,94vw)!important;
+  max-height:94vh!important;
+  overflow:auto!important;
+  padding:24px clamp(16px,3vw,42px)!important;
+  border:10px solid #59331e!important;
+  border-radius:5px!important;
+  outline:3px solid #d8b66d!important;
+  background:linear-gradient(135deg,rgba(255,249,234,.96),rgba(247,231,199,.94))!important;
+  box-shadow:0 0 0 7px rgba(31,15,8,.7),0 24px 58px rgba(15,7,3,.62)!important;
+}
+body.cn-open #modal .panel:before{
+  content:"國 文 書 坊"!important;
+  display:block!important;
+  width:min(520px,92%)!important;
+  margin:-24px auto 20px!important;
+  padding:10px 16px!important;
+  text-align:center!important;
+  color:#f8dfa2!important;
+  font:900 clamp(25px,3.8vw,43px) "Noto Serif TC",serif!important;
+  letter-spacing:.24em!important;
+  background:linear-gradient(#75492b,#2c180e)!important;
+  border:6px double #d7ad62!important;
+  border-radius:4px!important;
+  text-shadow:0 2px 4px #1b0d06!important;
+  box-shadow:0 7px 0 #321b10!important;
+}
+body.cn-open #modal .panel-head{justify-content:center!important;position:relative!important;border-bottom:2px solid #d6bd91!important;padding-bottom:14px!important}
+body.cn-open #modal .panel-head h2{font-family:"Noto Serif TC",serif!important;color:#873327!important;font-size:clamp(22px,2.6vw,30px)!important}
+body.cn-open #modal .panel-head .close{position:absolute!important;right:0!important;top:0!important;background:#922f24!important;color:#fff!important;border:2px solid #d8b66d!important;border-radius:5px!important}
+body.cn-open #modal #topics.topic-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:24px!important;max-width:1120px!important;margin:24px auto!important}
+body.cn-open #modal #topics .topic{
+  min-height:210px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:10px!important;
+  padding:22px 14px!important;text-align:center!important;
+  border:9px solid #71452a!important;border-top-width:13px!important;border-bottom-width:13px!important;border-radius:4px!important;
+  background:linear-gradient(135deg,#fff9e9,#eee0bd)!important;
+  box-shadow:inset 0 0 0 2px #d4b878,0 8px 0 #321b10,0 13px 20px #2b160d55!important;
+}
+body.cn-open #modal #topics .topic:before,body.cn-open #modal #topics .topic:after{
+  content:""!important;position:absolute!important;left:-12px!important;right:-12px!important;height:13px!important;border-radius:8px!important;
+  background:linear-gradient(90deg,#a87835,#f2d58a 18%,#c79a4d 50%,#f1d38a 82%,#a87835)!important;
+}
+body.cn-open #modal #topics .topic:before{top:-14px!important}
+body.cn-open #modal #topics .topic:after{bottom:-14px!important}
+body.cn-open #modal #topics .topic .emoji{font-size:42px!important}
+body.cn-open #modal #topics .topic strong{font:900 clamp(22px,2.5vw,30px) "Noto Serif TC",serif!important;color:#42271a!important}
+body.cn-open #modal #topics .topic small{font:15px/1.7 "Noto Serif TC",serif!important;color:#806b51!important}
+body.cn-open #modal .subline{text-align:center!important;color:#806344!important;font-family:"Noto Serif TC",serif!important}
+@media(max-width:760px){
+ body.cn-open #modal{padding:7px!important;background-position:center top!important}
+ body.cn-open #modal .panel{width:96vw!important;max-height:96vh!important;padding:16px 12px!important}
+ body.cn-open #modal #topics.topic-grid{grid-template-columns:1fr!important;gap:17px!important}
+ body.cn-open #modal #topics .topic{min-height:155px!important}
+}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>

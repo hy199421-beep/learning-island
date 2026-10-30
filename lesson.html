@@ -207,14 +207,28 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
   options
  };
 }
+const lifeWordQuiz=[
+ {display:'1. 「著」書立說（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:0,options:['ㄓㄨˋ','ㄓㄨㄛˊ','ㄓㄨˇ','ㄓㄨˊ']},
+ {display:'2. 著書立「ㄕㄨㄛ」（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:1,options:['朔','說','碩','爍']},
+ {display:'3. 從容自「ㄖㄨˊ」（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:2,options:['汝','茹','如','儒']},
+ {display:'4. 溫「ㄞˇ」學者（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:3,options:['矮','愛','靄','藹']},
+ {display:'5. 不「敷」使用（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:0,options:['ㄈㄨ','ㄈㄨˊ','ㄈㄨˇ','ㄈㄨˋ']},
+ {display:'6. 「撇」開不談（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:1,options:['ㄆㄧㄝˇ','ㄆㄧㄝ','ㄆㄧㄝˋ','ㄆㄧㄝˊ']},
+ {display:'7. 「盛」年不重來（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:2,options:['ㄕㄥ','ㄕㄣˋ','ㄕㄥˋ','ㄕㄣ']},
+ {display:'8. 「尺」璧非寶（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:3,options:['ㄔ','ㄔˋ','ㄘˇ','ㄔˇ']},
+ {display:'9. 尺「ㄅㄧˋ」非寶（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:0,options:['璧','壁','碧','臂']},
+ {display:'10. 寸陰是「競」（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:1,options:['ㄐㄧㄥ','ㄐㄧㄥˋ','ㄐㄧㄣˋ','ㄑㄧㄥˋ']},
+ {display:'11. 積沙成「ㄊㄚˇ」（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:2,options:['塌','踏','塔','撻']},
+ {display:'12. 集「ㄧㄝˋ」成裘（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:3,options:['液','夜','頁','腋']},
+ {display:'13. 集腋成「裘」（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:0,options:['ㄑㄧㄡˊ','ㄑㄧㄡ','ㄑㄧㄡˇ','ㄐㄧㄡˊ']},
+ {display:'14. 一「ㄗㄨㄥ」財富（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:1,options:['棕','宗','蹤','綜']},
+ {display:'15. 「千」字文（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:2,options:['ㄑㄧㄢˊ','ㄑㄧㄢˇ','ㄑㄧㄢ','ㄐㄧㄢ']}
+];
 const wordQuiz=isAilian
  ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,i%4))
- :wordBank.flatMap((entry,i)=>[
-   buildWordQuestion(entry,i,true,(i*2)%4),
-   buildWordQuestion(entry,i,false,(i*2+1)%4)
-  ]);
+ :lifeWordQuiz;
 const zy=document.getElementById('zhuyin');
-zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文指定字詞國字注音練習')+'</h3><p class="muted">'+(isAilian?'每次只考一題，交替練習看注音選國字、看國字選注音。每題選完立即公布正確答案。':'依照指定的12個課文詞語出題，每個詞語都會考「看注音選國字」及「看國字選注音」各一題。答案平均分配在A、B、C、D四個選項，每題作答後立即公布正確答案。')+'</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
+zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文指定字詞國字注音練習')+'</h3><p class="muted">'+(isAilian?'每次只考一題，交替練習看注音選國字、看國字選注音。每題選完立即公布正確答案。':'依照指定的15題課文題目練習國字與注音。看國字選注音、看注音選國字兩種題型都有；答案平均分配在A、B、C、D四個選項，每題作答後立即公布正確答案。')+'</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
 let wordIndex=0;
 const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');
@@ -224,12 +238,14 @@ function renderWordQuestion(){
  wordCard.innerHTML='';
  const heading=document.createElement('h2');
  heading.style.cssText='font-size:30px;text-align:center;margin:16px 0 22px;color:#68452e';
- heading.textContent=(q.askZhuyin?'注音：':'國字：')+q.stimulus;
+ heading.textContent=q.display||((q.askZhuyin?'注音：':'國字：')+q.stimulus);
  wordCard.appendChild(heading);
- const hint=document.createElement('p');
- hint.style.cssText='font-size:17px;line-height:1.8;text-align:left;margin:0 0 18px';
- hint.textContent=q.hint;
- wordCard.appendChild(hint);
+ if(q.hint){
+  const hint=document.createElement('p');
+  hint.style.cssText='font-size:17px;line-height:1.8;text-align:left;margin:0 0 18px';
+  hint.textContent=q.hint;
+  wordCard.appendChild(hint);
+ }
  const ask=document.createElement('p');
  ask.style.cssText='font-weight:bold;text-align:center';
  ask.textContent=q.prompt;

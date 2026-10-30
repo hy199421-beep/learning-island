@@ -104,7 +104,7 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 </div>
 <h2 id="lessonTitle">課文學習</h2>
 <nav class="tabs" aria-label="課文學習區塊">
-<button class="active" data-tab="text">🎯 題目</button>
+<button class="active" data-tab="text">📖 課文</button>
 <button data-tab="zhuyin">🔤 國字注音</button>
 <button data-tab="meaning">📚 解釋</button>
 </nav>
@@ -116,7 +116,7 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
-document.querySelector('.tabs button[data-tab="meaning"]').textContent=isAilian?'📚 解釋':'🧩 配段練習題';
+document.querySelector('.tabs button[data-tab="meaning"]').textContent='📚 解釋';
 document.getElementById('lessonTitle').textContent=isAilian?'愛蓮說':'生命中的碎珠';
 const sections=isAilian?{
 text:`<h3>《愛蓮說》｜周敦頤</h3><div class="poem">水陸草木之花，可愛者甚蕃。
@@ -162,7 +162,7 @@ zhuyin:`<h3>國字注音</h3>
 <div class="note"><ruby>撇<rt>ㄆㄧㄝ</rt></ruby>開　悠<ruby>閒<rt>ㄒㄧㄢˊ</rt></ruby>　瑣<ruby>碎<rt>ㄙㄨㄟˋ</rt></ruby>　哲<ruby>人<rt>ㄖㄣˊ</rt></ruby>　勉<ruby>勵<rt>ㄌㄧˋ</rt></ruby></div>
 <div class="note">尺<ruby>璧<rt>ㄅㄧˋ</rt></ruby>　<ruby>脩<rt>ㄒㄧㄡ</rt></ruby>（歐陽脩）　<ruby>廁<rt>ㄘㄜˋ</rt></ruby>上　<ruby>腋<rt>ㄧㄝˋ</rt></ruby>下　成<ruby>裘<rt>ㄑㄧㄡˊ</rt></ruby></div>
 <div class="note">撿<ruby>拾<rt>ㄕˊ</rt></ruby>　<ruby>宗<rt>ㄗㄨㄥ</rt></ruby>　<ruby>藹<rt>ㄞˇ</rt></ruby>（溫藹）　<ruby>勵<rt>ㄌㄧˋ</rt></ruby>（勉勵）</div>`,
-meaning:`<h3>📚 解釋配對練習</h3><p class="muted">閱讀課文詞語，選出正確的意思。每題作答後立即公布答案。</p><div id="matchProgress" class="note"></div><div id="matchCard" class="note" style="min-height:250px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="matchPrev" type="button">上一題</button><button id="matchNext" type="button">下一題</button><button id="matchFinish" type="button">查看成績</button></div><p id="matchResult" aria-live="polite"></p>`
+meaning:`<h3>📚 解釋</h3><p class="muted">閱讀課文詞語，選出正確的意思。每題作答後立即公布答案。</p><div id="matchProgress" class="note"></div><div id="matchCard" class="note" style="min-height:250px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="matchPrev" type="button">上一題</button><button id="matchNext" type="button">下一題</button><button id="matchFinish" type="button">查看成績</button></div><p id="matchResult" aria-live="polite"></p>`
 
 };
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];

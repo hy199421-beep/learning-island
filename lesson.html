@@ -68,6 +68,15 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 #zhuyin #wordResult{text-align:center;font-size:19px;font-weight:800}
 @media(max-width:620px){#zhuyin #wordCard>div{grid-template-columns:1fr!important}#zhuyin #wordCard{padding:22px 16px}#zhuyin #wordCard label{min-height:60px}}
 
+
+/* 喇叭報讀鍵與確認答案按鍵分離，採圖示輕量樣式 */
+.read-aloud-btn{display:inline-flex!important;align-items:center;justify-content:center;width:44px;height:44px;padding:0!important;margin:0 0 12px!important;border:2px solid #cbb47f!important;border-radius:50%!important;background:#fffaf0!important;color:#7d4a2c!important;box-shadow:none!important;font-size:22px!important;line-height:1;cursor:pointer}
+.read-aloud-btn:hover{background:#f1e4c7!important;transform:scale(1.05)}
+#zhuyin #wordCard .zhuyin-choice[aria-pressed="true"]{background:linear-gradient(120deg,#e7f1d9,#f5f0d9)!important;border:3px solid #6c9552!important;box-shadow:0 5px 0 #b5c99a!important;transform:translateY(-2px)}
+#zhuyin #wordCard .zhuyin-choice:disabled{opacity:.85;cursor:default}
+#zhuyin #wordCard .zhuyin-choice:focus-visible{outline:3px solid #8b6ac0;outline-offset:3px}
+#zhuyin #wordCard>div{gap:16px!important}
+
 </style>
 </head>
 <body>
@@ -201,11 +210,12 @@ function renderWordQuestion(){
  const ask=document.createElement('p');ask.style.cssText='font-weight:bold;text-align:center';ask.textContent='請選出上方語詞／文句的正確注音：';wordCard.appendChild(ask);
  const choices=document.createElement('div');choices.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
  q.options.forEach((opt,k)=>{
-  const label=document.createElement('label');label.style.cssText='display:flex;align-items:center;gap:9px;background:#fff9ed;border:2px solid #d7bd91;border-radius:9px;padding:13px;cursor:pointer;font-size:18px';
-  const radio=document.createElement('input');radio.type='radio';radio.name='wordPronunciation';radio.value=String(k);radio.checked=wordAnswers[wordIndex]===k;radio.disabled=wordFinished;radio.style.transform='scale(1.2)';
-  radio.addEventListener('change',()=>{wordAnswers[wordIndex]=k;});
+  const label=document.createElement('button');label.type='button';label.className='zhuyin-choice';label.setAttribute('aria-pressed',String(wordAnswers[wordIndex]===k));label.disabled=wordFinished;label.style.cssText='display:flex;align-items:center;gap:12px;text-align:left;background:#fff9ed;border:2px solid #d7bd91;border-radius:18px;padding:18px;cursor:pointer;font-size:clamp(17px,2vw,21px);font-weight:700;color:#493321;min-height:78px;box-shadow:0 5px 0 #d4c092;transition:transform .15s,background .15s,border-color .15s';
+  const badge=document.createElement('span');badge.textContent=['🌱','⭐','🔔','💎'][k];badge.style.cssText='font-size:24px;flex:0 0 auto';
   const span=document.createElement('span');span.textContent=wordLetters[k]+'．'+opt;
-  label.appendChild(radio);label.appendChild(span);choices.appendChild(label);
+  label.appendChild(badge);label.appendChild(span);
+  label.addEventListener('click',()=>{if(wordFinished)return;wordAnswers[wordIndex]=k;renderWordQuestion();});
+  choices.appendChild(label);
  });
  wordCard.appendChild(choices);
  if(wordFinished){const p=document.createElement('p');p.textContent='正確答案：'+wordLetters[q.answer]+'．'+q.options[q.answer];p.style.color=wordAnswers[wordIndex]===q.answer?'#26734d':'#a33d2e';wordCard.appendChild(p);}
@@ -259,7 +269,7 @@ if(!isAilian){
  const host=game.querySelector('#gameQuestions');
  paragraphs.forEach((item,index)=>{
   const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
-  const readBtn=document.createElement('button');readBtn.textContent='🔊 報讀題目';readBtn.style.cssText='padding:9px 14px;margin:0 0 10px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';readBtn.addEventListener('click',()=>{if(!('speechSynthesis' in window)){feedback.textContent='此裝置暫不支援語音報讀，請由老師協助念題。';return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(item.p.replace(/[｜]/g,'。')+'。'+item.q);utterance.lang='zh-TW';utterance.rate=0.78;speechSynthesis.speak(utterance);feedback.textContent='正在報讀題目，請仔細聆聽。';});
+  const readBtn=document.createElement('button');readBtn.textContent='🔊';readBtn.className='read-aloud-btn';readBtn.type='button';readBtn.setAttribute('aria-label','報讀題目');readBtn.title='報讀題目';readBtn.addEventListener('click',()=>{if(!('speechSynthesis' in window)){feedback.textContent='此裝置暫不支援語音報讀，請由老師協助念題。';return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(item.p.replace(/[｜]/g,'。')+'。'+item.q);utterance.lang='zh-TW';utterance.rate=0.78;speechSynthesis.speak(utterance);feedback.textContent='正在報讀題目，請仔細聆聽。';});
   card.appendChild(readBtn);
   const select=document.createElement('select');select.setAttribute('aria-label','第'+(index+1)+'題答案');select.style.cssText='padding:10px 12px;border:1px solid #bd9253;border-radius:8px;background:#fffdf7;color:#493321;font-size:16px;max-width:100%;';
   const empty=document.createElement('option');empty.value='';empty.textContent='請選擇答案';select.appendChild(empty);

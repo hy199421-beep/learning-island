@@ -201,6 +201,105 @@ body.cn-open .cn-actions button{border-color:#c49a55;color:#59351e}
  body.cn-open .panel:before{margin:-14px -12px 14px}
  body.cn-open .topic-grid{grid-template-columns:1fr}
 }
+
+/* 2026-10-30 國文書院視覺改版：依照參考圖的木造書院、卷軸與雙課文版面 */
+body.cn-open .modal{
+  align-items:center;justify-content:center;padding:clamp(8px,2vw,26px);
+  background:
+    radial-gradient(ellipse at 50% 35%,rgba(166,105,57,.24),transparent 58%),
+    repeating-linear-gradient(90deg,transparent 0 82px,rgba(20,9,4,.28) 83px 88px,transparent 89px 164px),
+    linear-gradient(180deg,#21130d 0%,#55331f 12%,#6c432b 55%,#2b190f 100%) !important;
+  backdrop-filter:none;
+}
+body.cn-open .modal:before,body.cn-open .modal:after{
+ content:"";position:fixed;top:0;bottom:0;width:clamp(42px,10vw,150px);pointer-events:none;z-index:-1;
+ background:
+  radial-gradient(ellipse at 50% 20%,#ffd88b 0 7%,#e56b25 8% 19%,transparent 21%),
+  linear-gradient(90deg,#1d100a,#75462a 22%,#2e190f 80%,#160c07);
+ box-shadow:inset 0 0 0 7px #3b2113,inset 0 0 0 10px #9a6c38;
+}
+body.cn-open .modal:before{left:0}body.cn-open .modal:after{right:0}
+body.cn-open .panel{
+ position:relative;width:min(1450px,94vw);max-height:94vh;overflow-y:auto;
+ padding:clamp(16px,2.2vw,30px) clamp(16px,3vw,44px);
+ border:10px solid #452719;border-radius:5px;
+ outline:3px solid #d7ad5e;
+ background:
+  linear-gradient(90deg,rgba(255,248,229,.97),rgba(250,238,211,.96)),
+  repeating-linear-gradient(0deg,transparent 0 34px,rgba(148,105,57,.035) 35px 36px);
+ box-shadow:0 0 0 7px rgba(29,14,7,.7),0 22px 55px #120904aa;
+}
+body.cn-open .panel:before{
+ content:"國 文 書 院";display:block;text-align:center;
+ margin:-30px auto 18px;padding:10px 24px;width:min(480px,90%);
+ color:#f7dc9c;font:900 clamp(26px,3.6vw,44px) Georgia,"Noto Serif TC",serif;
+ letter-spacing:.25em;text-shadow:0 3px 2px #211008;
+ background:linear-gradient(180deg,#684128,#29170e);
+ border:6px double #c99d50;border-radius:4px;
+ box-shadow:0 8px 0 #321b10,0 12px 22px #2b160d55;
+}
+body.cn-open .panel-head{justify-content:center;border-bottom:2px solid #d6bd91;padding:0 0 12px}
+body.cn-open .panel-head h2{font-family:serif;color:#7f3024;font-size:clamp(22px,2.5vw,30px)}
+body.cn-open .panel-head .close{position:absolute;right:0;top:0;border-radius:5px;background:#8f2f25;color:#fff;border:2px solid #d8b56e}
+body.cn-open .subline{text-align:center;color:#806344;font-family:serif;font-weight:800;letter-spacing:.06em;margin:12px 0 22px}
+body.cn-open .topic-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,2vw,28px);
+ max-width:1120px;margin:24px auto 18px;
+}
+body.cn-open .topic{
+ min-height:clamp(190px,22vw,270px);position:relative;overflow:visible;
+ display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;
+ padding:24px 18px;text-align:center;color:#38251a;
+ border:9px solid #71452a;border-top-width:13px;border-bottom-width:13px;border-radius:4px;
+ background:
+  radial-gradient(ellipse at 15% 90%,rgba(157,125,76,.14),transparent 28%),
+  linear-gradient(135deg,#fff9e9,#efe0c0);
+ box-shadow:inset 0 0 0 2px #d8bd86,0 8px 0 #2d190f,0 13px 20px #2b160d66;
+ transition:transform .18s,filter .18s;
+}
+body.cn-open .topic:before,body.cn-open .topic:after{
+ content:"";position:absolute;left:-12px;right:-12px;height:13px;border-radius:8px;
+ background:linear-gradient(90deg,#a87835,#f2d58a 18%,#c79a4d 50%,#f1d38a 82%,#a87835);
+ box-shadow:0 2px 2px #4a2b18;
+}
+body.cn-open .topic:before{top:-14px}body.cn-open .topic:after{bottom:-14px}
+body.cn-open .topic:hover{transform:translateY(-5px);filter:brightness(1.04)}
+body.cn-open .topic .emoji{font-size:clamp(34px,4vw,48px)}
+body.cn-open .topic strong{font-family:"Noto Serif TC","Songti TC",serif;font-size:clamp(22px,2.6vw,30px);color:#42271a}
+body.cn-open .topic small{font-family:serif;font-size:clamp(13px,1.4vw,16px);color:#806b51;line-height:1.7}
+body.cn-open .cn-code{font:900 15px Georgia,serif;letter-spacing:.05em;color:#9b3027;border:2px solid #a33a2d;background:#fff7e6;padding:4px 12px}
+body.cn-open .cn-status{font-family:serif;color:#907858;line-height:1.8}
+body.cn-open .cn-detail{
+ display:none;grid-template-columns:1.1fr .9fr;gap:clamp(16px,3vw,36px);
+ margin:18px 0 4px;padding:clamp(18px,2.5vw,34px);
+ border:9px double #bd9654;background:linear-gradient(135deg,#fff9e9,#f2e2c2);
+ box-shadow:inset 0 0 0 3px #fffdf4,0 8px 0 #68442b;
+}
+body.cn-open .cn-detail.show{display:grid}
+body.cn-open .cn-detail h3{font-family:"Noto Serif TC",serif;color:#4c2b1d;font-size:clamp(24px,2.8vw,34px)}
+body.cn-open .cn-detail p{font-family:"Noto Serif TC",serif;color:#604833;font-size:16px;line-height:2}
+body.cn-open .cn-tag{background:#a43229;border:2px solid #d7ad64;color:#fff3d4;padding:7px 14px}
+body.cn-open .cn-actions h3{font-size:22px}
+body.cn-open .cn-actions button{
+ display:flex;align-items:center;gap:12px;border:2px solid #d3b477;border-radius:28px;
+ background:linear-gradient(#fff8e8,#f0d6a1);padding:14px 20px;
+ color:#55351f;font:900 17px "Noto Serif TC",serif;text-align:left;
+ box-shadow:0 4px 0 #b98e4e,0 7px 12px #6c482322;
+}
+body.cn-open .cn-actions button:hover{background:linear-gradient(#fff1c9,#e8bd70);transform:translateY(-2px)}
+body.cn-open .cn-back{background:#70452b;color:#fff2d5;border:2px solid #cda65e;border-radius:20px}
+body.cn-open .practice{background:#f5e8ce;border:2px solid #d0b174}
+@media(max-width:760px){
+ body.cn-open .modal{padding:8px}
+ body.cn-open .modal:before,body.cn-open .modal:after{width:24px}
+ body.cn-open .panel{width:calc(100vw - 28px);max-height:96vh;padding:14px 12px;border-width:6px}
+ body.cn-open .panel:before{margin:-15px auto 14px;padding:9px 8px;letter-spacing:.16em}
+ body.cn-open .topic-grid{grid-template-columns:1fr;gap:18px;margin:18px auto}
+ body.cn-open .topic{min-height:155px}
+ body.cn-open .cn-detail.show{grid-template-columns:1fr}
+ body.cn-open .cn-detail{padding:14px}
+ body.cn-open .cn-detail p{font-size:15px}
+}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>

@@ -150,7 +150,9 @@ function renderWordQuestion(){
  const q=wordQuiz[wordIndex];
  zy.querySelector('#wordProgress').textContent='第 '+(wordIndex+1)+' 題／共 '+wordQuiz.length+' 題';
  wordCard.innerHTML='';
- const heading=document.createElement('h2');heading.style.cssText='font-size:30px;text-align:center;margin:16px 0 22px;color:#68452e';heading.textContent='「'+q.word+'」';wordCard.appendChild(heading);\n const hint=document.createElement('p');hint.style.cssText='font-size:17px;line-height:1.8;text-align:left;margin:0 0 18px';hint.textContent=q.hint;wordCard.appendChild(hint);\n const ask=document.createElement('p');ask.style.cssText='font-weight:bold;text-align:center';ask.textContent='請選出上方語詞／文句的正確注音：';wordCard.appendChild(ask);
+ const heading=document.createElement('h2');heading.style.cssText='font-size:30px;text-align:center;margin:16px 0 22px;color:#68452e';heading.textContent='「'+q.word+'」';wordCard.appendChild(heading);
+ const hint=document.createElement('p');hint.style.cssText='font-size:17px;line-height:1.8;text-align:left;margin:0 0 18px';hint.textContent=q.hint;wordCard.appendChild(hint);
+ const ask=document.createElement('p');ask.style.cssText='font-weight:bold;text-align:center';ask.textContent='請選出上方語詞／文句的正確注音：';wordCard.appendChild(ask);
  const choices=document.createElement('div');choices.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
  q.options.forEach((opt,k)=>{
   const label=document.createElement('label');label.style.cssText='display:flex;align-items:center;gap:9px;background:#fff9ed;border:2px solid #d7bd91;border-radius:9px;padding:13px;cursor:pointer;font-size:18px';

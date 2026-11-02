@@ -100,10 +100,42 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 @keyframes correctGlow{0%{transform:scale(.96);opacity:.5}65%{transform:scale(1.025)}100%{transform:scale(1);opacity:1}}
 @keyframes starBounce{0%{transform:translateY(8px) scale(.5);opacity:0}70%{transform:translateY(-4px) scale(1.15)}100%{transform:translateY(0) scale(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.answer-celebrate,.answer-correct,.answer-correct:before{animation:none!important}}
+
+/* 國文村角色養成與學生進度 */
+.cn-playerbar{max-width:1040px;margin:14px auto 0;padding:12px 16px;background:linear-gradient(120deg,#fff8e8,#f1dfbb);border:2px solid #c6a36b;border-radius:18px;box-shadow:0 4px 0 #d6c39b;display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#573a24}
+.cn-player-avatar{font-size:38px;width:52px;height:52px;display:grid;place-items:center;background:#fff0c9;border-radius:15px}
+.cn-player-info{flex:1;min-width:150px}.cn-player-info strong{font-size:17px}.cn-xpbar{height:9px;background:#e1d4b8;border-radius:20px;overflow:hidden;margin-top:6px}.cn-xpbar span{display:block;height:100%;background:linear-gradient(90deg,#78a95f,#e0b64f);width:0}
+.cn-playerbar button,.cn-profile-modal button{border:1px solid #a77b45;border-radius:12px;padding:9px 13px;background:#70472d;color:#fff7e5;font-weight:900;cursor:pointer}
+.cn-profile-modal{position:fixed;inset:0;z-index:9999;background:#24180ed9;display:none;align-items:center;justify-content:center;padding:18px}
+.cn-profile-modal.show{display:flex}.cn-profile-card{width:min(560px,100%);padding:24px;background:#fff7e7;border:7px double #bd9253;border-radius:22px;box-shadow:0 14px 35px #160d08;color:#493321}
+.cn-profile-card h2{text-align:center;margin:0 0 8px}.cn-profile-card p{text-align:center;color:#80694e}
+.cn-profile-card input{width:100%;padding:13px;border:2px solid #cbb27e;border-radius:12px;font-size:17px;margin:8px 0 14px}
+.cn-role-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.cn-role{background:#fffaf0!important;color:#573a24!important;border:2px solid #d4bd91!important;display:grid;gap:4px;justify-items:center;padding:12px 5px!important}.cn-role.selected{outline:3px solid #d5a844;background:#fff0c9!important}.cn-role span{font-size:29px}.cn-profile-actions{display:flex;gap:10px;margin-top:16px}.cn-profile-actions button{flex:1}
+.cn-feedback{padding:12px 14px;border-radius:12px;background:#fff0d5;color:#704521;font-weight:800;margin-top:12px;line-height:1.7}
+.cn-xp-pop{font-weight:900;color:#2f7845;margin-top:6px}
+@media(max-width:560px){.cn-role-grid{grid-template-columns:repeat(2,1fr)}.cn-playerbar{padding:10px}}
+
 </style>
 </head>
 <body>
 <header><h1>國 文 書 坊</h1><p>靜心閱讀・認識文字・理解文意</p></header>
+<section class="cn-playerbar" id="cnPlayerBar" aria-live="polite">
+ <div class="cn-player-avatar" id="cnPlayerAvatar">📚</div>
+ <div class="cn-player-info"><strong id="cnPlayerName">國文學習夥伴</strong> <span id="cnPlayerLevel">識字新手</span>
+ <div class="cn-xpbar"><span id="cnPlayerXpFill"></span></div><small id="cnPlayerXpText">0 EXP</small></div>
+ <button type="button" id="cnSwitchStudent">切換學生／角色</button>
+</section>
+<div class="cn-profile-modal" id="cnProfileModal" role="dialog" aria-modal="true" aria-labelledby="cnProfileTitle">
+ <div class="cn-profile-card"><h2 id="cnProfileTitle">🌸 國文村學習夥伴</h2><p>先輸入姓名或座號，再選擇陪你學習的角色！</p>
+ <label for="cnStudentId"><strong>學生姓名或座號</strong></label><input id="cnStudentId" maxlength="24" autocomplete="off" placeholder="例如：王小明／ 07號">
+ <strong>選擇你的角色</strong><div class="cn-role-grid">
+ <button type="button" class="cn-role selected" data-role="fox"><span>🦊</span>小狐書生</button>
+ <button type="button" class="cn-role" data-role="rabbit"><span>🐰</span>月兔學士</button>
+ <button type="button" class="cn-role" data-role="panda"><span>🐼</span>熊貓博士</button>
+ <button type="button" class="cn-role" data-role="dragon"><span>🐉</span>智慧小龍</button>
+ </div><div class="cn-profile-actions"><button type="button" id="cnProfileSave">開始學習</button></div>
+ <small style="display:block;margin-top:12px;color:#80694e">同一台裝置會依姓名／座號分開保存角色與經驗值。</small></div>
+</div>
 <main>
 <div class="page-actions">
 <a class="back-island" href="./index.html">🏝 返回學習島</a>
@@ -119,6 +151,72 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 <section class="panel" id="zhuyin"></section>
 <section class="panel" id="meaning"></section>
 </main>
+<script>
+(function(){
+ const STORE='learningIslandChinesePlayersV1';
+ const roles={fox:{emoji:'🦊',name:'小狐書生'},rabbit:{emoji:'🐰',name:'月兔學士'},panda:{emoji:'🐼',name:'熊貓博士'},dragon:{emoji:'🐉',name:'智慧小龍'}};
+ const stages=[{min:0,name:'識字新手',next:50},{min:50,name:'識字學徒',next:120},{min:120,name:'閱讀學者',next:200},{min:200,name:'國文大師',next:null}];
+ let players={};try{players=JSON.parse(localStorage.getItem(STORE)||'{}')||{}}catch(e){}
+ let currentId='',selectedRole='fox';
+ const modal=document.getElementById('cnProfileModal');
+ const idInput=document.getElementById('cnStudentId');
+ function save(){try{localStorage.setItem(STORE,JSON.stringify(players))}catch(e){}}
+ function player(){return currentId?players[currentId]:null}
+ function stage(xp){return [...stages].reverse().find(x=>xp>=x.min)||stages[0]}
+ function paint(){
+  const p=player();if(!p)return;
+  const role=roles[p.role]||roles.fox,st=stage(p.xp||0),remaining=st.next===null?0:st.next-(p.xp||0);
+  document.getElementById('cnPlayerAvatar').textContent=role.emoji;
+  document.getElementById('cnPlayerName').textContent=currentId+'｜'+role.name;
+  document.getElementById('cnPlayerLevel').textContent='・'+st.name;
+  document.getElementById('cnPlayerXpText').textContent=(p.xp||0)+' EXP'+(remaining?'・距離進化還差 '+remaining+' 點':'・已完成最終進化');
+  document.getElementById('cnPlayerXpFill').style.width=(st.next?Math.min(100,((p.xp-st.min)/(st.next-st.min))*100):100)+'%';
+ }
+ function openProfile(){
+  const p=player();idInput.value=currentId||'';
+  selectedRole=p?.role||'fox';
+  document.querySelectorAll('.cn-role').forEach(b=>b.classList.toggle('selected',b.dataset.role===selectedRole));
+  modal.classList.add('show');idInput.focus();
+ }
+ document.querySelectorAll('.cn-role').forEach(b=>b.addEventListener('click',()=>{selectedRole=b.dataset.role;document.querySelectorAll('.cn-role').forEach(x=>x.classList.toggle('selected',x===b))}));
+ document.getElementById('cnProfileSave').addEventListener('click',()=>{
+  const id=idInput.value.trim();if(!id){idInput.focus();idInput.setCustomValidity('請輸入姓名或座號');idInput.reportValidity();return}
+  idInput.setCustomValidity('');currentId=id;
+  if(!players[id])players[id]={role:selectedRole,xp:0,awards:{},attempts:{},solved:{}};
+  players[id].role=selectedRole;players[id].awards||={};players[id].attempts||={};players[id].solved||={};save();modal.classList.remove('show');paint();
+ });
+ document.getElementById('cnSwitchStudent').addEventListener('click',openProfile);
+ const last=sessionStorage.getItem('cnActiveStudent');
+ if(last&&players[last]){currentId=last;paint();modal.classList.remove('show')}else openProfile();
+ const originalSave=document.getElementById('cnProfileSave');
+ originalSave.addEventListener('click',()=>{if(currentId){sessionStorage.setItem('cnActiveStudent',currentId)}});
+ window.cnProgress={
+  attempt:function(taskId,isCorrect,hint,answer){
+   const p=player();if(!p)return {attempt:1,solved:false,points:0,message:'請先選擇學生。'};
+   p.attempts[taskId]=(p.attempts[taskId]||0)+1;
+   const n=p.attempts[taskId];
+   if(p.solved[taskId])return {attempt:n,solved:true,points:0,message:'這題已完成，不會重複加分。'};
+   if(isCorrect){
+    p.solved[taskId]=true;
+    const points=n===1?10:n===2?7:5;
+    p.xp=(p.xp||0)+points;save();paint();
+    return {attempt:n,solved:true,points,message:'答對了！獲得 '+points+' EXP！'};
+   }
+   save();
+   if(n===1)return {attempt:n,solved:false,points:0,message:'再想一想！提示：'+(hint||'先仔細看題目、聽聽讀音。')};
+   if(n===2)return {attempt:n,solved:false,points:0,message:'第二次了！再給你一個方向：'+(hint||'試著排除看起來不合理的選項。')};
+   p.solved[taskId]=true;save();
+   return {attempt:n,solved:true,reveal:true,points:0,message:'我們一起看答案：'+answer+'。記住這個重點，下次會更熟悉！'};
+  },
+  award:function(taskId,points,label){
+   const p=player();if(!p||p.awards[taskId])return 0;
+   p.awards[taskId]=true;p.xp=(p.xp||0)+points;save();paint();
+   return points;
+  },
+  getStudent:function(){return currentId}
+ };
+})();
+</script>
 <script>
 const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';

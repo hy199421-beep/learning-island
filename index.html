@@ -581,16 +581,16 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 }
 
 
-/* 作者島飛機入口：縮小並移至草地空位，避開村莊文字 */
-.author-flight{position:absolute;z-index:5;left:auto;right:9%;top:69%;width:108px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:0;text-decoration:none;color:#60391f;filter:drop-shadow(0 5px 4px #355a3c66);transition:transform .25s}
+/* 作者島飛機入口：縮小後放在國文村右側草地 */
+.author-flight{position:absolute;z-index:5;left:41%;right:auto;top:25%;width:94px;min-width:0;display:flex;flex-direction:column;align-items:center;gap:0;text-decoration:none;color:#60391f;filter:drop-shadow(0 5px 4px #355a3c66);transition:transform .25s}
 .author-flight:hover{transform:translateY(-4px) rotate(-2deg)}
 .flight-plane{width:100%;height:auto;overflow:visible;animation:planeCruise 3.6s ease-in-out infinite}
-.flight-trail{position:absolute;top:4%;left:-8%;color:#fff3a5;font-size:12px;letter-spacing:3px;animation:trailTwinkle 2s ease-in-out infinite alternate}
-.flight-sign{margin-top:-5px;padding:4px 8px;border:2px solid #9b5e2f;border-radius:11px;background:linear-gradient(#fff1b9,#e8ad55);font-weight:1000;font-size:11px;white-space:nowrap;box-shadow:0 3px 0 #87502b;text-shadow:0 1px #fff}
+.flight-trail{position:absolute;top:4%;left:-8%;color:#fff3a5;font-size:11px;letter-spacing:3px;animation:trailTwinkle 2s ease-in-out infinite alternate}
+.flight-sign{margin-top:-5px;padding:4px 8px;border:2px solid #9b5e2f;border-radius:11px;background:linear-gradient(#fff1b9,#e8ad55);font-weight:1000;font-size:10px;white-space:nowrap;box-shadow:0 3px 0 #87502b;text-shadow:0 1px #fff}
 .flight-caption{display:none}
 @keyframes planeCruise{0%,100%{transform:translate(0,0) rotate(-2deg)}50%{transform:translate(4px,-4px) rotate(2deg)}}
 @keyframes trailTwinkle{to{opacity:.35;transform:translateX(4px)}}
-@media(max-width:700px){.author-flight{position:absolute;left:auto;right:5%;top:auto;bottom:9%;z-index:5;width:68px;min-width:0;margin:0}.flight-sign{font-size:9px;padding:3px 5px;border-width:1px}.flight-trail{font-size:9px}}
+@media(max-width:700px){.author-flight{position:absolute;left:44%;right:auto;top:31%;bottom:auto;z-index:5;width:62px;min-width:0;margin:0}.flight-sign{font-size:8px;padding:3px 4px;border-width:1px}.flight-trail{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.flight-plane,.flight-trail{animation:none}}
 
 /* 飛往作者島的全螢幕過場 */

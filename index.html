@@ -605,6 +605,20 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 @keyframes planeDepart{0%{transform:translate(-130vw,35vh) rotate(-12deg) scale(.7)}45%{transform:translate(0,-3vh) rotate(3deg) scale(1.1)}100%{transform:translate(135vw,-45vh) rotate(12deg) scale(.8)}}
 @keyframes cloudPass{to{transform:translateX(145vw)}}
 @media(prefers-reduced-motion:reduce){.flight-transition,.flight-transition *{animation:none!important;transition:none!important}.flight-transition.is-flying{opacity:1}.transition-plane{transform:none}}
+
+/* 數學研究中心：科學實驗室與數學藍圖主題 */
+body.math-open .modal{background:radial-gradient(circle at 50% 20%,rgba(54,105,153,.35),rgba(8,25,49,.9)),linear-gradient(135deg,#102a48,#183f60);backdrop-filter:blur(5px)}
+body.math-open .panel{width:min(1050px,96vw);max-height:94vh;border:8px solid #477da0;border-radius:20px;background:linear-gradient(rgba(235,247,255,.96),rgba(215,235,247,.97)),repeating-linear-gradient(0deg,transparent 0 31px,#83b6d055 32px),repeating-linear-gradient(90deg,transparent 0 31px,#83b6d055 32px);box-shadow:0 0 0 4px #b8e7f4,0 18px 40px #071a2c;color:#183650}
+body.math-open .panel-head h2{color:#174c70}
+body.math-open .subline{color:#426b85;font-weight:700}
+body.math-open .topic{border:2px solid #83b5d0;background:linear-gradient(145deg,#fff,#dceefa);color:#183c59;box-shadow:0 5px 0 #6698b5}
+body.math-open .topic:hover{background:#fff6d9}
+body.math-open .topic small{color:#52758b}
+body.math-open .practice{background:#e5f2fa;border:2px solid #9ac3d9;color:#173b55}
+body.math-open .answer{border-color:#83b5d0;color:#173b55}
+body.math-open .back{background:#24658a}
+.math-lab-note{margin:12px 0;padding:10px 14px;border-radius:12px;background:#d7edf7;border:1px solid #91bfd5;color:#24516c;font-weight:800}
+@media(max-width:700px){body.math-open .panel{padding:17px 13px}}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
@@ -645,6 +659,24 @@ cn:{title:'國文書坊',desc:'走進古典書院，依照課文選擇閱讀與�
 math:{title:'🔢 數學村',desc:'選擇年級，從生活例題開始，一步一步練習！',topics:[['🌱','七年級數學','整數、分數、數線與一元一次方程式'],['🧩','八年級數學','乘法公式、根式、因式分解與幾何'],['📐','九年級數學｜南一九上','連比與相似形、圓的性質、推理證明與三角形的心']]},
 en:{title:'🔤 英文村',desc:'Say hello! 從字母、單字到簡單對話。',topics:[['🔠','字母與發音','認識英文字母與基本發音'],['🍎','生活單字','累積常見生活英語單字'],['💬','基礎句型','練習日常問候與句子'],['📗','簡易閱讀','讀懂短句與生活情境']]},
 special:{title:'🤝 特需村',desc:'練習生活中的重要能力，讓每天都更有自信！',topics:[['🤝','社會技巧','打招呼、輪流、合作與交友'],['🧠','學習策略','訂目標、整理步驟與記憶'],['💬','溝通表達','表達需求、傾聽與適當回應'],['🌈','情緒管理','辨認情緒並找到調節方法'],['🎒','自我管理','時間安排、物品整理與負責']]}}
+const mathChapters=[
+{title:'第一章｜相似形',desc:'比例、相似三角形與生活中的放大縮小',emoji:'📐',questions:[
+{q:'地圖上 1 公分代表實際 2 公里。地圖距離 3 公分，實際距離是？',a:['2 公里','3 公里','5 公里','6 公里'],c:3,why:'1 公分代表 2 公里，3 公分就是 2×3＝6 公里。'},
+{q:'兩個三角形的對應角相等、對應邊成比例，稱為？',a:['相似三角形','直角三角形','等腰三角形','正三角形'],c:0,why:'這是相似三角形的特徵。'},
+{q:'照片長寬都放大 2 倍，原本長 5 公分，放大後多長？',a:['7 公分','10 公分','12 公分','15 公分'],c:1,why:'5×2＝10 公分，長度放大 2 倍。'}]},
+{title:'第二章｜圓形',desc:'認識圓心、半徑、直徑與圓的基本性質',emoji:'⭕',questions:[
+{q:'圓心到圓周上任一點的線段，稱為？',a:['直徑','半徑','弦','弧'],c:1,why:'圓心到圓周的距離是半徑。'},
+{q:'一個圓的直徑是 10 公分，半徑是多少？',a:['2 公分','5 公分','10 公分','20 公分'],c:1,why:'半徑是直徑的一半：10÷2＝5。'},
+{q:'通過圓心，而且兩端都在圓周上的線段是？',a:['半徑','弦','直徑','切線'],c:2,why:'通過圓心的弦就是直徑。'}]},
+{title:'第三章｜幾何推理',desc:'從已知條件找線索，練習說明圖形關係',emoji:'🧠',questions:[
+{q:'兩條直線相交時，形成的對頂角有什麼關係？',a:['一定相等','一定互補','一定是直角','一定不相等'],c:0,why:'兩直線相交形成的對頂角一定相等。'},
+{q:'三角形三個內角的角度合起來是多少？',a:['90°','180°','270°','360°'],c:1,why:'任何三角形的內角和都是 180°。'},
+{q:'解幾何題時，先把已知條件標在圖上，有什麼幫助？',a:['讓圖變漂亮','幫助整理線索','可以不用計算','答案會自動出現'],c:1,why:'把已知條件標示出來，有助於看出圖形關係。'}]},
+{title:'第四章｜三角形的心',desc:'認識內心、外心、重心與生活中的中心點',emoji:'🔺',questions:[
+{q:'三角形三條中線相交的點，稱為？',a:['內心','外心','重心','垂心'],c:2,why:'三條中線交於重心。'},
+{q:'三角形三邊的垂直平分線交點，稱為？',a:['外心','內心','重心','頂點'],c:0,why:'三邊垂直平分線交於外心。'},
+{q:'三角形三個內角的角平分線交點，稱為？',a:['重心','內心','外心','垂心'],c:1,why:'三個內角的角平分線交於內心。'}]}
+];
 const quiz=[
 {q:'《愛蓮說》中，作者藉由蓮花主要想表達什麼？',a:['君子的高尚品格','秋天景色的美麗','種植花草的方法','對富貴生活的嚮往'],c:0,why:'作者以蓮花象徵潔身自好、不隨俗浮沉的君子品格。'},
 {q:'閱讀《生命的碎珠》時，哪一種方式最能幫助理解課文？',a:['找出重要片段並思考帶來的體會','只背第一句','跳過不懂的段落','只計算文章有幾個字'],c:0,why:'閱讀時可以整理重要片段、事件與作者想傳達的感受。'},
@@ -656,8 +688,8 @@ const quiz=[
 let activeQuiz=0,answered=false,currentVillage='';
 let activeQuestions=quiz;const store=JSON.parse(localStorage.getItem('learningIsland')||'{"stars":0,"done":0,"today":0}');
 function sync(){document.getElementById('stars').textContent=store.stars;document.getElementById('done').textContent=store.done;document.getElementById('today').textContent=store.today}
-function openVillage(key){currentVillage=key;document.body.classList.toggle('cn-open',key==='cn');document.getElementById('cnDetail').classList.remove('show');const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};const buddyLineElement=document.getElementById('buddyLine');if(buddyLineElement)buddyLineElement.innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>key==='cn'?openLesson(i):startPractice(i);if(key==='cn'){b.innerHTML='<span class="cn-code">L0'+(i+1)+'</span><span class="emoji">'+t[0]+'</span><strong>'+t[1]+'</strong><span class="cn-status">● ● ● ●<br>未修練</span>'}box.appendChild(b)});document.getElementById('modal').classList.add('show')}
-function closeModal(){document.getElementById('modal').classList.remove('show');document.body.classList.remove('cn-open');document.getElementById('topics').style.display='grid';document.getElementById('cnDetail').classList.remove('show')}
+function openVillage(key){currentVillage=key;document.body.classList.toggle('cn-open',key==='cn');document.body.classList.toggle('math-open',key==='math');document.getElementById('cnDetail').classList.remove('show');const d=data[key];const lines={cn:'語文精靈：出發去文字森林，找找文章裡的寶藏！',math:'數學博士：準備好了嗎？一起破解數字謎題！',en:'語文精靈：Let’s go！今天來收集英文單字吧！',special:'勇氣夥伴：每一次練習，都是更棒的自己！'};const buddyLineElement=document.getElementById('buddyLine');if(buddyLineElement)buddyLineElement.innerHTML=lines[key];document.getElementById('modalTitle').textContent=d.title;document.getElementById('subline').textContent=d.desc;document.getElementById('practice').classList.remove('show');const box=document.getElementById('topics');box.innerHTML='';d.topics.forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>key==='cn'?openLesson(i):(key==='math'&&i===2?openMathChapters():startPractice(i));if(key==='cn'){b.innerHTML='<span class="cn-code">L0'+(i+1)+'</span><span class="emoji">'+t[0]+'</span><strong>'+t[1]+'</strong><span class="cn-status">● ● ● ●<br>未修練</span>'}box.appendChild(b)});document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show');document.body.classList.remove('cn-open','math-open');document.getElementById('topics').style.display='grid';document.getElementById('cnDetail').classList.remove('show')}
 
 function openLesson(i){
  const lesson=data.cn.topics[i];
@@ -691,6 +723,18 @@ const mathCourses=[
 {q:'三角形三個內角的角度合起來是多少？',a:['90°','180°','270°','360°'],c:1,why:'任何三角形的內角和都是 180°。'}
 ]
 ];
+function openMathChapters(){
+ const box=document.getElementById('topics');box.innerHTML='';
+ document.getElementById('subline').textContent='南一版九年級上學期｜選擇章節開始練習';
+ mathChapters.forEach((ch,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+ch.emoji+'</span><span><strong>'+ch.title+'</strong><small>'+ch.desc+'</small></span>';b.onclick=()=>startMathChapter(i);box.appendChild(b)});
+ document.getElementById('practice').classList.remove('show');
+}
+function startMathChapter(i){
+ activeQuestions=mathChapters[i].questions;activeQuiz=0;
+ document.getElementById('question').textContent=mathChapters[i].title+'｜'+mathChapters[i].desc;
+ document.getElementById('buddyLine').innerHTML='數學博士：我們從圖形和線索開始，一步一步解題！';
+ document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion();
+}
 function startPractice(i){activeQuestions=currentVillage==='math'?mathCourses[i]:quiz;activeQuiz=0;document.getElementById('buddyLine').innerHTML='數學博士：先看清楚題目，跟著提示一步一步算！';answered=false;document.getElementById('practice').classList.add('show');document.getElementById('feedback').textContent='';renderQuestion()}
 function renderQuestion(){const q=activeQuestions[activeQuiz];document.getElementById('question').textContent=q.q;const box=document.getElementById('answers');box.innerHTML='';q.a.forEach((a,i)=>{const b=document.createElement('button');b.className='answer';b.textContent=a;b.onclick=()=>checkAnswer(i,b);box.appendChild(b)});document.getElementById('bar').style.width='0%';answered=false}
 function checkAnswer(i,btn){if(answered)return;answered=true;const q=activeQuestions[activeQuiz];const buttons=[...document.querySelectorAll('.answer')];buttons.forEach((b,n)=>{b.disabled=true;if(n===q.c)b.classList.add('correct')});if(i===q.c){store.stars+=1;store.done+=1;store.today+=1;document.getElementById('feedback').textContent='🎉 答對了！'+q.why}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='再想一想！正確答案已標示。'+q.why}if(i!==q.c){store.done+=1;store.today+=1}localStorage.setItem('learningIsland',JSON.stringify(store));sync();document.getElementById('bar').style.width='100%'}
@@ -728,9 +772,23 @@ if(canvas){
   box(x,2.36,z+.02,1.15,.22,.12,wood);
   box(x-1.62,.65,z+1.12,.3,.72,.3,mat(0x89877c));box(x-1.62,1.1,z+1.12,.46,.12,.46,gold);
  }
+ function researchLab(x,z){
+  const glass=mat(0x8ed8e8,.25),frame=mat(0x315d80),white=mat(0xeaf4f5),blue=mat(0x397eae),yellow=mat(0xf2c65d),steel=mat(0x7896a6);
+  box(x,.42,z,3.25,.42,2.45,steel);
+  box(x,.98,z,2.75,1.18,1.9,white);
+  box(x,1.02,z+.98,2.35,.88,.08,glass);
+  for(const dx of [-1.05,-.35,.35,1.05])box(x+dx,1.02,z+.99,.07,1.05,.1,frame);
+  box(x,1.52,z,3.05,.16,2.2,blue);
+  const roof=new THREE.Mesh(new THREE.BoxGeometry(3.15,.18,2.35),frame);roof.position.set(x,1.68,z);roof.castShadow=true;scene.add(roof);
+  // 屋頂上的數學符號招牌與小型天文觀測球
+  box(x,1.9,z+.15,1.35,.12,.2,yellow);
+  const dome=new THREE.Mesh(new THREE.SphereGeometry(.48,10,8,0,Math.PI*2,0,Math.PI/2),glass);dome.position.set(x+.95,1.88,z-.35);scene.add(dome);
+  const scope=new THREE.Mesh(new THREE.CylinderGeometry(.09,.13,.95,8),steel);scope.position.set(x+.95,2.18,z-.35);scope.rotation.z=-.42;scope.castShadow=true;scene.add(scope);
+  box(x-1.95,.65,z+.45,.48,.8,.45,blue);box(x-1.95,1.12,z+.45,.62,.14,.58,yellow);
+ }
  function cart(x,z){box(x,.3,z,.65,.35,.42,mat(0xb73d2c));box(x,.55,z,.64,.12,.43,mat(0xf8eee0));for(let i=0;i<3;i++)box(x-.2+i*.2,.63,z,.09,.12,.44,mat(0xc83d32));for(const dx of [-.22,.22]){const w=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,.08,8),mat(0x332d29));w.rotation.z=Math.PI/2;w.position.set(x+dx,.12,z);scene.add(w)}}
  const zones=[{x:-6,z:-5,c:0x24796a,wall:0xe5f2e8,roof:0x175f56},{x:6,z:-5,c:0x315fbd,wall:0xe5ebf7,roof:0x2459b4},{x:-6,z:5,c:0x7040b6,wall:0xe8e0f4,roof:0x6337a4},{x:6,z:5,c:0xb95032,wall:0xf3dfbd,roof:0xb94c2e}];
- zones.forEach((q,i)=>{const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.5,.48,8),mat(q.c));platform.position.set(q.x,.03,q.z);platform.rotation.y=Math.PI/8;platform.castShadow=true;platform.receiveShadow=true;scene.add(platform);const top=new THREE.Mesh(new THREE.CylinderGeometry(3.15,3.15,.12,8),mat(q.wall));top.position.set(q.x,.32,q.z);top.rotation.y=Math.PI/8;scene.add(top);if(i===0){traditionalAcademy(q.x,.55+q.z)}else{house(q.x-.85,.55+q.z,q.wall,q.roof);house(q.x+.85,.45+q.z,q.wall,q.roof)}cart(q.x-.1,q.z+1.55);tree(q.x-2.65,q.z-1.9,.8);tree(q.x+2.6,q.z+1.7,.75)});
+ zones.forEach((q,i)=>{const platform=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.5,.48,8),mat(q.c));platform.position.set(q.x,.03,q.z);platform.rotation.y=Math.PI/8;platform.castShadow=true;platform.receiveShadow=true;scene.add(platform);const top=new THREE.Mesh(new THREE.CylinderGeometry(3.15,3.15,.12,8),mat(q.wall));top.position.set(q.x,.32,q.z);top.rotation.y=Math.PI/8;scene.add(top);if(i===0){traditionalAcademy(q.x,.55+q.z)}else if(i===1){researchLab(q.x,.55+q.z)}else{house(q.x-.85,.55+q.z,q.wall,q.roof);house(q.x+.85,.45+q.z,q.wall,q.roof)}cart(q.x-.1,q.z+1.55);tree(q.x-2.65,q.z-1.9,.8);tree(q.x+2.6,q.z+1.7,.75)});
  // 四座村莊各加入一位低多邊形 3D 可愛島民
  const islandResidents=[];
  function addResident(x,z,bodyColor,bellyColor,accent,kind){

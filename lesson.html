@@ -93,6 +93,13 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 #meaning #matchResult{text-align:center;font-size:19px;font-weight:800}
 @media(max-width:620px){#meaning #matchCard .match-options{grid-template-columns:1fr}#meaning #matchCard{padding:20px 14px}}
 
+.answer-celebrate{position:relative!important;animation:correctPop .55s ease!important;border-color:#65a66b!important;box-shadow:0 0 0 4px #bde8a8,0 8px 22px #79b86a66!important}
+.answer-correct{color:#246c3a!important;background:linear-gradient(100deg,#e5f8d9,#fff5c9)!important;animation:correctGlow .7s ease both}
+.answer-correct:before{content:"🌟 🎉 ✨";display:block;font-size:24px;letter-spacing:8px;margin-bottom:6px;animation:starBounce .7s ease}
+@keyframes correctPop{0%{transform:scale(1)}45%{transform:scale(1.025)}100%{transform:scale(1)}}
+@keyframes correctGlow{0%{transform:scale(.96);opacity:.5}65%{transform:scale(1.025)}100%{transform:scale(1);opacity:1}}
+@keyframes starBounce{0%{transform:translateY(8px) scale(.5);opacity:0}70%{transform:translateY(-4px) scale(1.15)}100%{transform:translateY(0) scale(1);opacity:1}}
+@media(prefers-reduced-motion:reduce){.answer-celebrate,.answer-correct,.answer-correct:before{animation:none!important}}
 </style>
 </head>
 <body>
@@ -167,6 +174,29 @@ meaning:`<h3>📚 解釋</h3><p class="muted">閱讀課文詞語，選出正確�
 };
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
 
+/* 答對即時回饋：短音效、亮起與星星動畫 */
+function celebrateCorrect(target,feedback){
+ try{
+  const AudioCtx=window.AudioContext||window.webkitAudioContext;
+  if(AudioCtx){
+   const ctx=new AudioCtx();
+   const now=ctx.currentTime;
+   [[659.25,0],[783.99,.13],[987.77,.26]].forEach(([freq,delay])=>{
+    const osc=ctx.createOscillator(),gain=ctx.createGain();
+    osc.type='sine';osc.frequency.setValueAtTime(freq,now+delay);
+    gain.gain.setValueAtTime(.0001,now+delay);
+    gain.gain.exponentialRampToValueAtTime(.16,now+delay+.02);
+    gain.gain.exponentialRampToValueAtTime(.0001,now+delay+.2);
+    osc.connect(gain);gain.connect(ctx.destination);osc.start(now+delay);osc.stop(now+delay+.22);
+   });
+   window.setTimeout(()=>ctx.close(),900);
+  }
+ }catch(e){}
+ if(target){target.classList.remove('answer-celebrate');void target.offsetWidth;target.classList.add('answer-celebrate');}
+ if(feedback){feedback.classList.remove('answer-correct');void feedback.offsetWidth;feedback.classList.add('answer-correct');}
+}
+
+
 if(!isAilian){
  const paragraphMatchQuestions=[
   {prompt:'「步履匆忙」的意思是？',answer:0,options:['腳步很急，形容事情很多、很忙。','走路很慢，完全不著急。','坐下來休息。','找不到回家的路。']},
@@ -210,7 +240,7 @@ if(!isAilian){
    button.disabled=matchAnswers[matchIndex]!==null;
    button.addEventListener('click',()=>{
     if(matchAnswers[matchIndex]!==null)return;
-    matchAnswers[matchIndex]=index;renderParagraphMatch();
+    matchAnswers[matchIndex]=index;if(index===q.answer)celebrateCorrect(matchCard);renderParagraphMatch();
    });
    choices.appendChild(button);
   });
@@ -219,7 +249,7 @@ if(!isAilian){
    const correct=matchAnswers[matchIndex]===q.answer;
    const feedback=document.createElement('p');
    feedback.style.cssText='margin:20px auto 0;padding:15px;border-radius:14px;text-align:center;font-size:19px;font-weight:800;background:'+(correct?'#e7f2df':'#f8e5dc')+';color:'+(correct?'#356b38':'#9b332b');
-   feedback.textContent=(correct?'🎉 答對了！':'再加油！')+' 正確答案：'+matchLetters[q.answer]+'．'+q.options[q.answer];
+   feedback.textContent=(correct?'🎉 答對了！太棒了！':'再加油！')+' 正確答案：'+matchLetters[q.answer]+'．'+q.options[q.answer];if(correct)feedback.classList.add('answer-correct');
    matchCard.appendChild(feedback);
   }
   document.getElementById('matchPrev').disabled=matchIndex===0;
@@ -347,7 +377,7 @@ function renderWordQuestion(){
   const correct=wordAnswers[wordIndex]===q.answer;
   const feedback=document.createElement('p');
   feedback.style.cssText='margin:22px auto 0;padding:16px;border-radius:14px;text-align:center;font-size:20px;font-weight:800;background:'+(correct?'#e7f2df':'#f8e5dc')+';color:'+(correct?'#356b38':'#9b332b');
-  feedback.textContent=(correct?'🎉 答對了！':'再加油！')+' 正確答案：'+wordLetters[q.answer]+'．'+q.options[q.answer];
+  feedback.textContent=(correct?'🎉 答對了！太棒了！':'再加油！')+' 正確答案：'+wordLetters[q.answer]+'．'+q.options[q.answer];if(correct)feedback.classList.add('answer-correct');
   wordCard.appendChild(feedback);
  }
  zy.querySelector('#wordPrev').disabled=wordIndex===0;
@@ -409,7 +439,7 @@ if(!isAilian){
   item.opts.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;select.appendChild(o);});
   const check=document.createElement('button');check.textContent='確認答案';check.style.cssText='margin-left:8px;padding:10px 16px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';
   const feedback=document.createElement('p');feedback.setAttribute('aria-live','polite');feedback.style.marginBottom='0';
-  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';feedback.textContent=correct?'答對了！很棒！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
+  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
   card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);
  });
 }

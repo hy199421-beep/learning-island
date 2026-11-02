@@ -368,6 +368,7 @@ function renderWordQuestion(){
   button.addEventListener('click',()=>{
    if(wordAnswers[wordIndex]!==null)return;
    wordAnswers[wordIndex]=k;
+   if(k===q.answer)celebrateCorrect(wordCard);
    renderWordQuestion();
   });
   choices.appendChild(button);

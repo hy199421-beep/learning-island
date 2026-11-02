@@ -186,10 +186,10 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
   players[id].role=selectedRole;players[id].awards||={};players[id].attempts||={};players[id].solved||={};save();modal.classList.remove('show');paint();
  });
  document.getElementById('cnSwitchStudent').addEventListener('click',openProfile);
- const last=sessionStorage.getItem('cnActiveStudent');
+ const last=localStorage.getItem('cnActiveStudent');
  if(last&&players[last]){currentId=last;paint();modal.classList.remove('show')}else openProfile();
  const originalSave=document.getElementById('cnProfileSave');
- originalSave.addEventListener('click',()=>{if(currentId){sessionStorage.setItem('cnActiveStudent',currentId)}});
+ originalSave.addEventListener('click',()=>{if(currentId){localStorage.setItem('cnActiveStudent',currentId)}});
  window.cnProgress={
   attempt:function(taskId,isCorrect,hint,answer){
    const p=player();if(!p)return {attempt:1,solved:false,points:0,message:'請先選擇學生。'};
@@ -533,6 +533,7 @@ if(!isAilian){
  game.innerHTML='<h3>🎮 分段慣用詞句配對・填空挑戰</h3><p class="muted">讀完每一段，選出最適合填入句子的詞語。完成八題看看自己能得幾分！</p><div id="gameScore" class="note">目前得分：0 / 8</div><div id="gameQuestions"></div>';
  document.getElementById('text').appendChild(game);
  const host=game.querySelector('#gameQuestions');
+ const paragraphDone=Array(paragraphs.length).fill(false);
  paragraphs.forEach((item,index)=>{
   const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
   const readBtn=document.createElement('button');readBtn.textContent='🔊';readBtn.className='read-aloud-btn';readBtn.type='button';readBtn.setAttribute('aria-label','報讀題目');readBtn.title='報讀題目';readBtn.addEventListener('click',()=>{if(!('speechSynthesis' in window)){feedback.textContent='此裝置暫不支援語音報讀，請由老師協助念題。';return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(item.p.replace(/[｜]/g,'。')+'。'+item.q);utterance.lang='zh-TW';utterance.rate=0.78;speechSynthesis.speak(utterance);feedback.textContent='正在報讀題目，請仔細聆聽。';});
@@ -542,7 +543,15 @@ if(!isAilian){
   item.opts.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;select.appendChild(o);});
   const check=document.createElement('button');check.textContent='確認答案';check.style.cssText='margin-left:8px;padding:10px 16px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';
   const feedback=document.createElement('p');feedback.setAttribute('aria-live','polite');feedback.style.marginBottom='0';
-  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
+  check.addEventListener('click',()=>{
+   if(paragraphDone[index])return;
+   if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}
+   const correct=select.value===item.a;
+   const result=window.cnProgress?window.cnProgress.attempt('fill-'+key+'-'+index,correct,'先看句子前後的意思，想想哪個詞語最合適。',item.a):{solved:correct,message:correct?'答對了！':'再想一想！'};
+   feedback.textContent=result.message;feedback.style.color=correct?'#26734d':'#9b5b24';
+   if(result.solved){paragraphDone[index]=true;card.dataset.correct=correct?'1':'0';if(correct)celebrateCorrect(card,feedback);else feedback.textContent=result.message;select.disabled=true;check.disabled=true;}else{select.value='';}
+   game.querySelector('#gameScore').textContent='已完成：'+paragraphDone.filter(Boolean).length+'／8 題';
+  });
   card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);
  });
 }

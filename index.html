@@ -581,8 +581,8 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 }
 
 
-/* 作者島飛行入口：設置在國文村左側，保留原有村莊版面 */
-.author-flight{position:absolute;z-index:6;left:0;top:29%;width:min(34%,350px);min-width:210px;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:#60391f;filter:drop-shadow(0 8px 5px #355a3c55);transition:transform .25s}
+/* 作者島飛行入口：移至國文村右後方 */
+.author-flight{position:absolute;z-index:2;left:24%;top:13%;width:min(29%,320px);min-width:190px;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:#60391f;filter:drop-shadow(0 8px 5px #355a3c55);transition:transform .25s}
 .author-flight:hover{transform:translateY(-8px) rotate(-2deg)}
 .flight-plane{width:78%;height:auto;overflow:visible;animation:planeCruise 3.6s ease-in-out infinite}
 .flight-trail{position:absolute;top:7%;left:4%;color:#fff3a5;font-size:23px;letter-spacing:8px;animation:trailTwinkle 2s ease-in-out infinite alternate}
@@ -590,8 +590,21 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 .flight-caption{font-size:12px;font-weight:900;color:#fff9df;text-shadow:0 2px 3px #49331e;margin-top:7px}
 @keyframes planeCruise{0%,100%{transform:translate(0,0) rotate(-2deg)}50%{transform:translate(8px,-9px) rotate(2deg)}}
 @keyframes trailTwinkle{to{opacity:.35;transform:translateX(8px)}}
-@media(max-width:700px){.author-flight{position:relative;left:auto;top:auto;grid-column:1/-1;grid-row:2;width:min(75%,300px);min-width:0;margin:-8px auto 8px}.flight-plane{width:70%}.flight-caption{color:#fff8dc}.center{grid-row:3}.v-en,.v-special{grid-row:4}}
+@media(max-width:700px){.author-flight{position:relative;left:auto;top:auto;z-index:4;grid-column:2;grid-row:1;width:min(100%,230px);min-width:0;margin:-22px auto 0;align-self:start}.flight-plane{width:78%}.flight-sign{font-size:14px;padding:7px 11px}.flight-caption{color:#fff8dc;text-align:center}.center{grid-row:3}.v-en,.v-special{grid-row:4}}
 @media(prefers-reduced-motion:reduce){.flight-plane,.flight-trail{animation:none}}
+
+/* 飛往作者島的全螢幕過場 */
+.flight-transition{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(180deg,#6dc4e5,#b8dfd1 65%,#e9d39c);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s,visibility .35s;overflow:hidden}
+.flight-transition.is-flying{opacity:1;visibility:visible;pointer-events:auto}
+.flight-transition .transition-cloud{position:absolute;font-size:clamp(48px,9vw,100px);opacity:.8;animation:cloudPass 2.1s linear infinite}
+.flight-transition .cloud-a{top:12%;left:-18%}.flight-transition .cloud-b{top:58%;left:-30%;animation-delay:-1s}
+.transition-plane{font-size:clamp(76px,15vw,150px);filter:drop-shadow(0 12px 6px #385b4b55);transform:translateX(-130vw) rotate(-8deg)}
+.is-flying .transition-plane{animation:planeDepart 1.8s cubic-bezier(.35,.05,.7,.95) forwards}
+.transition-message{font-size:clamp(20px,4vw,32px);font-weight:1000;color:#67452a;text-shadow:0 2px #fff6d9}
+.transition-sub{font-size:14px;font-weight:800;color:#fff;text-shadow:0 2px 4px #426b69}
+@keyframes planeDepart{0%{transform:translate(-130vw,35vh) rotate(-12deg) scale(.7)}45%{transform:translate(0,-3vh) rotate(3deg) scale(1.1)}100%{transform:translate(135vw,-45vh) rotate(12deg) scale(.8)}}
+@keyframes cloudPass{to{transform:translateX(145vw)}}
+@media(prefers-reduced-motion:reduce){.flight-transition,.flight-transition *{animation:none!important;transition:none!important}.flight-transition.is-flying{opacity:1}.transition-plane{transform:none}}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
@@ -624,7 +637,7 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
 <div class="quest-banner"><span class="quest-icon">🗺️</span><span>今日任務：挑選一座村莊，完成一個挑戰！</span></div>
 <div class="bottom"><div class="daily">📌 今日練了 <span id="today">0</span> 回・點村莊出發</div></div>
 <span class="tree-deco t1">🌳</span><span class="tree-deco t2">🌲</span><span class="tree-deco t3">🌳</span><span class="tree-deco t4">🌲</span>
-</div></main>
+</div></main><div class="flight-transition" id="flightTransition" aria-hidden="true"><span class="transition-cloud cloud-a">☁️</span><span class="transition-cloud cloud-b">☁️</span><div class="transition-plane">✈️</div><div class="transition-message">準備起飛！前往作者島</div><div class="transition-sub">穿越雲朵，探索文學家的故事……</div></div>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="cn-detail" id="cnDetail"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>
 <script>
 const data={
@@ -764,4 +777,20 @@ if(canvas){
  }animate(0);
 }
 
-</script></body></html>
+</script>
+<script>
+(function(){
+ const link=document.querySelector('.author-flight');
+ const screen=document.getElementById('flightTransition');
+ if(!link||!screen)return;
+ link.addEventListener('click',function(event){
+  if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+  event.preventDefault();
+  screen.classList.add('is-flying');
+  screen.setAttribute('aria-hidden','false');
+  const target=link.href;
+  window.setTimeout(function(){window.location.href=target;},1900);
+ });
+})();
+</script>
+</body></html>

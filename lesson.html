@@ -311,7 +311,7 @@ if(!isAilian){
   {prompt:'「著書立說」的意思是？',answer:3,options:['把書本放回書架。','每天閱讀很多故事。','抄寫別人的文章。','寫作書籍，提出自己的學說或想法。']}
  ];
  const matchLetters=['A','B','C','D'];
- const matchAnswers=Array(paragraphMatchQuestions.length).fill(null);
+ const matchAnswers=Array(paragraphMatchQuestions.length).fill(null),matchDone=Array(paragraphMatchQuestions.length).fill(false),matchFeedback=Array(paragraphMatchQuestions.length).fill('');
  let matchIndex=0;
  const matchCard=document.getElementById('matchCard');
  function renderParagraphMatch(){
@@ -335,24 +335,27 @@ if(!isAilian){
    const button=document.createElement('button');
    button.type='button';button.className='match-choice';
    button.textContent=matchLetters[index]+'．'+option;
-   button.disabled=matchAnswers[matchIndex]!==null;
+   button.disabled=matchDone[matchIndex];
    button.addEventListener('click',()=>{
-    if(matchAnswers[matchIndex]!==null)return;
-    matchAnswers[matchIndex]=index;if(index===q.answer)celebrateCorrect(matchCard);renderParagraphMatch();
+    if(matchDone[matchIndex])return;
+    const result=window.cnProgress?window.cnProgress.attempt('meaning-'+key+'-'+matchIndex,index===q.answer,'先想想這個詞語在生活中代表什麼情況。',matchLetters[q.answer]+'．'+q.options[q.answer]):{solved:index===q.answer,message:index===q.answer?'答對了！':'再想一想！'};
+    matchFeedback[matchIndex]=result.message;
+    if(result.solved){matchDone[matchIndex]=true;matchAnswers[matchIndex]=index===q.answer?index:q.answer;if(index===q.answer)celebrateCorrect(matchCard);}
+    renderParagraphMatch();
    });
    choices.appendChild(button);
   });
   matchCard.appendChild(choices);
-  if(matchAnswers[matchIndex]!==null){
-   const correct=matchAnswers[matchIndex]===q.answer;
+  if(matchFeedback[matchIndex]){
+   const correct=matchDone[matchIndex]&&matchAnswers[matchIndex]===q.answer;
    const feedback=document.createElement('p');
    feedback.style.cssText='margin:20px auto 0;padding:15px;border-radius:14px;text-align:center;font-size:19px;font-weight:800;background:'+(correct?'#e7f2df':'#f8e5dc')+';color:'+(correct?'#356b38':'#9b332b');
-   feedback.textContent=(correct?'🎉 答對了！太棒了！':'再加油！')+' 正確答案：'+matchLetters[q.answer]+'．'+q.options[q.answer];if(correct)feedback.classList.add('answer-correct');
+   feedback.textContent=correct?'🎉 答對了！太棒了！':matchFeedback[matchIndex];if(correct)feedback.classList.add('answer-correct');
    matchCard.appendChild(feedback);
   }
   document.getElementById('matchPrev').disabled=matchIndex===0;
   document.getElementById('matchNext').disabled=matchIndex===paragraphMatchQuestions.length-1;
-  document.getElementById('matchFinish').disabled=matchAnswers.some(x=>x===null);
+  document.getElementById('matchFinish').disabled=matchDone.some(x=>!x);
  }
  document.getElementById('matchPrev').addEventListener('click',()=>{if(matchIndex>0){matchIndex--;renderParagraphMatch();}});
  document.getElementById('matchNext').addEventListener('click',()=>{if(matchIndex<paragraphMatchQuestions.length-1){matchIndex++;renderParagraphMatch();}});
@@ -431,7 +434,7 @@ const wordQuiz=isAilian
 const zy=document.getElementById('zhuyin');
 zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文指定字詞國字注音練習')+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
 let wordIndex=0;
-const wordAnswers=Array(wordQuiz.length).fill(null);
+const wordAnswers=Array(wordQuiz.length).fill(null),wordDone=Array(wordQuiz.length).fill(false),wordFeedback=Array(wordQuiz.length).fill('');
 const wordCard=zy.querySelector('#wordCard');
 function renderWordQuestion(){
  const q=wordQuiz[wordIndex];
@@ -454,7 +457,7 @@ function renderWordQuestion(){
   button.type='button';
   button.className='zhuyin-choice';
   button.setAttribute('aria-pressed',String(wordAnswers[wordIndex]===k));
-  button.disabled=wordAnswers[wordIndex]!==null;
+  button.disabled=wordDone[wordIndex];
   button.style.cssText='display:flex;align-items:center;gap:12px;text-align:left;background:#fff9ed;border:2px solid #d7bd91;border-radius:18px;padding:18px;cursor:pointer;font-size:clamp(17px,2vw,21px);font-weight:700;color:#493321;min-height:78px;box-shadow:0 5px 0 #d4c092;overflow-wrap:anywhere';
   const badge=document.createElement('span');
   badge.textContent=['🌱','⭐','🔔','💎'][k];
@@ -464,24 +467,25 @@ function renderWordQuestion(){
   button.appendChild(badge);
   button.appendChild(label);
   button.addEventListener('click',()=>{
-   if(wordAnswers[wordIndex]!==null)return;
-   wordAnswers[wordIndex]=k;
-   if(k===q.answer)celebrateCorrect(wordCard);
+   if(wordDone[wordIndex])return;
+   const result=window.cnProgress?window.cnProgress.attempt('word-'+key+'-'+wordIndex,k===q.answer,q.hint||'請比較國字的字形與注音。',wordLetters[q.answer]+'．'+q.options[q.answer]):{solved:k===q.answer,points:0,message:k===q.answer?'答對了！':'再試一次！'};
+   wordFeedback[wordIndex]=result.message;
+   if(result.solved){wordDone[wordIndex]=true;wordAnswers[wordIndex]=k===q.answer?k:q.answer;if(k===q.answer)celebrateCorrect(wordCard);}
    renderWordQuestion();
   });
   choices.appendChild(button);
  });
  wordCard.appendChild(choices);
- if(wordAnswers[wordIndex]!==null){
-  const correct=wordAnswers[wordIndex]===q.answer;
+ if(wordFeedback[wordIndex]){
+  const correct=wordDone[wordIndex]&&wordAnswers[wordIndex]===q.answer;
   const feedback=document.createElement('p');
   feedback.style.cssText='margin:22px auto 0;padding:16px;border-radius:14px;text-align:center;font-size:20px;font-weight:800;background:'+(correct?'#e7f2df':'#f8e5dc')+';color:'+(correct?'#356b38':'#9b332b');
-  feedback.textContent=(correct?'🎉 答對了！太棒了！':'再加油！')+' 正確答案：'+wordLetters[q.answer]+'．'+q.options[q.answer];if(correct)feedback.classList.add('answer-correct');
+  feedback.textContent=(correct?'🎉 答對了！太棒了！':wordFeedback[wordIndex]);if(correct)feedback.classList.add('answer-correct');
   wordCard.appendChild(feedback);
  }
  zy.querySelector('#wordPrev').disabled=wordIndex===0;
  zy.querySelector('#wordNext').disabled=wordIndex===wordQuiz.length-1;
- zy.querySelector('#wordFinish').disabled=wordAnswers.some(x=>x===null);
+ zy.querySelector('#wordFinish').disabled=wordDone.some(x=>!x);
 }
 zy.querySelector('#wordPrev').addEventListener('click',()=>{
  if(wordIndex>0){wordIndex--;renderWordQuestion();}

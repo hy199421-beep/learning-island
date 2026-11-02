@@ -580,11 +580,38 @@ body.cn-open #modal .panel>.back{margin-top:14px!important;padding:12px 22px!imp
  .boat-destination{left:27px!important;top:34px!important}
 }
 
+
+/* 作者島飛行入口：設置在國文村左側，保留原有村莊版面 */
+.author-flight{position:absolute;z-index:6;left:0;top:29%;width:min(34%,350px);min-width:210px;display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:#60391f;filter:drop-shadow(0 8px 5px #355a3c55);transition:transform .25s}
+.author-flight:hover{transform:translateY(-8px) rotate(-2deg)}
+.flight-plane{width:78%;height:auto;overflow:visible;animation:planeCruise 3.6s ease-in-out infinite}
+.flight-trail{position:absolute;top:7%;left:4%;color:#fff3a5;font-size:23px;letter-spacing:8px;animation:trailTwinkle 2s ease-in-out infinite alternate}
+.flight-sign{margin-top:-8px;padding:9px 20px;border:3px solid #9b5e2f;border-radius:18px;background:linear-gradient(#fff1b9,#e8ad55);font-weight:1000;font-size:clamp(15px,1.6vw,20px);box-shadow:0 5px 0 #87502b;text-shadow:0 1px #fff}
+.flight-caption{font-size:12px;font-weight:900;color:#fff9df;text-shadow:0 2px 3px #49331e;margin-top:7px}
+@keyframes planeCruise{0%,100%{transform:translate(0,0) rotate(-2deg)}50%{transform:translate(8px,-9px) rotate(2deg)}}
+@keyframes trailTwinkle{to{opacity:.35;transform:translateX(8px)}}
+@media(max-width:700px){.author-flight{position:relative;left:auto;top:auto;grid-column:1/-1;grid-row:2;width:min(75%,300px);min-width:0;margin:-8px auto 8px}.flight-plane{width:70%}.flight-caption{color:#fff8dc}.center{grid-row:3}.v-en,.v-special{grid-row:4}}
+@media(prefers-reduced-motion:reduce){.flight-plane,.flight-trail{animation:none}}
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
 <header class="header"><div class="brand"><span class="brand-icon">🏝️</span><div><h1>學習島</h1><p>每天一小步，能力大冒險！</p></div></div><div class="stats">⭐ <span id="stars">0</span> 星星　🏅 <span id="done">0</span> 次練習</div></header>
 <section class="welcome"><h2>嗨！小小探險家，今天想去哪一村？</h2><p>選一座學習村莊，開始你的知識冒險吧！</p></section>
+<a class="author-flight" href="./author-island.html" aria-label="搭乘飛機前往作者島">
+  <span class="flight-trail" aria-hidden="true">✦ · · · · · · ✦</span>
+  <svg class="flight-plane" viewBox="0 0 260 150" role="img" aria-label="紅白色小飛機">
+    <path d="M18 91 Q92 8 229 55" fill="none" stroke="#ffe58a" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 12"/>
+    <path d="M46 82 L116 67 L184 23 Q194 17 198 26 L171 72 L221 80 Q232 84 225 92 L165 102 L143 131 Q137 138 131 130 L123 104 L61 111 Q46 110 46 98Z" fill="#f5f7f8" stroke="#9b4b2c" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M65 85 L146 67 L174 39 L160 77 L216 85 L159 94 L139 119 L127 95 L65 102Z" fill="#e95b3d" stroke="#a83f2c" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M96 75 Q103 46 128 48 Q147 50 151 66Z" fill="#8bd5eb" stroke="#fff" stroke-width="5"/>
+    <circle cx="119" cy="62" r="8" fill="#ffe4a3"/><path d="M115 59q4-5 8 0" fill="none" stroke="#553d2a" stroke-width="2"/>
+    <path d="M42 80 L34 58 M32 57 L50 62" stroke="#f6bd48" stroke-width="5" stroke-linecap="round"/>
+    <path d="M174 22 L180 7 L188 23 L204 28 L188 34 L181 50 L175 34 L160 28Z" fill="#ffd45f" stroke="#fff2bd" stroke-width="2"/>
+    <circle cx="70" cy="113" r="7" fill="#5d4b3c"/><circle cx="181" cy="103" r="7" fill="#5d4b3c"/>
+  </svg>
+  <span class="flight-sign">✈ 前往作者島</span>
+  <span class="flight-caption">搭乘小飛機，拜訪文學家</span>
+</a>
 <div class="villages">
 <section class="village v-cn"><span class="trees">🌸 🌳</span><div class="buildings"><div class="house">📖</div><div class="house">🪷</div></div><button class="village-label" onclick="openVillage('cn')">📖 國文村</button></section>
 

@@ -340,7 +340,7 @@ if(!isAilian){
     if(matchDone[matchIndex])return;
     const result=window.cnProgress?window.cnProgress.attempt('meaning-'+key+'-'+matchIndex,index===q.answer,'先想想這個詞語在生活中代表什麼情況。',matchLetters[q.answer]+'．'+q.options[q.answer]):{solved:index===q.answer,message:index===q.answer?'答對了！':'再想一想！'};
     matchFeedback[matchIndex]=result.message;
-    if(result.solved){matchDone[matchIndex]=true;matchAnswers[matchIndex]=index===q.answer?index:q.answer;if(index===q.answer)celebrateCorrect(matchCard);}
+    if(result.solved){matchDone[matchIndex]=true;matchAnswers[matchIndex]=index;if(index===q.answer)celebrateCorrect(matchCard);}
     renderParagraphMatch();
    });
    choices.appendChild(button);
@@ -470,7 +470,7 @@ function renderWordQuestion(){
    if(wordDone[wordIndex])return;
    const result=window.cnProgress?window.cnProgress.attempt('word-'+key+'-'+wordIndex,k===q.answer,q.hint||'請比較國字的字形與注音。',wordLetters[q.answer]+'．'+q.options[q.answer]):{solved:k===q.answer,points:0,message:k===q.answer?'答對了！':'再試一次！'};
    wordFeedback[wordIndex]=result.message;
-   if(result.solved){wordDone[wordIndex]=true;wordAnswers[wordIndex]=k===q.answer?k:q.answer;if(k===q.answer)celebrateCorrect(wordCard);}
+   if(result.solved){wordDone[wordIndex]=true;wordAnswers[wordIndex]=k;if(k===q.answer)celebrateCorrect(wordCard);}
    renderWordQuestion();
   });
   choices.appendChild(button);

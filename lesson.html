@@ -100,42 +100,10 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 @keyframes correctGlow{0%{transform:scale(.96);opacity:.5}65%{transform:scale(1.025)}100%{transform:scale(1);opacity:1}}
 @keyframes starBounce{0%{transform:translateY(8px) scale(.5);opacity:0}70%{transform:translateY(-4px) scale(1.15)}100%{transform:translateY(0) scale(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.answer-celebrate,.answer-correct,.answer-correct:before{animation:none!important}}
-
-/* 國文村角色養成與學生進度 */
-.cn-playerbar{max-width:1040px;margin:14px auto 0;padding:12px 16px;background:linear-gradient(120deg,#fff8e8,#f1dfbb);border:2px solid #c6a36b;border-radius:18px;box-shadow:0 4px 0 #d6c39b;display:flex;align-items:center;gap:12px;flex-wrap:wrap;color:#573a24}
-.cn-player-avatar{font-size:38px;width:52px;height:52px;display:grid;place-items:center;background:#fff0c9;border-radius:15px}
-.cn-player-info{flex:1;min-width:150px}.cn-player-info strong{font-size:17px}.cn-xpbar{height:9px;background:#e1d4b8;border-radius:20px;overflow:hidden;margin-top:6px}.cn-xpbar span{display:block;height:100%;background:linear-gradient(90deg,#78a95f,#e0b64f);width:0}
-.cn-playerbar button,.cn-profile-modal button{border:1px solid #a77b45;border-radius:12px;padding:9px 13px;background:#70472d;color:#fff7e5;font-weight:900;cursor:pointer}
-.cn-profile-modal{position:fixed;inset:0;z-index:9999;background:#24180ed9;display:none;align-items:center;justify-content:center;padding:18px}
-.cn-profile-modal.show{display:flex}.cn-profile-card{width:min(560px,100%);padding:24px;background:#fff7e7;border:7px double #bd9253;border-radius:22px;box-shadow:0 14px 35px #160d08;color:#493321}
-.cn-profile-card h2{text-align:center;margin:0 0 8px}.cn-profile-card p{text-align:center;color:#80694e}
-.cn-profile-card input{width:100%;padding:13px;border:2px solid #cbb27e;border-radius:12px;font-size:17px;margin:8px 0 14px}
-.cn-role-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.cn-role{background:#fffaf0!important;color:#573a24!important;border:2px solid #d4bd91!important;display:grid;gap:4px;justify-items:center;padding:12px 5px!important}.cn-role.selected{outline:3px solid #d5a844;background:#fff0c9!important}.cn-role span{font-size:29px}.cn-profile-actions{display:flex;gap:10px;margin-top:16px}.cn-profile-actions button{flex:1}
-.cn-feedback{padding:12px 14px;border-radius:12px;background:#fff0d5;color:#704521;font-weight:800;margin-top:12px;line-height:1.7}
-.cn-xp-pop{font-weight:900;color:#2f7845;margin-top:6px}
-@media(max-width:560px){.cn-role-grid{grid-template-columns:repeat(2,1fr)}.cn-playerbar{padding:10px}}
-
 </style>
 </head>
 <body>
 <header><h1>國 文 書 坊</h1><p>靜心閱讀・認識文字・理解文意</p></header>
-<section class="cn-playerbar" id="cnPlayerBar" aria-live="polite">
- <div class="cn-player-avatar" id="cnPlayerAvatar">📚</div>
- <div class="cn-player-info"><strong id="cnPlayerName">國文學習夥伴</strong> <span id="cnPlayerLevel">識字新手</span>
- <div class="cn-xpbar"><span id="cnPlayerXpFill"></span></div><small id="cnPlayerXpText">0 EXP</small></div>
- <button type="button" id="cnSwitchStudent">切換學生／角色</button>
-</section>
-<div class="cn-profile-modal" id="cnProfileModal" role="dialog" aria-modal="true" aria-labelledby="cnProfileTitle">
- <div class="cn-profile-card"><h2 id="cnProfileTitle">🌸 國文村學習夥伴</h2><p>先輸入姓名或座號，再選擇陪你學習的角色！</p>
- <label for="cnStudentId"><strong>學生姓名或座號</strong></label><input id="cnStudentId" maxlength="24" autocomplete="off" placeholder="例如：王小明／ 07號">
- <strong>選擇你的角色</strong><div class="cn-role-grid">
- <button type="button" class="cn-role selected" data-role="fox"><span>🦊</span>小狐書生</button>
- <button type="button" class="cn-role" data-role="rabbit"><span>🐰</span>月兔學士</button>
- <button type="button" class="cn-role" data-role="panda"><span>🐼</span>熊貓博士</button>
- <button type="button" class="cn-role" data-role="dragon"><span>🐉</span>智慧小龍</button>
- </div><div class="cn-profile-actions"><button type="button" id="cnProfileSave">開始學習</button></div>
- <small style="display:block;margin-top:12px;color:#80694e">同一台裝置會依姓名／座號分開保存角色與經驗值。</small></div>
-</div>
 <main>
 <div class="page-actions">
 <a class="back-island" href="./index.html">🏝 返回學習島</a>
@@ -151,72 +119,6 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 <section class="panel" id="zhuyin"></section>
 <section class="panel" id="meaning"></section>
 </main>
-<script>
-(function(){
- const STORE='learningIslandChinesePlayersV1';
- const roles={fox:{emoji:'🦊',name:'小狐書生'},rabbit:{emoji:'🐰',name:'月兔學士'},panda:{emoji:'🐼',name:'熊貓博士'},dragon:{emoji:'🐉',name:'智慧小龍'}};
- const stages=[{min:0,name:'識字新手',next:50},{min:50,name:'識字學徒',next:120},{min:120,name:'閱讀學者',next:200},{min:200,name:'國文大師',next:null}];
- let players={};try{players=JSON.parse(localStorage.getItem(STORE)||'{}')||{}}catch(e){}
- let currentId='',selectedRole='fox';
- const modal=document.getElementById('cnProfileModal');
- const idInput=document.getElementById('cnStudentId');
- function save(){try{localStorage.setItem(STORE,JSON.stringify(players))}catch(e){}}
- function player(){return currentId?players[currentId]:null}
- function stage(xp){return [...stages].reverse().find(x=>xp>=x.min)||stages[0]}
- function paint(){
-  const p=player();if(!p)return;
-  const role=roles[p.role]||roles.fox,st=stage(p.xp||0),remaining=st.next===null?0:st.next-(p.xp||0);
-  document.getElementById('cnPlayerAvatar').textContent=role.emoji;
-  document.getElementById('cnPlayerName').textContent=currentId+'｜'+role.name;
-  document.getElementById('cnPlayerLevel').textContent='・'+st.name;
-  document.getElementById('cnPlayerXpText').textContent=(p.xp||0)+' EXP'+(remaining?'・距離進化還差 '+remaining+' 點':'・已完成最終進化');
-  document.getElementById('cnPlayerXpFill').style.width=(st.next?Math.min(100,((p.xp-st.min)/(st.next-st.min))*100):100)+'%';
- }
- function openProfile(){
-  const p=player();idInput.value=currentId||'';
-  selectedRole=p?.role||'fox';
-  document.querySelectorAll('.cn-role').forEach(b=>b.classList.toggle('selected',b.dataset.role===selectedRole));
-  modal.classList.add('show');idInput.focus();
- }
- document.querySelectorAll('.cn-role').forEach(b=>b.addEventListener('click',()=>{selectedRole=b.dataset.role;document.querySelectorAll('.cn-role').forEach(x=>x.classList.toggle('selected',x===b))}));
- document.getElementById('cnProfileSave').addEventListener('click',()=>{
-  const id=idInput.value.trim();if(!id){idInput.focus();idInput.setCustomValidity('請輸入姓名或座號');idInput.reportValidity();return}
-  idInput.setCustomValidity('');currentId=id;
-  if(!players[id])players[id]={role:selectedRole,xp:0,awards:{},attempts:{},solved:{}};
-  players[id].role=selectedRole;players[id].awards||={};players[id].attempts||={};players[id].solved||={};save();modal.classList.remove('show');paint();
- });
- document.getElementById('cnSwitchStudent').addEventListener('click',openProfile);
- const last=localStorage.getItem('cnActiveStudent');
- if(last&&players[last]){currentId=last;paint();modal.classList.remove('show')}else openProfile();
- const originalSave=document.getElementById('cnProfileSave');
- originalSave.addEventListener('click',()=>{if(currentId){localStorage.setItem('cnActiveStudent',currentId)}});
- window.cnProgress={
-  attempt:function(taskId,isCorrect,hint,answer){
-   const p=player();if(!p)return {attempt:1,solved:false,points:0,message:'請先選擇學生。'};
-   p.attempts[taskId]=(p.attempts[taskId]||0)+1;
-   const n=p.attempts[taskId];
-   if(p.solved[taskId])return {attempt:n,solved:true,points:0,message:'這題已完成，不會重複加分。'};
-   if(isCorrect){
-    p.solved[taskId]=true;
-    const points=n===1?10:n===2?7:5;
-    p.xp=(p.xp||0)+points;save();paint();
-    return {attempt:n,solved:true,points,message:'答對了！獲得 '+points+' EXP！'};
-   }
-   save();
-   if(n===1)return {attempt:n,solved:false,points:0,message:'再想一想！提示：'+(hint||'先仔細看題目、聽聽讀音。')};
-   if(n===2)return {attempt:n,solved:false,points:0,message:'第二次了！再給你一個方向：'+(hint||'試著排除看起來不合理的選項。')};
-   p.solved[taskId]=true;save();
-   return {attempt:n,solved:true,reveal:true,points:0,message:'我們一起看答案：'+answer+'。記住這個重點，下次會更熟悉！'};
-  },
-  award:function(taskId,points,label){
-   const p=player();if(!p||p.awards[taskId])return 0;
-   p.awards[taskId]=true;p.xp=(p.xp||0)+points;save();paint();
-   return points;
-  },
-  getStudent:function(){return currentId}
- };
-})();
-</script>
 <script>
 const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';
@@ -311,7 +213,7 @@ if(!isAilian){
   {prompt:'「著書立說」的意思是？',answer:3,options:['把書本放回書架。','每天閱讀很多故事。','抄寫別人的文章。','寫作書籍，提出自己的學說或想法。']}
  ];
  const matchLetters=['A','B','C','D'];
- const matchAnswers=Array(paragraphMatchQuestions.length).fill(null),matchDone=Array(paragraphMatchQuestions.length).fill(false),matchFeedback=Array(paragraphMatchQuestions.length).fill('');
+ const matchAnswers=Array(paragraphMatchQuestions.length).fill(null);
  let matchIndex=0;
  const matchCard=document.getElementById('matchCard');
  function renderParagraphMatch(){
@@ -335,27 +237,24 @@ if(!isAilian){
    const button=document.createElement('button');
    button.type='button';button.className='match-choice';
    button.textContent=matchLetters[index]+'．'+option;
-   button.disabled=matchDone[matchIndex];
+   button.disabled=matchAnswers[matchIndex]!==null;
    button.addEventListener('click',()=>{
-    if(matchDone[matchIndex])return;
-    const result=window.cnProgress?window.cnProgress.attempt('meaning-'+key+'-'+matchIndex,index===q.answer,'先想想這個詞語在生活中代表什麼情況。',matchLetters[q.answer]+'．'+q.options[q.answer]):{solved:index===q.answer,message:index===q.answer?'答對了！':'再想一想！'};
-    matchFeedback[matchIndex]=result.message;
-    if(result.solved){matchDone[matchIndex]=true;matchAnswers[matchIndex]=index;if(index===q.answer)celebrateCorrect(matchCard);}
-    renderParagraphMatch();
+    if(matchAnswers[matchIndex]!==null)return;
+    matchAnswers[matchIndex]=index;if(index===q.answer)celebrateCorrect(matchCard);renderParagraphMatch();
    });
    choices.appendChild(button);
   });
   matchCard.appendChild(choices);
-  if(matchFeedback[matchIndex]){
-   const correct=matchDone[matchIndex]&&matchAnswers[matchIndex]===q.answer;
+  if(matchAnswers[matchIndex]!==null){
+   const correct=matchAnswers[matchIndex]===q.answer;
    const feedback=document.createElement('p');
    feedback.style.cssText='margin:20px auto 0;padding:15px;border-radius:14px;text-align:center;font-size:19px;font-weight:800;background:'+(correct?'#e7f2df':'#f8e5dc')+';color:'+(correct?'#356b38':'#9b332b');
-   feedback.textContent=correct?'🎉 答對了！太棒了！':matchFeedback[matchIndex];if(correct)feedback.classList.add('answer-correct');
+   feedback.textContent=(correct?'🎉 答對了！太棒了！':'再加油！')+' 正確答案：'+matchLetters[q.answer]+'．'+q.options[q.answer];if(correct)feedback.classList.add('answer-correct');
    matchCard.appendChild(feedback);
   }
   document.getElementById('matchPrev').disabled=matchIndex===0;
   document.getElementById('matchNext').disabled=matchIndex===paragraphMatchQuestions.length-1;
-  document.getElementById('matchFinish').disabled=matchDone.some(x=>!x);
+  document.getElementById('matchFinish').disabled=matchAnswers.some(x=>x===null);
  }
  document.getElementById('matchPrev').addEventListener('click',()=>{if(matchIndex>0){matchIndex--;renderParagraphMatch();}});
  document.getElementById('matchNext').addEventListener('click',()=>{if(matchIndex<paragraphMatchQuestions.length-1){matchIndex++;renderParagraphMatch();}});
@@ -434,7 +333,7 @@ const wordQuiz=isAilian
 const zy=document.getElementById('zhuyin');
 zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文指定字詞國字注音練習')+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
 let wordIndex=0;
-const wordAnswers=Array(wordQuiz.length).fill(null),wordDone=Array(wordQuiz.length).fill(false),wordFeedback=Array(wordQuiz.length).fill('');
+const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');
 function renderWordQuestion(){
  const q=wordQuiz[wordIndex];
@@ -457,7 +356,7 @@ function renderWordQuestion(){
   button.type='button';
   button.className='zhuyin-choice';
   button.setAttribute('aria-pressed',String(wordAnswers[wordIndex]===k));
-  button.disabled=wordDone[wordIndex];
+  button.disabled=wordAnswers[wordIndex]!==null;
   button.style.cssText='display:flex;align-items:center;gap:12px;text-align:left;background:#fff9ed;border:2px solid #d7bd91;border-radius:18px;padding:18px;cursor:pointer;font-size:clamp(17px,2vw,21px);font-weight:700;color:#493321;min-height:78px;box-shadow:0 5px 0 #d4c092;overflow-wrap:anywhere';
   const badge=document.createElement('span');
   badge.textContent=['🌱','⭐','🔔','💎'][k];
@@ -467,25 +366,24 @@ function renderWordQuestion(){
   button.appendChild(badge);
   button.appendChild(label);
   button.addEventListener('click',()=>{
-   if(wordDone[wordIndex])return;
-   const result=window.cnProgress?window.cnProgress.attempt('word-'+key+'-'+wordIndex,k===q.answer,q.hint||'請比較國字的字形與注音。',wordLetters[q.answer]+'．'+q.options[q.answer]):{solved:k===q.answer,points:0,message:k===q.answer?'答對了！':'再試一次！'};
-   wordFeedback[wordIndex]=result.message;
-   if(result.solved){wordDone[wordIndex]=true;wordAnswers[wordIndex]=k;if(k===q.answer)celebrateCorrect(wordCard);}
+   if(wordAnswers[wordIndex]!==null)return;
+   wordAnswers[wordIndex]=k;
+   if(k===q.answer)celebrateCorrect(wordCard);
    renderWordQuestion();
   });
   choices.appendChild(button);
  });
  wordCard.appendChild(choices);
- if(wordFeedback[wordIndex]){
-  const correct=wordDone[wordIndex]&&wordAnswers[wordIndex]===q.answer;
+ if(wordAnswers[wordIndex]!==null){
+  const correct=wordAnswers[wordIndex]===q.answer;
   const feedback=document.createElement('p');
   feedback.style.cssText='margin:22px auto 0;padding:16px;border-radius:14px;text-align:center;font-size:20px;font-weight:800;background:'+(correct?'#e7f2df':'#f8e5dc')+';color:'+(correct?'#356b38':'#9b332b');
-  feedback.textContent=(correct?'🎉 答對了！太棒了！':wordFeedback[wordIndex]);if(correct)feedback.classList.add('answer-correct');
+  feedback.textContent=(correct?'🎉 答對了！太棒了！':'再加油！')+' 正確答案：'+wordLetters[q.answer]+'．'+q.options[q.answer];if(correct)feedback.classList.add('answer-correct');
   wordCard.appendChild(feedback);
  }
  zy.querySelector('#wordPrev').disabled=wordIndex===0;
  zy.querySelector('#wordNext').disabled=wordIndex===wordQuiz.length-1;
- zy.querySelector('#wordFinish').disabled=wordDone.some(x=>!x);
+ zy.querySelector('#wordFinish').disabled=wordAnswers.some(x=>x===null);
 }
 zy.querySelector('#wordPrev').addEventListener('click',()=>{
  if(wordIndex>0){wordIndex--;renderWordQuestion();}
@@ -533,7 +431,6 @@ if(!isAilian){
  game.innerHTML='<h3>🎮 分段慣用詞句配對・填空挑戰</h3><p class="muted">讀完每一段，選出最適合填入句子的詞語。完成八題看看自己能得幾分！</p><div id="gameScore" class="note">目前得分：0 / 8</div><div id="gameQuestions"></div>';
  document.getElementById('text').appendChild(game);
  const host=game.querySelector('#gameQuestions');
- const paragraphDone=Array(paragraphs.length).fill(false);
  paragraphs.forEach((item,index)=>{
   const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
   const readBtn=document.createElement('button');readBtn.textContent='🔊';readBtn.className='read-aloud-btn';readBtn.type='button';readBtn.setAttribute('aria-label','報讀題目');readBtn.title='報讀題目';readBtn.addEventListener('click',()=>{if(!('speechSynthesis' in window)){feedback.textContent='此裝置暫不支援語音報讀，請由老師協助念題。';return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(item.p.replace(/[｜]/g,'。')+'。'+item.q);utterance.lang='zh-TW';utterance.rate=0.78;speechSynthesis.speak(utterance);feedback.textContent='正在報讀題目，請仔細聆聽。';});
@@ -543,15 +440,7 @@ if(!isAilian){
   item.opts.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;select.appendChild(o);});
   const check=document.createElement('button');check.textContent='確認答案';check.style.cssText='margin-left:8px;padding:10px 16px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';
   const feedback=document.createElement('p');feedback.setAttribute('aria-live','polite');feedback.style.marginBottom='0';
-  check.addEventListener('click',()=>{
-   if(paragraphDone[index])return;
-   if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}
-   const correct=select.value===item.a;
-   const result=window.cnProgress?window.cnProgress.attempt('fill-'+key+'-'+index,correct,'先看句子前後的意思，想想哪個詞語最合適。',item.a):{solved:correct,message:correct?'答對了！':'再想一想！'};
-   feedback.textContent=result.message;feedback.style.color=correct?'#26734d':'#9b5b24';
-   if(result.solved){paragraphDone[index]=true;card.dataset.correct=correct?'1':'0';if(correct)celebrateCorrect(card,feedback);else feedback.textContent=result.message;select.disabled=true;check.disabled=true;}else{select.value='';}
-   game.querySelector('#gameScore').textContent='已完成：'+paragraphDone.filter(Boolean).length+'／8 題';
-  });
+  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
   card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);
  });
 }

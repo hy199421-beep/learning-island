@@ -217,7 +217,7 @@ if(isAilian){
  const feedback=document.getElementById('ailianFeedback');
  function drawRebuild(){
   const q=rebuildItems[rebuildIndex];placed=Array(q.parts.length).fill(null);
-  document.getElementById('ailianPrompt').textContent=q.prompt;
+  document.getElementById('ailianPrompt').textContent='';
   feedback.textContent='';
   tileHost.innerHTML='';slotHost.innerHTML='';
   q.parts.map((v,i)=>({v,i})).sort(()=>Math.random()-.5).forEach(({v,i})=>{

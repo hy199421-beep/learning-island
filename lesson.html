@@ -187,6 +187,76 @@ meaning:`<h3>📚 解釋</h3><p class="muted">閱讀課文詞語，選出正確�
 };
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
 
+/* 愛蓮說課文句子重組：點選詞語卡，依序放入句子格 */
+if(isAilian){
+ const textPanel=document.getElementById('text');
+ textPanel.innerHTML=`<h3>《愛蓮說》｜課文句子重組</h3>
+ <p class="muted">聽一聽、想一想，把詞語卡依照課文順序放進句子格。放錯可以再點格子拿回來。</p>
+ <section id="ailianRebuild" class="note" style="background:#fff9ed;border:2px solid #d4bd8a;border-radius:18px;padding:20px">
+  <div id="ailianStep" style="font-weight:800;color:#80522f;margin-bottom:12px"></div>
+  <div style="font-size:clamp(22px,3vw,30px);font-weight:900;line-height:1.7;margin-bottom:18px" id="ailianPrompt"></div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 22px" id="ailianTiles"></div>
+  <div style="font-size:15px;color:#806f5c;margin-bottom:8px">把詞語卡放進下面的格子：</div>
+  <div style="display:flex;flex-wrap:wrap;gap:9px;min-height:58px;margin-bottom:18px" id="ailianSlots"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+   <button type="button" id="ailianCheck" style="background:#a52222;color:white;border:0;border-radius:12px;padding:12px 22px;font-weight:800;cursor:pointer">檢查答案</button>
+   <button type="button" id="ailianReset" style="background:#fffaf0;color:#765034;border:1px solid #c9b17e;border-radius:12px;padding:12px 20px;font-weight:800;cursor:pointer">重置</button>
+   <button type="button" id="ailianNext" style="background:#765034;color:white;border:0;border-radius:12px;padding:12px 20px;font-weight:800;cursor:pointer">下一句</button>
+   <button type="button" id="ailianRead" aria-label="報讀題目" style="background:#fffaf0;border:1px solid #c9b17e;border-radius:12px;padding:10px 15px;cursor:pointer">🔊 報讀</button>
+  </div>
+  <p id="ailianFeedback" aria-live="polite" style="font-weight:800;margin-bottom:0"></p>
+ </section>`;
+ const rebuildItems=[
+  {prompt:'請排出作者最喜歡蓮花的句子：',parts:['予獨愛','蓮之','出淤泥而不染','濯清漣而不妖'],punct:['予獨愛','蓮之','出淤泥而不染','濯清漣而不妖']},
+  {prompt:'請排出蓮花外形正直的句子：',parts:['中通外直','不蔓不枝','香遠益清','亭亭淨植'],punct:['中通外直','不蔓不枝','香遠益清','亭亭淨植']},
+  {prompt:'請排出作者對蓮花的評價：',parts:['蓮','花之君子者也'],punct:['蓮','花之君子者也']},
+  {prompt:'請排出作者對蓮花的觀賞態度：',parts:['可遠觀','而不可褻玩焉'],punct:['可遠觀','而不可褻玩焉']},
+  {prompt:'請排出文章最後對牡丹的看法：',parts:['牡丹之愛','宜乎眾矣'],punct:['牡丹之愛','宜乎眾矣']}
+ ];
+ let rebuildIndex=0,placed=[];
+ const tileHost=document.getElementById('ailianTiles'),slotHost=document.getElementById('ailianSlots');
+ const feedback=document.getElementById('ailianFeedback');
+ function drawRebuild(){
+  const q=rebuildItems[rebuildIndex];placed=Array(q.parts.length).fill(null);
+  document.getElementById('ailianStep').textContent='第 '+(rebuildIndex+1)+' 句／共 '+rebuildItems.length+' 句';
+  document.getElementById('ailianPrompt').textContent=q.prompt;
+  feedback.textContent='';
+  tileHost.innerHTML='';slotHost.innerHTML='';
+  q.parts.map((v,i)=>({v,i})).sort(()=>Math.random()-.5).forEach(({v,i})=>{
+   const b=document.createElement('button');b.type='button';b.textContent=v;b.dataset.part=i;
+   b.style.cssText='padding:12px 17px;border:2px solid #c9b17e;border-radius:13px;background:linear-gradient(#fff5d9,#f0dfb4);box-shadow:0 3px 0 #c6ad78;font-size:clamp(17px,2.4vw,23px);font-weight:800;color:#493321;cursor:pointer';
+   b.addEventListener('click',()=>{const empty=placed.findIndex(x=>x===null);if(empty<0)return;placed[empty]=i;drawSlots();b.disabled=true;b.style.opacity='.35';});
+   tileHost.appendChild(b);
+  });
+  drawSlots();
+ }
+ function drawSlots(){
+  slotHost.innerHTML='';
+  placed.forEach((part,index)=>{
+   const b=document.createElement('button');b.type='button';b.textContent=part===null?'＿＿＿＿':rebuildItems[rebuildIndex].parts[part];
+   b.style.cssText='min-width:105px;min-height:48px;padding:8px 12px;border:0;border-bottom:3px solid #b99a60;background:transparent;color:#493321;font-size:19px;font-weight:800;cursor:pointer';
+   b.addEventListener('click',()=>{if(part===null)return;placed[index]=null;[...tileHost.children].forEach(t=>{if(Number(t.dataset.part)===part){t.disabled=false;t.style.opacity='1';}});drawSlots();});
+   slotHost.appendChild(b);
+  });
+ }
+ document.getElementById('ailianCheck').addEventListener('click',()=>{
+  const q=rebuildItems[rebuildIndex];
+  if(placed.some(x=>x===null)){feedback.textContent='請先把所有詞語卡放進格子喔！';feedback.style.color='#9b5b24';return;}
+  const correct=placed.every((x,i)=>x===i);
+  feedback.textContent=correct?'🎉 答對了！太棒了！':'再試一次，點選格子可以把詞語拿回來。';
+  feedback.style.color=correct?'#26734d':'#a33d2e';
+  if(correct)celebrateCorrect(document.getElementById('ailianRebuild'),feedback);
+ });
+ document.getElementById('ailianReset').addEventListener('click',drawRebuild);
+ document.getElementById('ailianNext').addEventListener('click',()=>{rebuildIndex=(rebuildIndex+1)%rebuildItems.length;drawRebuild();});
+ document.getElementById('ailianRead').addEventListener('click',()=>{
+  const q=rebuildItems[rebuildIndex];const line=q.parts.join('，');
+  if('speechSynthesis' in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.prompt+line);u.lang='zh-TW';u.rate=.8;speechSynthesis.speak(u);}
+  else feedback.textContent='此裝置暫不支援語音報讀。';
+ });
+ drawRebuild();
+}
+
 /* 答對即時回饋：短音效、亮起與星星動畫 */
 function celebrateCorrect(target,feedback){
  const pop=document.createElement('div');pop.className='correct-pop';pop.innerHTML='<div class="correct-pop-card"><div class="correct-pop-stars">⭐ ✨ ⭐</div><div class="correct-pop-title">答對了！太棒了！</div><div class="correct-pop-sub">你做到了，繼續加油！</div></div>';document.body.appendChild(pop);window.setTimeout(()=>pop.remove(),1000);

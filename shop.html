@@ -12,14 +12,11 @@
 const API="https://script.google.com/macros/s/AKfycbyLulBpo2oKuyfwbhmkGrtvivaUi-Dl03dzk7k-JLhVSNCGdHB7OiUa8X1C40op1vjt/exec";
 const groups={"數學9A":["慶豐","詠甯","祺叡","冠閔","鴻昱","聖民","柏曜"],"國文8A":["淮喆","鼎杰","佳瑋","子田","司浩"],"國文8B":["昱佑","奕訢","日良","羽琪","世賢","宣澔"]};
 const rewards=[
-{emoji:"🌟",name:"閃亮小貼紙",desc:"可愛貼紙一份，讓好表現被看見！",cost:10},
-{emoji:"✏️",name:"文具小禮物",desc:"鉛筆、橡皮擦等實用文具。",cost:20},
-{emoji:"🎨",name:"創意畫畫時間",desc:"享有一次自由創作時間。",cost:25},
-{emoji:"📚",name:"故事選讀券",desc:"選一本喜歡的故事，由老師陪你閱讀。",cost:30},
-{emoji:"🎲",name:"桌遊優先選",desc:"下一次活動優先挑選桌遊。",cost:35},
-{emoji:"🍀",name:"小驚喜禮物",desc:"由老師準備一份神祕小禮物。",cost:40},
-{emoji:"👑",name:"小隊長體驗",desc:"擔任一次活動小隊長。",cost:50},
-{emoji:"🎵",name:"點歌／選活動券",desc:"選擇一次課堂暖身歌曲或活動。",cost:60}
+{emoji:"🎲",name:"桌遊",desc:"扣點 50 分；全班學生一起兌換後，下一節課可以玩桌遊。",cost:50},
+{emoji:"✍️",name:"習作生字寫一遍",desc:"扣點 40 分；完成習作生字書寫一遍，字體仍需端正。",cost:40},
+{emoji:"🎤",name:"KTV",desc:"扣點 30 分；下課前 5 分鐘可以播放一首歌。",cost:30},
+{emoji:"🍪",name:"點心卷",desc:"扣點 80 分；可獲得一份點心。",cost:80},
+{emoji:"🏅",name:"嘉獎卷",desc:"扣點 150 分；可記一支嘉獎。",cost:150}
 ];
 let db={},selectedGroup="",selectedName="",busy=false;
 const $=id=>document.getElementById(id);

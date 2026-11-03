@@ -191,12 +191,11 @@ for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTM
 if(isAilian){
  const textPanel=document.getElementById('text');
  textPanel.innerHTML=`<h3>《愛蓮說》｜課文句子重組</h3>
- <p class="muted">聽一聽、想一想，把詞語卡依照課文順序放進句子格。放錯可以再點格子拿回來。</p>
+ 
  <section id="ailianRebuild" class="note" style="background:#fff9ed;border:2px solid #d4bd8a;border-radius:18px;padding:20px">
-  <div id="ailianStep" style="font-weight:800;color:#80522f;margin-bottom:12px"></div>
-  <div style="font-size:clamp(22px,3vw,30px);font-weight:900;line-height:1.7;margin-bottom:18px" id="ailianPrompt"></div>
+    <div style="font-size:clamp(22px,3vw,30px);font-weight:900;line-height:1.7;margin-bottom:18px" id="ailianPrompt"></div>
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 22px" id="ailianTiles"></div>
-  <div style="font-size:15px;color:#806f5c;margin-bottom:8px">把詞語卡放進下面的格子：</div>
+  
   <div style="display:flex;flex-wrap:wrap;gap:9px;min-height:58px;margin-bottom:18px" id="ailianSlots"></div>
   <div style="display:flex;gap:10px;flex-wrap:wrap">
    <button type="button" id="ailianCheck" style="background:#a52222;color:white;border:0;border-radius:12px;padding:12px 22px;font-weight:800;cursor:pointer">檢查答案</button>
@@ -218,7 +217,6 @@ if(isAilian){
  const feedback=document.getElementById('ailianFeedback');
  function drawRebuild(){
   const q=rebuildItems[rebuildIndex];placed=Array(q.parts.length).fill(null);
-  document.getElementById('ailianStep').textContent='第 '+(rebuildIndex+1)+' 句／共 '+rebuildItems.length+' 句';
   document.getElementById('ailianPrompt').textContent=q.prompt;
   feedback.textContent='';
   tileHost.innerHTML='';slotHost.innerHTML='';

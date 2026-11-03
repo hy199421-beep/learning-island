@@ -879,38 +879,38 @@ if(canvas){
 </script>
 <script>
 (function(){
- const link=document.querySelector('.island-shop');
- const screen=document.getElementById('shopEntryTransition');
- if(!link||!screen)return;
- function playDoorChime(){
-  try{
-   const AudioCtx=window.AudioContext||window.webkitAudioContext;
-   if(!AudioCtx)return;
-   const ctx=new AudioCtx();
-   if(ctx.state==='suspended')ctx.resume();
-   const now=ctx.currentTime;
-   const notes=[{f:784,t:0,d:.22},{f:1046.5,t:.16,d:.3},{f:659.3,t:.42,d:.42}];
-   notes.forEach(n=>{
-    const osc=ctx.createOscillator(),gain=ctx.createGain();
-    osc.type='sine';osc.frequency.setValueAtTime(n.f,now+n.t);
-    gain.gain.setValueAtTime(.0001,now+n.t);
-    gain.gain.exponentialRampToValueAtTime(.16,now+n.t+.025);
-    gain.gain.exponentialRampToValueAtTime(.0001,now+n.t+n.d);
-    osc.connect(gain);gain.connect(ctx.destination);
-    osc.start(now+n.t);osc.stop(now+n.t+n.d+.03);
-   });
-   window.setTimeout(()=>ctx.close(),1300);
-  }catch(e){console.warn('商店提示音無法播放',e)}
- }
- link.addEventListener('click',function(event){
+ document.addEventListener('click',function(event){
+  const link=event.target.closest('.island-shop');
+  if(!link)return;
   if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
   event.preventDefault();
-  if(screen.classList.contains('active'))return;
-  screen.classList.add('active');screen.setAttribute('aria-hidden','false');
-  playDoorChime();
+  event.stopPropagation();
+  const screen=document.getElementById('shopEntryTransition');
+  if(!screen){window.location.href=link.href;return;}
+  screen.style.display='flex';
+  screen.style.visibility='visible';
+  screen.style.opacity='1';
+  screen.style.pointerEvents='auto';
+  screen.classList.add('active');
+  screen.setAttribute('aria-hidden','false');
+  try{
+   const AC=window.AudioContext||window.webkitAudioContext;
+   if(AC){
+    const ctx=new AC();
+    const now=ctx.currentTime;
+    [{f:784,t:0,d:.22},{f:1046.5,t:.16,d:.3},{f:659.3,t:.42,d:.42}].forEach(n=>{
+     const o=ctx.createOscillator(),g=ctx.createGain();
+     o.type='sine';o.frequency.value=n.f;
+     g.gain.setValueAtTime(.0001,now+n.t);
+     g.gain.exponentialRampToValueAtTime(.14,now+n.t+.025);
+     g.gain.exponentialRampToValueAtTime(.0001,now+n.t+n.d);
+     o.connect(g);g.connect(ctx.destination);o.start(now+n.t);o.stop(now+n.t+n.d+.03);
+    });
+    setTimeout(()=>ctx.close(),1400);
+   }
+  }catch(e){}
   const target=link.href;
-  window.setTimeout(function(){window.location.href=target;},1650);
- });
-})();
-</script>
+  setTimeout(()=>{window.location.assign(target);},2400);
+ },true);
+})();</script>
 </body></html>

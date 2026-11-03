@@ -111,6 +111,20 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 @keyframes popFade{0%,72%{opacity:1}100%{opacity:0}}
 @keyframes starSpin{0%{transform:rotate(-18deg) scale(.4)}70%{transform:rotate(12deg) scale(1.2)}100%{transform:rotate(0) scale(1)}}
 
+
+/* 學生自訂姓名與角色 */
+.student-profile{margin:14px 0 20px;padding:16px;border:2px solid #e5d8b9;border-radius:18px;background:linear-gradient(135deg,#fffdf5,#f7f4e9)}
+.student-profile h3{margin:0 0 6px;color:#66543a}
+.profile-hint{margin:0 0 12px;color:#776b58;font-size:14px}
+.profile-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.profile-name{flex:1;min-width:180px;padding:11px 12px;border:1px solid #d7c9aa;border-radius:10px;font-size:16px}
+.role-options{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.role-choice{border:2px solid #e2d7c2;background:#fff;border-radius:12px;padding:8px 12px;font-size:15px;cursor:pointer}
+.role-choice.selected{border-color:#d69a38;background:#fff2d7;box-shadow:0 0 0 2px #f6dfb2}
+.profile-start{background:#6b8c65;color:white;border:0;border-radius:10px;padding:11px 18px;font-weight:800;cursor:pointer}
+.profile-current{display:none;align-items:center;gap:10px;flex-wrap:wrap}
+.profile-current strong{font-size:17px}
+.profile-switch{border:1px solid #b9a77e;background:#fff;border-radius:9px;padding:8px 12px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -120,6 +134,23 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 <a class="back-island" href="./index.html">🏝 返回學習島</a>
 <a class="back" href="javascript:window.close()">✕ 關閉課文分頁</a>
 </div>
+<section class="student-profile" id="studentProfile">
+ <div id="profileSetup">
+  <h3>🌟 今天要由誰來學習呢？</h3>
+  <p class="profile-hint">請輸入自己的姓名，再挑選喜歡的學習角色。</p>
+  <div class="profile-row"><input class="profile-name" id="studentName" maxlength="20" placeholder="輸入你的姓名" autocomplete="off"></div>
+  <div class="role-options" id="roleOptions">
+   <button type="button" class="role-choice selected" data-role="🐰 兔兔">🐰 兔兔</button>
+   <button type="button" class="role-choice" data-role="🦊 狐狸">🦊 狐狸</button>
+   <button type="button" class="role-choice" data-role="🐼 熊貓">🐼 熊貓</button>
+   <button type="button" class="role-choice" data-role="🐻 小熊">🐻 小熊</button>
+   <button type="button" class="role-choice" data-role="🐱 貓咪">🐱 貓咪</button>
+   <button type="button" class="role-choice" data-role="🐸 青蛙">🐸 青蛙</button>
+  </div>
+  <button type="button" class="profile-start" id="startLearning">開始今天的學習</button>
+ </div>
+ <div class="profile-current" id="profileCurrent"><span id="profileAvatar" style="font-size:30px">🐰</span><strong id="profileLabel"></strong><span>準備開始學習！</span><button type="button" class="profile-switch" id="switchStudent">切換學生</button></div>
+</section>
 <h2 id="lessonTitle">課文學習</h2>
 <nav class="tabs" aria-label="課文學習區塊">
 <button class="active" data-tab="text">📖 課文</button>
@@ -458,5 +489,36 @@ if(!isAilian){
 }
 
 document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.tab));}));
+
+/* 共用教室電腦：學生自行輸入姓名、選擇角色，切換時清除當前身分 */
+(function(){
+ const storageKey='learningIslandChineseStudentProfile';
+ let selectedRole='🐰 兔兔';
+ const setup=document.getElementById('profileSetup'),current=document.getElementById('profileCurrent');
+ const nameInput=document.getElementById('studentName');
+ const choices=[...document.querySelectorAll('.role-choice')];
+ function showProfile(p){
+  setup.style.display='none';current.style.display='flex';
+  document.getElementById('profileAvatar').textContent=p.role.split(' ')[0];
+  document.getElementById('profileLabel').textContent=p.name+'（'+p.role+'）';
+ }
+ choices.forEach(btn=>btn.addEventListener('click',()=>{
+  selectedRole=btn.dataset.role;choices.forEach(x=>x.classList.toggle('selected',x===btn));
+ }));
+ document.getElementById('startLearning').addEventListener('click',()=>{
+  const name=nameInput.value.trim();
+  if(!name){alert('請先輸入你的姓名喔！');nameInput.focus();return;}
+  const p={name,role:selectedRole};
+  try{localStorage.setItem(storageKey,JSON.stringify(p));}catch(e){}
+  showProfile(p);
+ });
+ document.getElementById('switchStudent').addEventListener('click',()=>{
+  try{localStorage.removeItem(storageKey);}catch(e){}
+  nameInput.value='';selectedRole='🐰 兔兔';choices.forEach((x,i)=>x.classList.toggle('selected',i===0));
+  current.style.display='none';setup.style.display='block';nameInput.focus();
+ });
+ try{const p=JSON.parse(localStorage.getItem(storageKey)||'null');if(p&&p.name&&p.role)showProfile(p);}catch(e){}
+})();
+
 </script>
 </body></html>

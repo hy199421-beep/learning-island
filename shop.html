@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>學習島｜歡樂積分商店</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#4b3a2b;background:linear-gradient(#c9eff5,#f8edce);min-height:100vh;padding:24px 14px 50px}.wrap{max-width:1000px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.back{color:#6d5138;text-decoration:none;font-weight:800;background:#fff8e8;padding:10px 16px;border-radius:14px;box-shadow:0 4px #d6bd8c}.hero{text-align:center;padding:22px 12px}.hero .icon{font-size:64px}.hero h1{margin:5px 0;font-size:clamp(27px,5vw,42px);color:#8b5a2b}.hero p{margin:5px;color:#79654d}.panel{background:#fffaf0;border:3px solid #e5c98f;border-radius:24px;padding:18px;margin:14px 0;box-shadow:0 7px 0 #d6bd8c}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.field{flex:1;min-width:180px}label{display:block;font-weight:800;margin:0 0 6px}select{width:100%;padding:12px;border:2px solid #ddc89e;border-radius:12px;background:white;font:inherit;color:#4b3a2b}.balance{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff0bd;border-radius:18px;padding:16px;margin-top:14px}.points{font-size:clamp(28px,5vw,40px);font-weight:900;color:#a76a0a}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:14px}.item{background:#fff;border:2px solid #ead8b6;border-radius:18px;padding:16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}.item .emoji{font-size:46px}.item h3{margin:0;font-size:19px}.item p{margin:0;color:#796c5c;font-size:14px;min-height:38px}.cost{font-weight:900;color:#a76a0a}.item button,.action{border:0;border-radius:12px;padding:10px 16px;background:#79a95c;color:white;font-weight:900;font-size:15px;cursor:pointer}.item button:disabled{background:#b8b8b8;cursor:not-allowed}.history{padding-left:20px;margin-bottom:0}.hint{font-size:13px;color:#82735e;line-height:1.7}.status{font-weight:800;margin-top:10px;min-height:24px}.empty{color:#8c7860}.foot{text-align:center;color:#8b7b66;font-size:12px;margin-top:20px}
+</style></head><body><main class="wrap"><div class="top"><a class="back" href="./index.html">← 返回學習島</a><span>🏝️ 學習島獎勵中心</span></div>
+<header class="hero"><div class="icon">🏪</div><h1>歡樂積分商店</h1><p>努力學習、累積星星，挑選喜歡的獎勵！</p></header>
+<section class="panel"><h2>👋 找到你的積分</h2><div class="row"><div class="field"><label for="group">選擇班級</label><select id="group"><option value="">請選擇班級</option><option>數學9A</option><option>國文8A</option><option>國文8B</option></select></div><div class="field"><label for="student">選擇姓名</label><select id="student" disabled><option value="">請先選班級</option></select></div><button class="action" id="refresh">🔄 更新積分</button></div><div class="balance"><div><strong id="who">尚未選擇學生</strong><div class="hint">積分依出缺席與課堂加分紀錄計算</div></div><div><div class="hint">目前可用積分</div><div class="points" id="balance">— ⭐</div></div></div><div class="status" id="status" aria-live="polite"></div></section>
+<section class="panel"><h2>🎁 挑選你的獎勵</h2><div class="grid" id="items"></div></section>
+<section class="panel"><h2>🧾 我的兌換紀錄</h2><div id="history" class="empty">選擇學生後，就能查看兌換紀錄。</div></section>
+<p class="foot">積分依每日準時 +2 分及老師課堂加分累計。兌換後會同步記錄。</p></main>
+<script>
+const API="https://script.google.com/macros/s/AKfycbyLulBpo2oKuyfwbhmkGrtvivaUi-Dl03dzk7k-JLhVSNCGdHB7OiUa8X1C40op1vjt/exec";
+const groups={"數學9A":["慶豐","詠甯","祺叡","冠閔","鴻昱","聖民","柏曜"],"國文8A":["淮喆","鼎杰","佳瑋","子田","司浩"],"國文8B":["昱佑","奕訢","日良","羽琪","世賢","宣澔"]};
+const rewards=[
+{emoji:"🌟",name:"閃亮小貼紙",desc:"可愛貼紙一份，讓好表現被看見！",cost:10},
+{emoji:"✏️",name:"文具小禮物",desc:"鉛筆、橡皮擦等實用文具。",cost:20},
+{emoji:"🎨",name:"創意畫畫時間",desc:"享有一次自由創作時間。",cost:25},
+{emoji:"📚",name:"故事選讀券",desc:"選一本喜歡的故事，由老師陪你閱讀。",cost:30},
+{emoji:"🎲",name:"桌遊優先選",desc:"下一次活動優先挑選桌遊。",cost:35},
+{emoji:"🍀",name:"小驚喜禮物",desc:"由老師準備一份神祕小禮物。",cost:40},
+{emoji:"👑",name:"小隊長體驗",desc:"擔任一次活動小隊長。",cost:50},
+{emoji:"🎵",name:"點歌／選活動券",desc:"選擇一次課堂暖身歌曲或活動。",cost:60}
+];
+let db={},selectedGroup="",selectedName="",busy=false;
+const $=id=>document.getElementById(id);
+function score(name,group){let total=0;Object.keys(db).forEach(date=>{const rec=db[date]?.[group]?.find(x=>x.name===name);if(rec)total+=(Number(rec.bonusScore)||0)+(rec.attendance==="準時"?2:0)});return total}
+function redemptions(){if(!Array.isArray(db.__shopRedemptions))db.__shopRedemptions=[];return db.__shopRedemptions}
+function spent(){return redemptions().filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((n,x)=>n+Number(x.cost||0),0)}
+function balance(){return Math.max(0,score(selectedName,selectedGroup)-spent())}
+function render(){
+ const g=$("group").value,sel=$("student");sel.innerHTML='<option value="">請選擇姓名</option>';
+ (groups[g]||[]).forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o)});sel.disabled=!g;
+ selectedGroup=g;selectedName="";$("who").textContent="尚未選擇學生";$("balance").textContent="— ⭐";$("history").textContent="選擇學生後，就能查看兌換紀錄。";drawItems();
+}
+function drawItems(){
+ $("items").innerHTML="";
+ rewards.forEach((r,i)=>{const d=document.createElement("article");d.className="item";const e=document.createElement("div");e.className="emoji";e.textContent=r.emoji;const h=document.createElement("h3");h.textContent=r.name;const p=document.createElement("p");p.textContent=r.desc;const c=document.createElement("div");c.className="cost";c.textContent=r.cost+" ⭐";const b=document.createElement("button");b.textContent="兌換獎勵";b.disabled=!selectedName||balance()<r.cost||busy;b.addEventListener("click",()=>redeem(i));d.append(e,h,p,c,b);$("items").appendChild(d)});
+}
+function updateStudent(){
+ selectedGroup=$("group").value;selectedName=$("student").value;
+ if(!selectedName){$("who").textContent="尚未選擇學生";$("balance").textContent="— ⭐";$("history").textContent="選擇學生後，就能查看兌換紀錄。";drawItems();return}
+ $("who").textContent=selectedGroup+"・"+selectedName;$("balance").textContent=balance()+" ⭐";
+ const list=redemptions().filter(x=>x.group===selectedGroup&&x.name===selectedName).slice().reverse();
+ if(!list.length){$("history").textContent="目前還沒有兌換紀錄。";$("history").className="empty"}
+ else{$("history").className="";const ul=document.createElement("ul");ul.className="history";list.forEach(x=>{const li=document.createElement("li");li.textContent=(x.date||"")+ "　"+x.reward+"　-"+x.cost+" 分";ul.appendChild(li)});$("history").replaceChildren(ul)}
+ drawItems();
+}
+async function load(){
+ $("status").textContent="正在讀取積分資料……";
+ try{const r=await fetch(API,{cache:"no-store"});if(!r.ok)throw Error("讀取失敗");db=await r.json()||{};$("status").textContent="✅ 積分已更新";updateStudent()}
+ catch(e){$("status").textContent="⚠️ 目前無法連線讀取積分，請稍後再試。";console.error(e)}
+}
+async function redeem(i){
+ const r=rewards[i];if(!selectedName||balance()<r.cost||busy)return;
+ if(!confirm("確定使用 "+r.cost+" 點兌換「"+r.name+"」嗎？"))return;
+ busy=true;$("status").textContent="正在儲存兌換紀錄……";drawItems();
+ db.__shopRedemptions=redemptions();db.__shopRedemptions.push({group:selectedGroup,name:selectedName,reward:r.name,cost:r.cost,date:new Date().toLocaleDateString("sv")});
+ try{await fetch(API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(db)});$("status").textContent="🎉 兌換申請已送出！請向老師領取獎勵。"; }
+ catch(e){db.__shopRedemptions.pop();$("status").textContent="⚠️ 儲存失敗，積分未扣除。請重新整理後再試。";console.error(e)}
+ busy=false;updateStudent();
+}
+$("group").addEventListener("change",render);$("student").addEventListener("change",updateStudent);$("refresh").addEventListener("click",load);
+load();
+</script></body></html>

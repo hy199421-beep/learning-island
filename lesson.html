@@ -121,23 +121,7 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 <a class="back-island" href="./index.html">🏝 返回學習島</a>
 <a class="back" href="javascript:window.close()">✕ 關閉課文分頁</a>
 </div>
-<section class="student-profile" id="studentProfile">
- <div id="profileSetup">
-  <h3>🌟 今天要由誰來學習呢？</h3>
-  <p class="profile-hint">請輸入自己的姓名，再挑選喜歡的學習角色。</p>
-  <div class="profile-row"><input class="profile-name" id="studentName" maxlength="20" placeholder="輸入你的姓名" autocomplete="off"></div>
-  <div class="role-options" id="roleOptions">
-   <button type="button" class="role-choice selected" data-role="🐰 兔兔">🐰 兔兔</button>
-   <button type="button" class="role-choice" data-role="🦊 狐狸">🦊 狐狸</button>
-   <button type="button" class="role-choice" data-role="🐼 熊貓">🐼 熊貓</button>
-   <button type="button" class="role-choice" data-role="🐻 小熊">🐻 小熊</button>
-   <button type="button" class="role-choice" data-role="🐱 貓咪">🐱 貓咪</button>
-   <button type="button" class="role-choice" data-role="🐸 青蛙">🐸 青蛙</button>
-  </div>
-  <button type="button" class="profile-start" id="startLearning">開始今天的學習</button>
- </div>
- <div class="profile-current" id="profileCurrent"><span id="profileAvatar" style="font-size:30px">🐰</span><strong id="profileLabel"></strong><span>準備開始學習！</span><button type="button" class="profile-switch" id="switchStudent">切換學生</button></div>
-</section>
+
 <h2 id="lessonTitle">課文學習</h2>
 <nav class="tabs" aria-label="課文學習區塊">
 <button class="active" data-tab="text">📖 課文</button>
@@ -477,35 +461,7 @@ if(!isAilian){
 
 document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.tab));}));
 
-/* 共用教室電腦：學生自行輸入姓名、選擇角色，切換時清除當前身分 */
-(function(){
- const storageKey='learningIslandChineseStudentProfile';
- let selectedRole='孔子';
- const setup=document.getElementById('profileSetup'),current=document.getElementById('profileCurrent');
- const nameInput=document.getElementById('studentName');
- const choices=[...document.querySelectorAll('.role-choice')];
- function showProfile(p){
-  setup.style.display='none';current.style.display='flex';
-  const avatar=choices.find(x=>x.dataset.role===p.role)?.querySelector('.role-portrait')?.textContent||'📚';\n   document.getElementById('profileAvatar').innerHTML='<span class="role-portrait">'+avatar+'</span>';
-  document.getElementById('profileLabel').textContent=p.name+'（'+p.role+'）';
- }
- choices.forEach(btn=>btn.addEventListener('click',()=>{
-  selectedRole=btn.dataset.role;choices.forEach(x=>x.classList.toggle('selected',x===btn));
- }));
- document.getElementById('startLearning').addEventListener('click',()=>{
-  const name=nameInput.value.trim();
-  if(!name){alert('請先輸入你的姓名喔！');nameInput.focus();return;}
-  const p={name,role:selectedRole};
-  try{localStorage.setItem(storageKey,JSON.stringify(p));}catch(e){}
-  showProfile(p);
- });
- document.getElementById('switchStudent').addEventListener('click',()=>{
-  try{localStorage.removeItem(storageKey);}catch(e){}
-  nameInput.value='';selectedRole='孔子';choices.forEach((x,i)=>x.classList.toggle('selected',i===0));
-  current.style.display='none';setup.style.display='block';nameInput.focus();
- });
- try{const p=JSON.parse(localStorage.getItem(storageKey)||'null');if(p&&p.name&&p.role)showProfile(p);}catch(e){}
-})();
+
 
 </script>
 </body></htmlhtml>
@@ -622,30 +578,7 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 @keyframes starSpin{0%{transform:rotate(-18deg) scale(.4)}70%{transform:rotate(12deg) scale(1.2)}100%{transform:rotate(0) scale(1)}}
 
 
-/* 國文名人 3D 角色選擇 */
-.student-profile{margin:14px 0 20px;padding:18px;border:2px solid #e5d8b9;border-radius:20px;background:linear-gradient(145deg,#fffdf5,#f3ead7);box-shadow:0 7px 0 #e5d8b9,0 12px 22px #59452a18}
-.student-profile h3{margin:0 0 6px;color:#66543a}
-.profile-hint{margin:0 0 12px;color:#776b58;font-size:14px}
-.profile-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.profile-name{flex:1;min-width:180px;padding:11px 12px;border:1px solid #d7c9aa;border-radius:10px;font-size:16px}
-.role-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:12px;margin:14px 0}
-.role-choice{min-height:145px;border:2px solid #e2d7c2;background:linear-gradient(150deg,#fff,#f5eddf);border-radius:17px;padding:10px 8px 12px;font-size:15px;font-weight:800;color:#594b39;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;box-shadow:0 5px 0 #d8cbb5,0 8px 12px #59452a18;transition:transform .18s,box-shadow .18s,border-color .18s}
-.role-choice:hover{transform:translateY(-4px);box-shadow:0 8px 0 #d8cbb5,0 12px 16px #59452a20}
-.role-choice.selected{border-color:#d69a38;background:linear-gradient(145deg,#fff8e8,#f8e4b9);box-shadow:0 5px 0 #d6a75c,0 0 0 3px #f6dfb2}
-.role-portrait{width:76px;height:82px;border-radius:42% 42% 34% 34%;display:flex;align-items:center;justify-content:center;font-size:48px;line-height:1;background:radial-gradient(circle at 32% 22%,#fff 0 8%,transparent 9%),linear-gradient(145deg,var(--robe-light),var(--robe));box-shadow:inset -7px -8px 12px #45321d28,inset 5px 5px 9px #ffffff9c,0 7px 0 #7b6340,0 10px 12px #4b39252b;position:relative}
-.role-portrait:after{content:"";position:absolute;bottom:-5px;width:55px;height:10px;border-radius:50%;background:#59452a20;filter:blur(4px)}
-.role-choice[data-role="孔子"]{--robe:#b77a43;--robe-light:#f0c58c}
-.role-choice[data-role="李白"]{--robe:#467fa8;--robe-light:#a9d8ec}
-.role-choice[data-role="杜甫"]{--robe:#637c59;--robe-light:#b7d0a0}
-.role-choice[data-role="蘇軾"]{--robe:#9b6e9f;--robe-light:#e2bce5}
-.role-choice[data-role="陶淵明"]{--robe:#8a9560;--robe-light:#d6dba0}
-.role-choice[data-role="周敦頤"]{--robe:#527f83;--robe-light:#b4d9d2}
-.profile-start{background:#6b8c65;color:white;border:0;border-radius:10px;padding:11px 18px;font-weight:800;cursor:pointer}
-.profile-current{display:none;align-items:center;gap:10px;flex-wrap:wrap}
-.profile-current strong{font-size:17px}
-.profile-current .role-portrait{width:54px;height:60px;font-size:34px}
-.profile-switch{border:1px solid #b9a77e;background:#fff;border-radius:9px;padding:8px 12px;cursor:pointer}
-@media(max-width:480px){.role-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
@@ -655,23 +588,7 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 <a class="back-island" href="./index.html">🏝 返回學習島</a>
 <a class="back" href="javascript:window.close()">✕ 關閉課文分頁</a>
 </div>
-<section class="student-profile" id="studentProfile">
- <div id="profileSetup">
-  <h3>🌟 今天要由誰來學習呢？</h3>
-  <p class="profile-hint">請輸入自己的姓名，再挑選喜歡的學習角色。</p>
-  <div class="profile-row"><input class="profile-name" id="studentName" maxlength="20" placeholder="輸入你的姓名" autocomplete="off"></div>
-  <div class="role-options" id="roleOptions">
-   <button type="button" class="role-choice selected" data-role="🐰 兔兔">🐰 兔兔</button>
-   <button type="button" class="role-choice" data-role="🦊 狐狸">🦊 狐狸</button>
-   <button type="button" class="role-choice" data-role="🐼 熊貓">🐼 熊貓</button>
-   <button type="button" class="role-choice" data-role="🐻 小熊">🐻 小熊</button>
-   <button type="button" class="role-choice" data-role="🐱 貓咪">🐱 貓咪</button>
-   <button type="button" class="role-choice" data-role="🐸 青蛙">🐸 青蛙</button>
-  </div>
-  <button type="button" class="profile-start" id="startLearning">開始今天的學習</button>
- </div>
- <div class="profile-current" id="profileCurrent"><span id="profileAvatar" style="font-size:30px">🐰</span><strong id="profileLabel"></strong><span>準備開始學習！</span><button type="button" class="profile-switch" id="switchStudent">切換學生</button></div>
-</section>
+
 <h2 id="lessonTitle">課文學習</h2>
 <nav class="tabs" aria-label="課文學習區塊">
 <button class="active" data-tab="text">📖 課文</button>
@@ -1011,35 +928,7 @@ if(!isAilian){
 
 document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.tab));}));
 
-/* 共用教室電腦：學生自行輸入姓名、選擇角色，切換時清除當前身分 */
-(function(){
- const storageKey='learningIslandChineseStudentProfile';
- let selectedRole='🐰 兔兔';
- const setup=document.getElementById('profileSetup'),current=document.getElementById('profileCurrent');
- const nameInput=document.getElementById('studentName');
- const choices=[...document.querySelectorAll('.role-choice')];
- function showProfile(p){
-  setup.style.display='none';current.style.display='flex';
-  document.getElementById('profileAvatar').textContent=p.role.split(' ')[0];
-  document.getElementById('profileLabel').textContent=p.name+'（'+p.role+'）';
- }
- choices.forEach(btn=>btn.addEventListener('click',()=>{
-  selectedRole=btn.dataset.role;choices.forEach(x=>x.classList.toggle('selected',x===btn));
- }));
- document.getElementById('startLearning').addEventListener('click',()=>{
-  const name=nameInput.value.trim();
-  if(!name){alert('請先輸入你的姓名喔！');nameInput.focus();return;}
-  const p={name,role:selectedRole};
-  try{localStorage.setItem(storageKey,JSON.stringify(p));}catch(e){}
-  showProfile(p);
- });
- document.getElementById('switchStudent').addEventListener('click',()=>{
-  try{localStorage.removeItem(storageKey);}catch(e){}
-  nameInput.value='';selectedRole='🐰 兔兔';choices.forEach((x,i)=>x.classList.toggle('selected',i===0));
-  current.style.display='none';setup.style.display='block';nameInput.focus();
- });
- try{const p=JSON.parse(localStorage.getItem(storageKey)||'null');if(p&&p.name&&p.role)showProfile(p);}catch(e){}
-})();
+
 
 </script>
 </body></html>

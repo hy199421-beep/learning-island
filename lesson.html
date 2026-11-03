@@ -207,16 +207,11 @@ if(isAilian){
   <p id="ailianFeedback" aria-live="polite" style="font-weight:800;margin-bottom:0"></p>
  </section>`;
  const rebuildItems=[
-  {prompt:'第一段｜請重組第 1 句：',parts:['水陸草木之花，','可愛者甚蕃。']},
-  {prompt:'第一段｜請重組第 2 句：',parts:['晉陶淵明','獨愛菊。']},
-  {prompt:'第一段｜請重組第 3 句：',parts:['自李唐來，','世人盛愛牡丹。']},
-  {prompt:'第一段｜請重組第 4 句：',parts:['予獨愛蓮之','出淤泥而不染，','濯清漣而不妖，','中通外直，','不蔓不枝，','香遠益清，','亭亭淨植，','可遠觀而不可褻玩焉。']},
-  {prompt:'第二段｜請重組第 1 句：',parts:['予謂菊，','花之隱逸者也；']},
-  {prompt:'第二段｜請重組第 2 句：',parts:['牡丹，','花之富貴者也；']},
-  {prompt:'第二段｜請重組第 3 句：',parts:['蓮，','花之君子者也。']},
-  {prompt:'第三段｜請重組第 1 句：',parts:['噫！','菊之愛，','陶後鮮有聞。']},
-  {prompt:'第三段｜請重組第 2 句：',parts:['蓮之愛，','同予者何人？']},
-  {prompt:'第三段｜請重組第 3 句：',parts:['牡丹之愛，','宜乎眾矣。']}
+  {prompt:'第一段｜請重組句子：',parts:['水陸草木之花，','可愛者甚蕃。']},
+  {prompt:'第一段｜請重組句子：',parts:['予獨愛蓮之','出淤泥而不染，','濯清漣而不妖。']},
+  {prompt:'第一段｜請重組句子：',parts:['中通外直，','不蔓不枝，','香遠益清，','亭亭淨植，','可遠觀而不可褻玩焉。']},
+  {prompt:'第二段｜請重組句子：',parts:['予謂菊，','花之隱逸者也；','牡丹，','花之富貴者也；','蓮，','花之君子者也。']},
+  {prompt:'第三段｜請重組句子：',parts:['噫！','菊之愛，陶後鮮有聞。','蓮之愛，同予者何人？','牡丹之愛，宜乎眾矣。']}
  ];
  let rebuildIndex=0,placed=[];
  const tileHost=document.getElementById('ailianTiles'),slotHost=document.getElementById('ailianSlots');

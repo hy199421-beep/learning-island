@@ -27,7 +27,7 @@ main{max-width:1010px;margin:0 auto;padding:0 20px 48px}.guide{background:#fff;b
 @keyframes popFade{0%,72%{opacity:1}100%{opacity:0}}
 @keyframes starSpin{0%{transform:rotate(-18deg) scale(.4)}70%{transform:rotate(12deg) scale(1.2)}100%{transform:rotate(0) scale(1)}}
 
-</style>
+.subunit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:12px 0 20px}.subunit-card{display:flex;flex-direction:column;align-items:flex-start;gap:9px;text-align:left;padding:20px;border:2px solid #b8d2e2;border-radius:18px;background:linear-gradient(145deg,#f7fcff,#e7f2f8);color:#294e69;box-shadow:0 5px 0 #c6dce8;cursor:pointer}.subunit-card .num{font-size:13px;font-weight:900;color:#5a91b1}.subunit-card strong{font-size:20px}.subunit-card small{color:#58778b}.subunit-card .go{font-weight:800;color:#397b9f;margin-top:5px}@media(max-width:650px){.subunit-grid{grid-template-columns:1fr}}</style>
 </head>
 <body>
 <header><strong>🔬 數學研究室｜九年級</strong><a class="back" href="./index.html">← 返回學習島</a></header>
@@ -64,7 +64,42 @@ const units=[
 {q:'利用相似三角形測量大樹高度時，常會比較什麼長度？',steps:[{p:'可以比較大樹和人的＿＿長度，推算大樹高度。',a:'影子',h:'陽光照射時，物體會在地面形成什麼？'}]}]}
 ];
 let current=0,index=0,answered=false;
-function startUnit(i){current=i;index=0;document.getElementById('units').style.display='none';document.getElementById('practice').classList.add('show');document.getElementById('unitNum').textContent=units[i].n;document.getElementById('unitTitle').textContent=units[i].title;document.getElementById('unitHint').textContent=units[i].hint;render()}
+function startUnit(i){
+ current=i;index=0;
+ document.getElementById('units').style.display='none';
+ document.getElementById('practice').classList.add('show');
+ document.getElementById('unitNum').textContent=units[i].n;
+ document.getElementById('unitTitle').textContent=units[i].title;
+ document.getElementById('unitHint').textContent=units[i].hint;
+ if(i===3){
+  document.getElementById('visual').innerHTML='<div class="subunit-grid"><button class="subunit-card" onclick="startApplicationPractice()"><span class="num">01</span><strong>對應邊的比</strong><small>步驟式練習</small><span class="go">開始練習 →</span></button><button class="subunit-card" onclick="window.open(' + "'https://spedmixteaching.pages.dev/math/G9S1-1-4-sincos','_blank','noopener'" + ')"><span class="num">04</span><strong>sin／cos／tan</strong><small>三角比練習題</small><span class="go">前往練習 →</span></button></div>';
+  document.getElementById('question').textContent='請選擇下方的練習單元';
+  document.getElementById('stepCount').textContent='';
+  document.getElementById('stepQuestion').textContent='';
+  document.getElementById('stepPrompt').textContent='';
+  document.getElementById('stepEntry').style.display='none';
+  document.getElementById('stepStatus').textContent='';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('stepCard').style.display='none';
+  document.querySelector('#practice .progress').style.display='none';
+  document.querySelector('#practice .actions .action').style.display='none';
+  return;
+ }
+ document.getElementById('stepEntry').style.display='flex';
+ document.getElementById('stepCard').style.display='';
+ document.querySelector('#practice .progress').style.display='';
+ document.querySelector('#practice .actions .action').style.display='';
+ render();
+}
+function startApplicationPractice(){
+ document.getElementById('stepEntry').style.display='flex';
+ document.getElementById('stepCard').style.display='';
+ document.querySelector('#practice .progress').style.display='';
+ document.querySelector('#practice .actions .action').style.display='';
+ document.getElementById('visual').innerHTML='';
+ document.getElementById('question').textContent=units[3].qs[0].q;
+ index=0;render();
+}
 function illustration(i){
 const art=[
 '<svg viewBox="0 0 560 190" role="img" aria-label="三種顏色球的數量比例圖"><text x="280" y="25" text-anchor="middle" font-size="17" fill="#294e69">把數量排成三組來比較</text><g font-size="15" text-anchor="middle" fill="#294e69"><text x="95" y="55">紅球 2 顆</text><text x="280" y="55">藍球 4 顆</text><text x="465" y="55">黃球 6 顆</text></g><g><rect x="48" y="70" width="94" height="26" rx="8" fill="#e88b80"/><rect x="48" y="103" width="94" height="26" rx="8" fill="#e88b80"/><rect x="233" y="70" width="40" height="26" rx="8" fill="#6aa9d2"/><rect x="280" y="70" width="40" height="26" rx="8" fill="#6aa9d2"/><rect x="233" y="103" width="40" height="26" rx="8" fill="#6aa9d2"/><rect x="280" y="103" width="40" height="26" rx="8" fill="#6aa9d2"/><rect x="418" y="70" width="28" height="26" rx="8" fill="#efc45c"/><rect x="451" y="70" width="28" height="26" rx="8" fill="#efc45c"/><rect x="484" y="70" width="28" height="26" rx="8" fill="#efc45c"/><rect x="418" y="103" width="28" height="26" rx="8" fill="#efc45c"/><rect x="451" y="103" width="28" height="26" rx="8" fill="#efc45c"/><rect x="484" y="103" width="28" height="26" rx="8" fill="#efc45c"/></g><text x="280" y="165" text-anchor="middle" font-size="16" fill="#315f80">一起除以 2 → 1：2：3</text></svg>',

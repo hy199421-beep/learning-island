@@ -100,6 +100,17 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 @keyframes correctGlow{0%{transform:scale(.96);opacity:.5}65%{transform:scale(1.025)}100%{transform:scale(1);opacity:1}}
 @keyframes starBounce{0%{transform:translateY(8px) scale(.5);opacity:0}70%{transform:translateY(-4px) scale(1.15)}100%{transform:translateY(0) scale(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.answer-celebrate,.answer-correct,.answer-correct:before{animation:none!important}}
+
+/* 答對時的中央彈出慶祝動畫 */
+.correct-pop{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(20,35,48,.24);animation:popFade .95s ease forwards;pointer-events:none}
+.correct-pop-card{background:linear-gradient(145deg,#fffdf0,#fff);border:3px solid #ffd45c;border-radius:26px;padding:28px 38px;text-align:center;box-shadow:0 16px 45px rgba(42,65,80,.24);animation:popBounce .72s cubic-bezier(.2,1.5,.4,1) both}
+.correct-pop-stars{font-size:32px;letter-spacing:8px;animation:starSpin .8s ease both}
+.correct-pop-title{font-size:30px;font-weight:900;color:#df8a16;margin:8px 0}
+.correct-pop-sub{font-size:17px;font-weight:700;color:#52704a}
+@keyframes popBounce{0%{opacity:0;transform:scale(.35) translateY(35px)}65%{opacity:1;transform:scale(1.12) translateY(-5px)}100%{opacity:1;transform:scale(1)}}
+@keyframes popFade{0%,72%{opacity:1}100%{opacity:0}}
+@keyframes starSpin{0%{transform:rotate(-18deg) scale(.4)}70%{transform:rotate(12deg) scale(1.2)}100%{transform:rotate(0) scale(1)}}
+
 </style>
 </head>
 <body>
@@ -176,6 +187,7 @@ for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTM
 
 /* 答對即時回饋：短音效、亮起與星星動畫 */
 function celebrateCorrect(target,feedback){
+ const pop=document.createElement('div');pop.className='correct-pop';pop.innerHTML='<div class="correct-pop-card"><div class="correct-pop-stars">⭐ ✨ ⭐</div><div class="correct-pop-title">答對了！太棒了！</div><div class="correct-pop-sub">你做到了，繼續加油！</div></div>';document.body.appendChild(pop);window.setTimeout(()=>pop.remove(),1000);
  try{
   const AudioCtx=window.AudioContext||window.webkitAudioContext;
   if(AudioCtx){

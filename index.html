@@ -619,7 +619,7 @@ body.math-open .answer{border-color:#83b5d0;color:#173b55}
 body.math-open .back{background:#24658a}
 .math-lab-note{margin:12px 0;padding:10px 14px;border-radius:12px;background:#d7edf7;border:1px solid #91bfd5;color:#24516c;font-weight:800}
 @media(max-width:700px){body.math-open .panel{padding:17px 13px}}
-</style></head>
+.shop-entry{display:inline-flex;align-items:center;gap:9px;margin:14px auto 0;padding:12px 22px;border-radius:18px;background:linear-gradient(135deg,#fff1bd,#f6d68b);border:3px solid #d5a64e;box-shadow:0 5px 0 #b9853e;color:#70451f;text-decoration:none;font-weight:900;font-size:17px;transition:transform .2s}.shop-entry:hover{transform:translateY(-3px)}.shop-entry span:first-child{font-size:25px}@media(max-width:700px){.shop-entry{font-size:15px;padding:10px 16px}}\n</style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>
 <header class="header"><div class="brand"><span class="brand-icon">🏝️</span><div><h1>學習島</h1><p>每天一小步，能力大冒險！</p></div></div><div class="stats">⭐ <span id="stars">0</span> 星星　🏅 <span id="done">0</span> 次練習</div></header>
@@ -649,7 +649,7 @@ body.math-open .back{background:#24658a}
 </div>
 <div class="character-row" aria-label="冒險夥伴小隊"><div class="hero" data-name="島島隊長">🤖</div><div class="hero" data-name="語文精靈">🦊</div><div class="hero" data-name="數學博士">🐼</div><div class="hero" data-name="勇氣夥伴">🐰</div></div>
 <div class="quest-banner"><span class="quest-icon">🗺️</span><span>今日任務：挑選一座村莊，完成一個挑戰！</span></div>
-<div class="bottom"><div class="daily">📌 今日練了 <span id="today">0</span> 回・點村莊出發</div></div>
+<div class="bottom"><div class="daily">📌 今日練了 <span id="today">0</span> 回・點村莊出發</div></div>\n<a class="shop-entry" href="./shop.html"><span>🏪</span><span>歡樂積分商店</span><span>🎁 用積分兌換獎勵 →</span></a>
 <span class="tree-deco t1">🌳</span><span class="tree-deco t2">🌲</span><span class="tree-deco t3">🌳</span><span class="tree-deco t4">🌲</span>
 </div></main><div class="flight-transition" id="flightTransition" aria-hidden="true"><span class="transition-cloud cloud-a">☁️</span><span class="transition-cloud cloud-b">☁️</span><div class="transition-plane">✈️</div><div class="transition-message">準備起飛！前往作者島</div><div class="transition-sub">穿越雲朵，探索文學家的故事……</div></div>
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="cn-detail" id="cnDetail"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>

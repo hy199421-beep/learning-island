@@ -169,6 +169,30 @@ h2{color:#526f7b!important}
 .read-aloud-btn{background:#eef6f7!important;border-color:#d7e7e8!important;color:#5b7d89!important}
 @media(max-width:600px){header{flex-direction:column!important;gap:5px!important}main{margin-top:16px!important}}
 
+
+
+/* 依照使用者確認的原始截圖，統一復原三個學習分頁的版面 */
+main{width:min(1220px,calc(100% - 48px))!important;margin:28px auto 60px!important}
+.page-actions{margin-bottom:18px!important}
+.page-actions a{min-height:54px!important;padding:12px 22px!important;border-radius:18px!important;font-size:17px!important}
+h2{margin:18px 0 24px!important;font-size:clamp(28px,4vw,38px)!important}
+.tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important;margin-bottom:22px!important}
+.tabs button{min-height:64px!important;padding:15px 10px!important;font-size:19px!important;border-radius:19px!important}
+.panel{padding:clamp(24px,4vw,44px)!important;border-radius:25px!important;line-height:2!important}
+.panel h3{font-size:24px!important;margin:0 0 22px!important}
+#text .poem{line-height:2.2!important}
+#text #paragraphGame{max-width:100%!important}
+#text #paragraphGame .note{border-radius:17px!important}
+#zhuyin #wordProgress,#meaning #matchProgress{padding:16px 20px!important;border-radius:16px!important}
+#zhuyin #wordCard,#meaning #matchCard{max-width:100%!important;border-radius:24px!important}
+@media(max-width:700px){
+ main{width:calc(100% - 24px)!important}
+ .page-actions a{font-size:15px!important;min-height:46px!important}
+ .tabs{gap:7px!important}
+ .tabs button{font-size:15px!important;min-height:54px!important;padding:10px 4px!important}
+ .panel{padding:20px 15px!important}
+}
+
 </style>
 </head>
 <body>

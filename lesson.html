@@ -193,6 +193,60 @@ h2{margin:18px 0 24px!important;font-size:clamp(28px,4vw,38px)!important}
  .panel{padding:20px 15px!important}
 }
 
+
+
+/* 依原本國文學習頁恢復米金紙紋背景與深咖啡色頁首 */
+body{
+ background:repeating-linear-gradient(90deg,rgba(164,127,73,.045) 0,rgba(164,127,73,.045) 1px,transparent 1px,transparent 22px),linear-gradient(135deg,#f7efd9,#efe1c1)!important;
+ color:#38271d!important;
+}
+header{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:16px!important;padding:16px clamp(16px,4vw,52px)!important;text-align:left!important;
+ background:linear-gradient(110deg,#583622,#321d14)!important;
+ color:#fff0cf!important;border-bottom:4px solid #c9a65e!important;
+ box-shadow:0 5px 14px #4b2b1d33!important;
+}
+header h1{color:#fff0cf!important}
+header p{color:#f5dfb3!important}
+h2{color:#39271d!important}
+.tabs button{
+ border:2px solid #c7ad7a!important;border-radius:16px!important;
+ background:#fdf7e9!important;color:#553923!important;
+ box-shadow:0 3px 0 #d8c69f!important;
+}
+.tabs button.active{
+ background:linear-gradient(#69452e,#432819)!important;
+ border-color:#9e7b48!important;color:#fff1d1!important;
+ box-shadow:0 3px 0 #b99a62!important;
+}
+.panel{
+ border:2px solid #d5c092!important;border-radius:26px!important;
+ background:rgba(255,251,240,.94)!important;
+ box-shadow:0 7px 0 #d7c59c,0 12px 26px #53351c18!important;
+ color:#38271d!important;
+}
+.panel h3{color:#563723!important}
+.note{
+ background:linear-gradient(110deg,#fff8e7,#f4e8c9)!important;
+ border:2px solid #d1bb88!important;border-left:5px solid #b99b63!important;
+ color:#493321!important;
+}
+#zhuyin #wordProgress,#meaning #matchProgress{
+ background:#eee7ff!important;color:#5d526c!important;
+}
+#zhuyin #wordCard,#meaning #matchCard{
+ border:2px solid #d7c392!important;border-radius:24px!important;
+ background:linear-gradient(145deg,#fffaf0,#f8efd9)!important;
+ box-shadow:0 6px 0 #d3c097!important;
+}
+#zhuyin #wordCard .zhuyin-choice,#meaning #matchCard .match-choice{
+ border-color:#cbb47f!important;
+ background:linear-gradient(110deg,#fff9e9,#f1e4bf)!important;
+ color:#39291e!important;box-shadow:0 4px 0 #d3c092!important;
+}
+@media(max-width:600px){header{align-items:flex-start!important;flex-direction:column!important;gap:4px!important}}
+
 </style>
 </head>
 <body>

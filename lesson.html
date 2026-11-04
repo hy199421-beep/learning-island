@@ -112,6 +112,63 @@ h2{color:#39271d;font-size:clamp(26px,4vw,36px);margin:12px 0 22px}
 @keyframes starSpin{0%{transform:rotate(-18deg) scale(.4)}70%{transform:rotate(12deg) scale(1.2)}100%{transform:rotate(0) scale(1)}}
 
 
+
+/* 2026-11-04 國文書坊：簡單天空色背景與清爽學習卡片 */
+body{background:linear-gradient(180deg,#dff1fa 0%,#edf7fa 42%,#f4f7f5 100%)!important;color:#4b606a!important}
+header{
+ position:relative!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ min-height:92px!important;padding:18px 24px!important;text-align:center!important;
+ background:linear-gradient(180deg,#fdfefe,#f4f9f8)!important;color:#536f7a!important;
+ border-bottom:1px solid #d9e8eb!important;box-shadow:0 4px 14px rgba(64,105,122,.07)!important;
+}
+header h1{color:#536f7a!important;font-size:clamp(25px,3.5vw,34px)!important;letter-spacing:.12em!important}
+header p{color:#83979d!important}
+main{width:min(1040px,calc(100% - 28px))!important;margin:24px auto 56px!important}
+.back-island,.back{
+ border:1px solid #d8e6e8!important;border-radius:15px!important;
+ background:linear-gradient(#fffdf7,#f5eedf)!important;color:#6b614f!important;
+ box-shadow:0 4px 0 #e5e6dc!important;
+}
+h2{color:#526f7b!important}
+.tabs{gap:12px!important}
+.tabs button{
+ border:1px solid #d9e7e8!important;border-radius:16px!important;
+ background:linear-gradient(#fff,#f5faf9)!important;color:#617985!important;
+ box-shadow:0 4px 0 #e2ebea!important;
+}
+.tabs button.active{
+ background:linear-gradient(#f9e9c7,#f1d9a8)!important;color:#72552e!important;
+ border-color:#e0c58f!important;box-shadow:0 4px 0 #e8d9bc!important;
+}
+.panel{
+ border:1px solid #e0e9e7!important;border-radius:22px!important;
+ background:rgba(255,255,255,.94)!important;
+ box-shadow:0 7px 0 rgba(214,229,228,.75),0 14px 28px rgba(63,104,120,.08)!important;
+ color:#4e626b!important;line-height:1.95!important;
+}
+.panel h3{color:#536f7b!important}
+.note{
+ background:linear-gradient(145deg,#f9fcfb,#f1f7f5)!important;
+ border:1px solid #dfeae7!important;border-left:4px solid #c5dcd8!important;
+ border-radius:15px!important;color:#586d75!important;
+}
+#gameQuestions select,#zhuyin #wordCard label,#meaning #matchCard .match-choice{
+ border-color:#d7e5e4!important;background:linear-gradient(#fff,#f5faf8)!important;
+ color:#4d626c!important;box-shadow:0 4px 0 #e5eeeb!important;border-radius:15px!important;
+}
+#gameQuestions button,#zhuyin #wordFinish,#meaning #matchFinish{
+ background:linear-gradient(#e8c985,#d9ad5f)!important;color:#624821!important;
+ border:1px solid #d0ad6d!important;box-shadow:0 4px 0 #e8d8b8!important;border-radius:14px!important;
+}
+#zhuyin #wordProgress,#meaning #matchProgress{background:#eaf4f5!important;color:#607e87!important}
+#zhuyin #wordCard,#meaning #matchCard{
+ border:1px solid #e0e9e7!important;border-radius:22px!important;
+ background:linear-gradient(145deg,#fff,#f8fbf9)!important;
+ box-shadow:0 6px 0 #e7efec!important;
+}
+.read-aloud-btn{background:#eef6f7!important;border-color:#d7e7e8!important;color:#5b7d89!important}
+@media(max-width:600px){header{flex-direction:column!important;gap:5px!important}main{margin-top:16px!important}}
+
 </style>
 </head>
 <body>

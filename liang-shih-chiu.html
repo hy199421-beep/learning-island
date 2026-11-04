@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>雅舍探訪 懷舊版｜梁實秋</title>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#c9bfa4;--ink:#1c1c20;--ctl:34px;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161c;--ink:#e6e2d0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14161c;--ink:#e6e2d0;color-scheme:dark}
+@media (pointer:fine){.tc{display:none}}@media (pointer:coarse){.kb{display:none}}#snd{top:8cqw}#fs{top:13.5cqw}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:"DotGothic16","Noto Sans TC","PingFang TC","Microsoft JhengHei",monospace}
+#g{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:8px;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+#tv{position:relative;aspect-ratio:4/3;width:min(100%,calc((100vh - var(--ctl))*4/3));width:min(100%,calc((100dvh - var(--ctl))*4/3));container-type:inline-size;border:8px solid #2a2a2e;border-radius:18px;background:#000;overflow:hidden;box-shadow:0 6px 0 #1a1a1e}
+#cv{width:100%;height:100%;display:block;image-rendering:pixelated;touch-action:none}
+#crt{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(rgba(0,0,0,.16) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.4))}
+.w{background:#1c2d4f;color:#fff7dc;border:.6cqw solid #f1e8cc;box-shadow:0 0 0 .4cqw #0b1226;border-radius:1cqw;padding:1.6cqw}
+.a{position:absolute}
+#cnt{left:2cqw;top:2cqw;font-size:max(11px,2.6cqw);padding:.4cqw 1.6cqw}
+#inv{right:2cqw;top:2cqw;display:flex;gap:.6cqw}
+#inv b{width:max(22px,6cqw);height:max(22px,6cqw);display:grid;place-items:center;background:#1c2d4f;border:.4cqw solid #f1e8cc;border-radius:.8cqw;font-size:max(12px,3.4cqw);color:#7a89aa}
+#inv b.on{border-color:#ffd04a;animation:pop .5s}
+@keyframes pop{from{transform:scale(1.9)}to{transform:scale(1)}}
+#dlg{left:2cqw;right:2cqw;bottom:2cqw;min-height:21cqw;display:none;gap:2cqw;font-size:max(13px,3.1cqw);line-height:1.55;cursor:pointer}
+#dlg canvas,#qp{width:17cqw;height:17cqw;flex:none;border:.4cqw solid #f1e8cc;image-rendering:pixelated;background:#2d4a6a}
+#nm{color:#ffd04a}
+#ar{float:right;color:#ffd04a;animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+#qz{inset:2cqw;display:none;gap:2cqw;font-size:max(12px,2.9cqw);line-height:1.5;overflow:auto}
+#qz>div{flex:1;min-width:0}
+#qh{margin:0 0 .8cqw;color:#ffd04a}
+#op button{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:none;border:0;padding:1.1cqw 1cqw 1.1cqw 3.6cqw;min-height:max(44px,6.5cqw);cursor:pointer;position:relative;border-bottom:.2cqw dotted #3a4a70}
+#op button.on::before{content:"▶";position:absolute;left:.6cqw;color:#ffd04a}
+#op button.x{text-decoration:line-through;opacity:.5}
+#fb{min-height:2.6em;margin:.6cqw 0 0;color:#ffd04a}
+.sc{inset:0;display:none;place-items:center;background:rgba(8,14,32,.92);text-align:center;padding:3cqw}
+.sc h1{font-size:max(30px,11cqw);margin:0 0 1cqw;color:#ffd04a;letter-spacing:.1em;text-shadow:.6cqw .6cqw 0 #b3302a}
+.sc p{font-size:max(12px,2.9cqw);color:#fff7dc;margin:.6cqw auto;max-width:78cqw;line-height:1.6}
+.go{font:inherit;font-size:max(14px,3.4cqw);color:#1c2d4f;background:#ffd04a;border:0;border-radius:1cqw;padding:1cqw 4cqw;margin-top:1.4cqw;cursor:pointer;box-shadow:0 .6cqw 0 #b88a1e;animation:bl 1.2s steps(2) infinite}
+#ctl{display:none;left:2cqw;right:2cqw;bottom:2cqw;justify-content:space-between;align-items:flex-end;pointer-events:none;opacity:.65}
+@media (pointer:coarse){#ctl.on{display:flex}}
+#dp{display:grid;grid-template:repeat(3,max(44px,8.5cqw))/repeat(3,max(44px,8.5cqw));gap:.4cqw}
+#dp button,#ab{pointer-events:auto;font:inherit;font-size:max(18px,4cqw);color:#fff7dc;background:#2a2a2e;border:.4cqw solid #888;border-radius:1.4cqw;touch-action:none}
+#ab{width:max(64px,13cqw);height:max(64px,13cqw);border-radius:50%;background:#b3302a;font-size:max(22px,5cqw)}
+#snd,#fs{left:2cqw;font:inherit;font-size:max(11px,2.6cqw);color:#fff7dc;background:#1c2d4f;border:.4cqw solid #f1e8cc;border-radius:.8cqw;padding:.2cqw 1.2cqw;cursor:pointer}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="g">
+<div id="tv">
+<canvas id="cv" width="256" height="192"></canvas>
+<div class="a w" id="cnt"></div>
+<div class="a" id="inv"></div>
+<div class="a w" id="dlg"><canvas id="pc" width="32" height="32"></canvas><div style="flex:1"><div id="nm"></div><span id="tx"></span><span id="ar">▼</span></div></div>
+<div class="a w" id="qz"><canvas id="qp" width="32" height="32"></canvas><div><p id="qh"></p><div id="op"></div><p id="fb"></p></div></div>
+<div class="a sc" id="en"><div class="w"></div></div>
+<div class="a sc" id="ti" style="display:grid"><div><h1>雅舍探訪</h1><p>國文村・懷舊版</p><p>走進村子，拜訪六個人，聽完他們說的梁實秋。再到村中央的雅舍門前答題，答對就能帶走道具。</p><p class="kb" style="color:#9fb0d0">方向鍵或 W A S D 移動　Z、E 或空白鍵：對話／確認　也可以用滑鼠點地面走過去</p><p class="tc" style="color:#9fb0d0">觸控：點地面走過去，點人物會走過去對話，點對話框繼續，點選項作答</p><button class="go" id="start">PRESS START</button></div></div>
+<div id="crt" class="a"></div>
+<button class="a" id="snd">音效：開</button><button class="a" id="fs">全螢幕</button>
+<div class="a" id="ctl"><div id="dp"><span></span><button data-d="3">▲</button><span></span><button data-d="1">◀</button><span></span><button data-d="2">▶</button><span></span><button data-d="0">▼</button><span></span></div><button id="ab">A</button></div>
+</div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const T=16,W=32,H=28,VW=256,VH=192,DX=[0,-1,1,0],DY=[1,0,0,-1];
+const cv=$('#cv'),cx=cv.getContext('2d'),pc=$('#pc').getContext('2d'),qp=$('#qp').getContext('2d');
+const NP=[
+{n:'清華老校友',x:3,y:10,hx:2,hy:7,k:{s:'#f2c9a0',h:'#262630',c:'#4f7f9a',g:1},L:['我是清華學校的校友。你問梁實秋？「實秋」是他的字，本名叫治華，年輕時還用過筆名「秋郎」。','他一九〇三年生在北京，祖籍浙江杭縣。','他愛說笑、愛聊天，也愛吃，後來還寫了《雅舍談吃》。']},
+{n:'哈佛留學生',x:26,y:9,hx:25,hy:6,k:{s:'#f2c9a0',h:'#5a3a22',c:'#8a5a7a',hat:1},L:['清華畢業後，他漂洋過海，先讀科羅拉多學院，再到哈佛。','在哈佛，白璧德教授教他：文學要講究理性、節制與分寸。','所以他的文章不愛大喊大叫，愛把話說得準、說得簡，還要說得有趣。']},
+{n:'雅舍房東',x:4,y:4,hx:3,hy:1,rc:'#7a5a3a',k:{s:'#e8b88a',h:'#d8d8d8',c:'#9a7a3c',m:1},L:['抗戰時他流亡到四川，租了我這間小屋，取名「雅舍」。','這屋子簡陋，風能進、雨也能進。可他把它寫成小品，後來集成《雅舍小品》。','我猜他覺得，日子再苦，文章也可以寫得從容。']},
+{n:'書房編輯',x:26,y:20,hx:25,hy:17,k:{s:'#f2c9a0',h:'#202020',c:'#4f8a6a',g:1},L:['他翻譯《莎士比亞全集》，從三〇年代開始，前後三十多年，一九六七年才譯完。','他還主編《遠東英漢大辭典》，在師範學院（今臺灣師範大學）教書，做過英語系主任。','這種事快不了，要靠耐性，還要一點固執。']},
+{n:'梁家老友',x:4,y:21,hx:3,hy:18,k:{s:'#e8b88a',h:'#e0e0e0',c:'#7a5a4a',g:1,m:1},L:['他的妻子季淑，一九七四年在西雅圖意外過世。','他寫了《槐園夢憶》來紀念她。那個愛開玩笑的人，寫起思念來是很認真的。','他一九八七年在台北走了，留下一些讓人會笑、也會心酸的文字。']},
+{n:'茶館小販',x:20,y:20,hx:19,hy:17,rc:'#c0703c',k:{s:'#d9a878',h:'#3a2a20',c:'#c0703c',hat:2},L:['來碗茶？我這兒小道消息最多，信不信由你。','我聽說，梁實秋就是寫《吶喊》的那位，文風激烈得很！','還有啊，他一輩子沒出過國，英文全是自學的。不信的話，去問問別人。']},
+{n:'雅舍守門人',x:15,y:6,gate:1,k:{s:'#e8b88a',h:'#cfcfcf',c:'#b3302a',m:2},L:[]}];
+NP.forEach(n=>n.d=0);
+const Q=[
+{q:'「實秋」是梁實秋的什麼？',o:['本名','筆名','字'],a:2,f:0,i:'🖋️',t:'毛筆'},
+{q:'梁實秋出生在哪裡？',o:['四川','北京','西雅圖'],a:1,f:0,i:'🗺️',t:'老地圖'},
+{q:'白璧德教他的文學態度是？',o:['激情與誇張','華麗的辭藻','理性、節制與分寸'],a:2,f:1,i:'🎓',t:'學位帽'},
+{q:'他在四川住的「雅舍」是什麼樣子？',o:['簡陋，風雨都能進','豪華大宅','清華的宿舍'],a:0,f:2,i:'🏮',t:'燈籠'},
+{q:'《莎士比亞全集》他譯了多久？',o:['三個月','三年','三十多年'],a:2,f:3,i:'📜',t:'劇本'},
+{q:'《槐園夢憶》是為了紀念誰？',o:['妻子季淑','母親','恩師白璧德'],a:0,f:4,i:'🌿',t:'槐葉'},
+{q:'小販說他一輩子沒出過國，哪個說法能反駁？',o:['他寫過《雅舍小品》','他赴美讀過科羅拉多學院與哈佛','他一九〇三年生於北京'],a:1,f:1,i:'🔎',t:'放大鏡'}];
+const PK={s:'#f2c9a0',h:'#3a2a20',c:'#3a8fd0'};
+const met=new Set(),won=new Set();let qi=0,wrong=0,st='title';
+/* 音效 */
+let AC=null,mute=false;
+function beep(f,d,v){if(mute||!AC)return;try{const o=AC.createOscillator(),g=AC.createGain();o.type='square';o.frequency.value=f;g.gain.value=v||.04;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d)}catch(e){}}
+const jingle=a=>a.forEach((f,i)=>setTimeout(()=>beep(f,.1,.05),i*90));
+/* 角色：16x16 像素小人（有臉） */
+function spr(c,x,y,K,d,f,bob){
+const R=(a,b,w,h,col)=>{c.fillStyle=col;c.fillRect(x+a,y+b,w,h)};
+R(4,15,8,1,'rgba(0,0,0,.28)');
+R(5,13+(f==1?1:0),2,3-(f==1?1:0),'#33343f');R(9,13+(f==2?1:0),2,3-(f==2?1:0),'#33343f');
+y+=bob||0;
+R(4,8,8,6,K.c);R(3,9,1,4,K.c);R(12,9,1,4,K.c);R(3,13,1,1,K.s);R(12,13,1,1,K.s);
+const E='#1a1a22';
+if(d==3){R(4,2,8,7,K.h)}
+else{R(4,3,8,6,K.s);R(4,2,8,2,K.h);
+ if(K.st)R(3,3,1,6,K.h);
+ if(d==0){R(6,5,1,2,E);R(9,5,1,2,E);if(K.g){R(5,4,6,1,E);R(5,6,6,1,E)}
+  if(K.m)R(6,7,4,1,K.h);else R(7,7,2,1,'#a04040');if(K.m==2)R(5,8,6,3,K.h)}
+ else{const l=d==1;R(l?5:10,5,1,2,E);R(l?9:4,3,3,6,K.h);if(K.g)R(l?4:9,5,3,1,E);R(l?5:9,7,2,1,'#a04040')}}
+if(K.hat==1){R(2,1,12,1,'#1a1a20');R(4,2,8,1,'#1a1a20');R(13,2,1,3,'#e3b04b')}
+if(K.hat==2){R(2,2,12,1,'#e0c070');R(4,0,8,2,'#e0c070')}}
+/* 對話頭像（大臉，會眨眼、說話時張嘴） */
+function face(c,K,open,blink){
+const R=(a,b,w,h,col)=>{c.fillStyle=col;c.fillRect(a,b,w,h)};
+R(0,0,32,32,'#2d4a6a');R(4,26,24,6,K.c);R(13,23,6,4,K.s);R(7,6,18,18,K.s);R(7,4,18,5,K.h);R(6,6,2,6,K.h);R(24,6,2,6,K.h);
+if(K.hat==1){R(3,3,26,2,'#1a1a20');R(8,1,16,3,'#1a1a20');R(28,3,1,7,'#e3b04b')}
+if(K.hat==2){R(2,4,28,2,'#e0c070');R(8,1,16,4,'#e0c070')}
+if(blink){R(10,14,4,1,'#222');R(18,14,4,1,'#222')}
+else{R(10,12,4,4,'#fff');R(11,13,2,3,'#222');R(18,12,4,4,'#fff');R(19,13,2,3,'#222')}
+R(10,10,4,1,K.h);R(18,10,4,1,K.h);
+if(K.g){[[9,11],[17,11]].forEach(([a,b])=>{R(a,b,6,1,'#222');R(a,b+5,6,1,'#222');R(a,b,1,6,'#222');R(a+5,b,1,6,'#222')});R(15,13,2,1,'#222')}
+R(15,16,2,2,'#c89870');R(9,18,3,2,'#e8a0a0');R(20,18,3,2,'#e8a0a0');
+if(open){R(13,20,6,3,'#802828');R(14,21,4,1,'#f0a0a0')}else R(13,21,6,1,'#a04040');
+if(K.m)R(11,19,10,2,K.h);if(K.m==2)R(9,23,14,6,K.h)}
+/* 地圖 */
+const blk=[...Array(H)].map(()=>Array(W).fill(0)),off=document.createElement('canvas');off.width=W*T;off.height=H*T;
+let r=11;const rnd=()=>(r=r*16807%2147483647)/2147483647;
+function buildMap(){const c=off.getContext('2d'),R=(a,b,w,h,col)=>{c.fillStyle=col;c.fillRect(a,b,w,h)};
+R(0,0,W*T,H*T,'#6aa05a');
+for(let i=0;i<900;i++){R(rnd()*W*T|0,rnd()*H*T|0,1,2,rnd()<.5?'#5a8c4a':'#7ab468')}
+const path=(x,y,w,h)=>{R(x*T,y*T,w*T,h*T,'#d8c590');for(let i=0;i<w*h*8;i++)R(x*T+rnd()*w*T|0,y*T+rnd()*h*T|0,2,1,'#c4b07a')};
+path(15,0,2,H);path(1,13,30,2);
+const house=(tx,ty,w,h,rc,dx,dw)=>{const px=tx*T,py=ty*T,rr=Math.ceil(h*.6),rh=rr*T,wh=(h-rr)*T,ww=w*T;
+R(px,py+rh,ww,wh,'#e8dcc0');R(px,py+rh+wh-3,ww,3,'#b8a888');
+for(let i=0;i<rh;i++){const ins=Math.floor((rh-1-i)*.22);R(px-4+ins,py+i,ww+8-ins*2,1,i%4?rc:'#00000033');if(i%4)c.globalAlpha=1}
+R(px-4,py+rh-2,ww+8,2,'#00000044');
+R(px+dx*T,py+rh+wh-14,dw*T,14,'#6a3a2a');
+if(w>4){R(px+T*1.5,py+rh+4,10,8,'#f6e7a0');R(px+ww-T*3,py+rh+4,10,8,'#f6e7a0')}else{R(px+T*2.2,py+rh+3,9,8,'#f6e7a0');R(px+T*2.2+4,py+rh+3,1,8,'#6a3a2a')}
+for(let a=0;a<w;a++)for(let b=0;b<h;b++)blk[ty+b][tx+a]=1};
+NP.forEach(n=>{if(!n.gate)house(n.hx,n.hy,4,3,n.rc||['#b3302a','#3f6f66','#6a4a3a'][n.hx%3],1,1)});
+house(12,1,8,5,'#a02a24',3,2);
+R(14*T,3*T+2,4*T,10,'#8a2a20');c.fillStyle='#ffd04a';c.font='9px sans-serif';c.textAlign='center';c.fillText('雅 舍',16*T,3*T+10);
+[13,18].forEach(x=>{R(x*T+6,6*T,4,16,'#6a3a2a');R(x*T+3,6*T+2,10,8,'#c8322a');blk[6][x]=1});
+for(let y=0;y<H;y++)for(let x=0;x<W;x++){const edge=x==0||x==W-1||y==H-1||y==0;
+if(blk[y][x])continue;const inPath=(x==15||x==16)||y==13||y==14;
+if(edge||(!inPath&&rnd()<.05&&!NP.some(n=>Math.abs(n.x-x)<3&&Math.abs(n.y-y)<3)&&y>6&&!(Math.abs(x-15)<4&&y>20))){blk[y][x]=1;const a=x*T,b=y*T;R(a+7,b+10,2,5,'#6a4a2a');R(a+2,b+3,12,8,'#2f6a3a');R(a+4,b+1,8,3,'#2f6a3a');R(a+4,b+4,3,2,'#4a8a4a')}
+else if(!inPath&&rnd()<.06){R(x*T+5,y*T+9,2,2,rnd()<.5?'#f0e060':'#f08080')}}}
+/* 遊戲狀態 */
+const P={x:15,y:22,d:3,m:null,s:0},held=[],cam={x:0,y:0};
+const free=(x,y)=>x>=0&&y>=0&&x<W&&y<H&&!blk[y][x]&&!NP.some(n=>n.x==x&&n.y==y);
+const npcAt=(x,y)=>NP.findIndex(n=>n.x==x&&n.y==y);
+let route=[],goalNpc=-1,tap=null;
+function goTo(tx,ty){if(st!=='play')return;const ni=npcAt(tx,ty),sx=P.m?P.m.x:P.y*0+P.x,sy=P.m?P.m.y:P.y;
+if(ni<0&&!free(tx,ty)){let b=null,bd=9;for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const x=tx+dx,y=ty+dy,dd=Math.abs(dx)+Math.abs(dy);if(free(x,y)&&dd<bd){bd=dd;b=[x,y]}}if(!b)return;tx=b[0];ty=b[1]}
+const q=[[sx,sy]],prev={},K=(x,y)=>y*W+x;prev[K(sx,sy)]=-1;let e=null;
+while(q.length){const[x,y]=q.shift();if(ni>=0?Math.abs(x-tx)+Math.abs(y-ty)==1:(x==tx&&y==ty)){e=[x,y];break}
+for(let d=0;d<4;d++){const nx=x+DX[d],ny=y+DY[d];if(prev[K(nx,ny)]===undefined&&free(nx,ny)){prev[K(nx,ny)]=K(x,y);q.push([nx,ny])}}}
+if(!e)return;route=[];let k=K(e[0],e[1]);while(prev[k]!==-1){route.unshift([k%W,(k/W)|0]);k=prev[k]}goalNpc=ni}
+cv.addEventListener('pointerdown',e=>{if(st!=='play')return;const r=cv.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width*VW,sy=(e.clientY-r.top)/r.height*VH;tap={x:sx,y:sy,t:performance.now()};goTo(Math.floor((sx+cam.x)/T),Math.floor((sy+cam.y)/T));beep(660,.04,.03)});
+function upd(dt){if(st!=='play')return;
+if(P.m){P.m.p+=dt/150;if(P.m.p>=1){P.x=P.m.x;P.y=P.m.y;P.m=null;P.s^=1}}
+if(held.length){route=[];goalNpc=-1}
+if(!P.m&&held.length){const d=held[held.length-1];P.d=d;const nx=P.x+DX[d],ny=P.y+DY[d];if(free(nx,ny))P.m={x:nx,y:ny,p:0}}
+else if(!P.m&&route.length){const[nx,ny]=route.shift(),d=[0,1,2,3].find(d=>DX[d]==nx-P.x&&DY[d]==ny-P.y);if(d!==undefined&&free(nx,ny)){P.d=d;P.m={x:nx,y:ny,p:0}}else route=[]}
+else if(!P.m&&goalNpc>=0){const g=NP[goalNpc],d=[0,1,2,3].find(d=>DX[d]==g.x-P.x&&DY[d]==g.y-P.y);goalNpc=-1;if(d!==undefined){P.d=d;act()}}}
+const ready=()=>6-met.size;
+function draw(t){
+const ppx=P.x*T+(P.m?(P.m.x-P.x)*T*P.m.p:0),ppy=P.y*T+(P.m?(P.m.y-P.y)*T*P.m.p:0);
+cam.x=Math.max(0,Math.min(W*T-VW,Math.round(ppx+8-VW/2)));cam.y=Math.max(0,Math.min(H*T-VH,Math.round(ppy+8-VH/2)));
+cx.drawImage(off,cam.x,cam.y,VW,VH,0,0,VW,VH);
+const fl=.22+.08*Math.sin(t/110);cx.fillStyle='rgba(255,170,60,'+fl+')';[13,18].forEach(x=>{cx.beginPath();cx.arc(x*T+8-cam.x,6*T+6-cam.y,14,0,7);cx.fill()});
+const L=[{y:ppy,f:()=>spr(cx,ppx-cam.x,ppy-cam.y,PK,P.d,P.m?(P.s?1:2):0,0)}];
+NP.forEach((n,i)=>L.push({y:n.y*T,f:()=>{const X=n.x*T-cam.x,Y=n.y*T-cam.y;spr(cx,X,Y,n.k,n.d,0,((t/520|0)+i)%2);
+const show=n.gate?ready()==0&&qi<Q.length:!met.has(i);if(show){const b=Math.round(Math.sin(t/200+i)*1.5),col=n.gate?'#ff6050':'#ffd04a';cx.fillStyle='#222';cx.fillRect(X+6,Y-10+b,4,9);cx.fillRect(X+6,Y+1+b,4,3);cx.fillStyle=col;cx.fillRect(X+7,Y-9+b,2,6);cx.fillRect(X+7,Y+2+b,2,1)}}}));
+L.sort((a,b)=>a.y-b.y).forEach(o=>o.f());
+if(tap){const a=(performance.now()-tap.t)/500;if(a<1){cx.strokeStyle='rgba(255,208,74,'+(1-a)+')';cx.lineWidth=2;cx.beginPath();cx.arc(tap.x,tap.y,3+a*14,0,7);cx.stroke()}else tap=null}
+$('#ctl').classList.toggle('on',st==='play');
+cx.fillStyle='rgba(15,35,20,.12)';for(let k=0;k<3;k++){cx.beginPath();cx.ellipse(((t/90+k*130)%420)-80,40+k*60,50,16,0,0,7);cx.fill()}
+const bl=(t%3200)<140,op=Math.floor(t/130)%2&&talking;
+if(st==='talk'&&D)face(pc,NP[D.i].k,op,bl);if(st==='quiz')face(qp,NP[6].k,0,bl)}
+/* 對話 */
+let D=null,tmr=null,talking=false;
+const AR=$('#ar'),TX=$('#tx');
+function say(i,lines,end){st='talk';D={i,lines,k:0,end};NP[i].d=[3,2,1,0][P.d];$('#dlg').style.display='flex';show()}
+function show(){const t=D.lines[D.k];$('#nm').textContent=NP[D.i].n;TX.textContent='';AR.style.visibility='hidden';let j=0;talking=true;clearInterval(tmr);
+if(matchMedia('(prefers-reduced-motion:reduce)').matches){fin();return}
+tmr=setInterval(()=>{TX.textContent=t.slice(0,++j);if(j%2)beep(440+D.i*40,.03,.025);if(j>=t.length)fin()},36)}
+function fin(){clearInterval(tmr);talking=false;TX.textContent=D.lines[D.k];AR.style.visibility='visible'}
+function adv(){if(talking){fin();return}if(++D.k<D.lines.length){show();return}
+$('#dlg').style.display='none';const e=D.end;D=null;st='play';e&&e()}
+function act(){if(st==='talk')return adv();if(st==='quiz')return pick(qsel);if(st!=='play'||P.m)return;
+const i=npcAt(P.x+DX[P.d],P.y+DY[P.d]);if(i<0)return;const n=NP[i];
+if(n.gate){if(ready()>0)return say(i,['要結案，得先把村裡的人都拜訪完。還有 '+ready()+' 位等著你。']);
+return say(i,qi>=Q.length?['你已經答完所有題目了。']:['我有 '+Q.length+' 個問題。答對一題，就能帶走一件道具。'],qi>=Q.length?null:quiz)}
+say(i,n.L,()=>{met.add(i);jingle([660,880]);hud()})}
+/* 答題 */
+let OP=[],qsel=0;
+function setOp(l){OP=l;qsel=Math.min(qsel,l.length-1);ro()}
+function ro(){$('#op').innerHTML=OP.map((o,i)=>`<button data-i="${i}" class="${i===qsel?'on':''}${o.x?' x':''}">${o.t}</button>`).join('')}
+function pick(i){const o=OP[i];o&&!o.x&&o.fn()}
+$('#op').onclick=e=>{const b=e.target.closest('button');if(b){qsel=+b.dataset.i;ro();pick(qsel)}};
+const fb=t=>$('#fb').textContent=t;
+function quiz(){st='quiz';$('#qz').style.display='flex';rq()}
+function rq(){const q=Q[qi];if(!q){$('#qz').style.display='none';return end()}
+$('#qh').textContent='第 '+(qi+1)+'/'+Q.length+' 題　'+q.q;fb('');qsel=0;
+setOp(q.o.map((t,j)=>({t,fn:()=>{if(j===q.a){won.add(qi);hud();jingle([523,659,784,1047]);fb('答對了！獲得 '+q.i+q.t);qsel=0;setOp([{t:qi+1<Q.length?'下一題':'完成',fn:()=>{qi++;rq()}}])}
+else{wrong++;beep(150,.2,.06);OP[j].x=1;fb('不太對。提示：去找「'+NP[q.f].n+'」再聽一次。');ro()}}})).concat([{t:'回去再問問',fn:()=>{$('#qz').style.display='none';st='play'}}]))}
+function end(){st='end';const e=$('#en');e.style.display='grid';e.firstChild.innerHTML=`<h1 style="font-size:max(26px,8cqw);margin:0 0 1cqw;color:#ffd04a">結案成功</h1><p style="font-size:max(26px,8cqw);margin:0;letter-spacing:.2em">${Q.map(q=>q.i).join('')}</p><p>你帶回了 ${won.size} 件道具，答錯 ${wrong} 次。<br>梁實秋：北京出生、哈佛留學，在簡陋的雅舍寫小品，用三十多年譯完莎士比亞，也在妻子離世後寫下《槐園夢憶》。</p><button class="go" onclick="location.reload()">再玩一次</button>`;jingle([523,659,784,1047,784,1047])}
+function hud(){$('#cnt').textContent='拜訪 '+met.size+'/6';$('#inv').innerHTML=Q.map((q,i)=>`<b class="${won.has(i)?'on':''}">${won.has(i)?q.i:'？'}</b>`).join('')}
+/* 輸入 */
+const KM={arrowdown:0,s:0,arrowleft:1,a:1,arrowright:2,d:2,arrowup:3,w:3};
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();
+if(st==='quiz'&&(k in KM)){e.preventDefault();if(KM[k]==3)qsel=(qsel+OP.length-1)%OP.length;if(KM[k]==0)qsel=(qsel+1)%OP.length;ro();return}
+if(k in KM){e.preventDefault();if(!held.includes(KM[k]))held.push(KM[k])}
+else if(['z','e','enter',' '].includes(k)){e.preventDefault();if(!e.repeat)act()}});
+addEventListener('keyup',e=>{const k=e.key.toLowerCase();if(k in KM){const i=held.indexOf(KM[k]);if(i>=0)held.splice(i,1)}});
+document.querySelectorAll('#dp button').forEach(b=>{const d=+b.dataset.d;
+b.addEventListener('pointerdown',e=>{e.preventDefault();if(st==='quiz'){if(d==3)qsel=(qsel+OP.length-1)%OP.length;if(d==0)qsel=(qsel+1)%OP.length;ro();return}if(!held.includes(d))held.push(d)});
+['pointerup','pointerleave','pointercancel'].forEach(t=>b.addEventListener(t,()=>{const i=held.indexOf(d);if(i>=0)held.splice(i,1)}))});
+$('#ab').addEventListener('pointerdown',e=>{e.preventDefault();act()});
+$('#dlg').onclick=()=>act();
+$('#snd').onclick=()=>{mute=!mute;$('#snd').textContent='音效：'+(mute?'關':'開')};
+$('#fs').onclick=()=>{const d=document;Promise.resolve().then(()=>d.fullscreenElement?d.exitFullscreen():$('#g').requestFullscreen()).catch(()=>{})};
+$('#start').onclick=()=>{try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}$('#ti').style.display='none';st='play';jingle([523,784]);hud()};
+/* 主迴圈 */
+buildMap();let last=0;
+(function loop(t){requestAnimationFrame(loop);upd(Math.min(50,t-last||0));last=t;draw(t)})(0);
+hud();
+</script>
+</body>
+</html>

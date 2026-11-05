@@ -46,7 +46,7 @@ async function readLatest(){
  const response=await fetch(API,{cache:"no-store"});
  if(!response.ok)throw Error("讀取試算表失敗");
  const value=await response.json();
- if(!value||typeof value!=="object"||Array.isArray(value))throw Error("試算表資料格式不正確");
+ if(!value||typeof value!=="object"||Array.isArray(value)||value.status==="error")throw Error(value&&value.message?value.message:"試算表資料格式不正確");
  return value;
 }
 async function load(){

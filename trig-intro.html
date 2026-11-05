@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>三角函數入門｜SIN、COS、TAN</title>
+<style>
+:root{--bg:#eef3f6;--card:#fff;--ink:#1b2a38;--mute:#5b6b7a;--line:#d3dee6;--o:#d9432b;--a:#1f74d1;--h:#12875a;--hl:#fff1b8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;color:var(--ink);font:16px/1.75 "Noto Sans TC","Microsoft JhengHei",sans-serif}
+main{max-width:720px;margin:auto;padding:20px 16px 40px}h1{font-size:26px;margin:0}h2{margin:0 0 8px}.sub,.mute{color:var(--mute)}.card{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:16px;margin:12px 0}
+nav,.actions,.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}button{font:inherit;cursor:pointer;color:var(--ink);background:var(--card);border:1.5px solid var(--ink);border-radius:10px;padding:8px 14px}button[aria-selected=true],button.active{background:var(--hl);font-weight:700}.primary{background:var(--ink);color:white}.formula{font-size:22px;font-weight:700;background:var(--hl);padding:4px 12px;border-radius:8px;display:inline-block}.ctl{display:flex;align-items:center;gap:10px}.ctl input{flex:1;min-width:0}svg{width:100%;max-height:300px}.opt{display:block;width:100%;text-align:left;margin:8px 0;font-size:18px}.opt.correct{background:var(--h);color:white}.opt.wrong{border-color:var(--o);color:var(--o)}.hint{background:var(--hl);padding:10px;border-radius:8px}.hidden{display:none!important}.feedback{min-height:40px}
+</style></head><body><main>
+<h1>三角函數入門</h1><p class="sub">SIN、COS、TAN 其實只是「邊長的比」</p>
+<nav id="tabs"><button data-mode="teach">教學</button><button data-mode="practice">練習</button></nav>
+<section id="teach" class="card"><h2 id="teachTitle">認識直角三角形的三邊</h2>
+<svg id="triangle" viewBox="0 0 340 270" role="img" aria-label="直角三角形示意圖"></svg>
+<div class="ctl"><button id="play">暫停動畫</button><input id="angle" type="range" min="10" max="80" value="30"><b id="angleText">30°</b></div>
+<div class="chips"><button data-angle="30">30°</button><button data-angle="45">45°</button><button data-angle="60">60°</button></div>
+<div id="teachInfo"></div><div class="actions"><button id="prev">上一步</button><button class="primary" id="next">下一步</button></div></section>
+<section id="practice" class="card hidden"><div id="quizArea"></div></section>
+</main><script>
+const $=s=>document.querySelector(s),rad=d=>d*Math.PI/180;
+let step=0,angle=30,playing=true,last=0,phase=0,qi=0,score=0,hints=0,miss=0;
+const names=['三邊','sin','cos','tan','記憶法'];
+function draw(){const r=rad(angle),x=42,y=230,L=220,bx=x+L*Math.cos(r),cy=y-L*Math.sin(r);const o=10*Math.sin(r),a=10*Math.cos(r);$('#triangle').innerHTML='<line x1="'+x+'" y1="'+y+'" x2="'+bx+'" y2="'+y+'" stroke="#d9432b" stroke-width="5"/><line x1="'+bx+'" y1="'+y+'" x2="'+bx+'" y2="'+cy+'" stroke="#1f74d1" stroke-width="5"/><line x1="'+x+'" y1="'+y+'" x2="'+bx+'" y2="'+cy+'" stroke="#12875a" stroke-width="5"/><path d="M'+(bx-12)+' '+y+'v-12h12" fill="none" stroke="#5b6b7a" stroke-width="2"/><text x="'+((x+bx)/2)+'" y="'+(y+25)+'" text-anchor="middle" fill="#d9432b" font-size="15">鄰邊 '+a.toFixed(1)+'</text><text x="'+(bx+8)+'" y="'+((y+cy)/2)+'" fill="#1f74d1" font-size="15">對邊 '+o.toFixed(1)+'</text><text x="'+((x+bx)/2-24)+'" y="'+((y+cy)/2-15)+'" fill="#12875a" font-size="15">斜邊 10</text><text x="'+(x+52*Math.cos(r/2))+'" y="'+(y-52*Math.sin(r/2))+'" font-size="20">θ</text>';
+$('#angleText').textContent=angle+'°';$('#angle').value=angle;
+const s=(o/10).toFixed(2),c=(a/10).toFixed(2),t=(o/a).toFixed(2);
+const infos=[
+'<p>站在 θ 這個角往外看：</p><p>🔴 <b>對邊</b>：正對著 θ 的直角邊。</p><p>🔵 <b>鄰邊</b>：貼著 θ 的直角邊。</p><p>🟢 <b>斜邊</b>：最長、對著直角的那一邊。</p><p class="mute">拖動角度滑桿，看看對邊和鄰邊如何改變。</p>',
+'<span class="formula">sin θ = 對邊 ÷ 斜邊</span><p>sin '+angle+'° ≈ '+o.toFixed(1)+' ÷ 10 ≈ <b>'+s+'</b></p><p>口訣：sin 是「對斜」。</p>',
+'<span class="formula">cos θ = 鄰邊 ÷ 斜邊</span><p>cos '+angle+'° ≈ '+a.toFixed(1)+' ÷ 10 ≈ <b>'+c+'</b></p><p>口訣：cos 是「鄰斜」。</p>',
+'<span class="formula">tan θ = 對邊 ÷ 鄰邊</span><p>tan '+angle+'° ≈ '+o.toFixed(1)+' ÷ '+a.toFixed(1)+' ≈ <b>'+t+'</b></p><p>口訣：tan 是「對鄰」，不需要斜邊。</p>',
+'<p><b>記憶口訣：</b></p><p>sin＝對／斜　　cos＝鄰／斜　　tan＝對／鄰</p><p>先找角度 θ，再判斷對邊、鄰邊和斜邊。</p>'
+];$('#teachTitle').textContent=names[step];$('#teachInfo').innerHTML=infos[step];$('#prev').disabled=step===0;$('#next').textContent=step===4?'前往練習':'下一步';}
+function setMode(m){$('#teach').classList.toggle('hidden',m!=='teach');$('#practice').classList.toggle('hidden',m!=='practice');document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.mode===m));if(m==='practice')showQ();window.scrollTo(0,0)}
+$('#tabs').onclick=e=>{if(e.target.dataset.mode)setMode(e.target.dataset.mode)};
+$('#angle').oninput=e=>{angle=+e.target.value;playing=false;$('#play').textContent='播放動畫';draw()};
+document.querySelectorAll('[data-angle]').forEach(b=>b.onclick=()=>{angle=+b.dataset.angle;playing=false;$('#play').textContent='播放動畫';draw()});
+$('#prev').onclick=()=>{step=Math.max(0,step-1);draw()};$('#next').onclick=()=>{if(step===4)setMode('practice');else{step++;draw()}};
+$('#play').onclick=()=>{playing=!playing;$('#play').textContent=playing?'暫停動畫':'播放動畫'};
+function loop(t){const dt=last?t-last:0;last=t;if(playing&&!$('#teach').classList.contains('hidden')){phase+=dt*.0007;const a=Math.round(45+30*Math.sin(phase));if(a!==angle){angle=a;draw()}}requestAnimationFrame(loop)}
+const Q=[
+{ask:'sin θ 等於多少？',ans:'3/5',opts:['3/5','4/5','3/4','5/3'],hint:'sin 是對邊 ÷ 斜邊。',ex:'對邊 3、斜邊 5，所以 sin θ＝3/5。'},
+{ask:'同一個三角形，cos θ 等於多少？',ans:'4/5',opts:['3/5','4/5','3/4','4/3'],hint:'cos 是鄰邊 ÷ 斜邊。',ex:'鄰邊 4、斜邊 5，所以 cos θ＝4/5。'},
+{ask:'同一個三角形，tan θ 等於多少？',ans:'3/4',opts:['3/5','4/5','3/4','4/3'],hint:'tan 是對邊 ÷ 鄰邊，不使用斜邊。',ex:'對邊 3、鄰邊 4，所以 tan θ＝3/4。'},
+{ask:'直角三角形鄰邊是 12、斜邊是 13，cos θ 等於多少？',ans:'12/13',opts:['12/13','5/13','5/12','13/12'],hint:'cos 是鄰邊 ÷ 斜邊。',ex:'12 ÷ 13＝12/13。'},
+{ask:'斜邊是 10，而且 sin θ＝0.6，對邊是多少？',ans:'6',opts:['6','8','4','0.6'],hint:'對邊＝斜邊 × sin θ。',ex:'10 × 0.6＝6。'}
+];
+function showQ(){if(qi>=Q.length){$('#quizArea').innerHTML='<h2>練習完成 🎉</h2><p>不靠提示、一次答對 '+score+'／'+Q.length+' 題；使用提示 '+hints+' 次。</p><button id="again">再練一次</button> <button id="review">回到教學</button>';$('#again').onclick=()=>{qi=0;score=0;hints=0;showQ()};$('#review').onclick=()=>{step=0;draw();setMode('teach')};return}
+const q=Q[qi];miss=0;let hinted=false;$('#quizArea').innerHTML='<p class="sub">第 '+(qi+1)+'／'+Q.length+' 題</p><svg viewBox="0 0 300 190"><path d="M35 160 L220 160 L220 35 Z" fill="none" stroke="#12875a" stroke-width="4"/><text x="115" y="180" text-anchor="middle">4</text><text x="232" y="100">3</text><text x="110" y="90">5</text><text x="45" y="150">θ</text></svg><h3>'+q.ask+'</h3><button id="hint">提示</button><div id="hintText"></div><div id="opts">'+q.opts.slice().sort(()=>Math.random()-.5).map(v=>'<button class="opt">'+v+'</button>').join('')+'</div><div class="feedback" id="fb"></div>';
+$('#hint').onclick=()=>{if(!hinted){hinted=true;hints++;$('#hintText').innerHTML='<p class="hint">'+q.hint+'</p>'}};
+$('#opts').onclick=e=>{if(!e.target.classList.contains('opt')||e.target.disabled)return;if(e.target.textContent===q.ans){document.querySelectorAll('.opt').forEach(b=>b.disabled=true);e.target.classList.add('correct');if(!miss&&!hinted)score++;$('#fb').innerHTML='<p><b>答對了！</b>'+q.ex+'</p><button class="primary" id="nx">'+(qi===Q.length-1?'看結果':'下一題')+'</button>';$('#nx').onclick=()=>{qi++;showQ()}}else{miss++;e.target.disabled=true;e.target.classList.add('wrong');$('#fb').textContent='再想想看，或使用提示。'}};
+}
+draw();setMode('teach');requestAnimationFrame(loop);
+</script></body></html>

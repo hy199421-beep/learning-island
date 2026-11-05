@@ -404,7 +404,12 @@ for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTM
 /* 愛蓮說課文句子重組：點選詞語卡，依序放入句子格 */
 if(isAilian){
  const textPanel=document.getElementById('text');
- textPanel.innerHTML=`<h3>《愛蓮說》｜課文句子重組</h3>
+ textPanel.innerHTML=`<section class="note" style="margin:0 0 24px;text-align:center;background:linear-gradient(135deg,#fff4d8,#f3dfb8);border:2px solid #c9a65e;border-radius:16px;padding:20px">
+  <h3 style="margin:0 0 8px">🎮 課文延伸闖關</h3>
+  <p style="margin:0 0 14px">讀完〈愛蓮說〉後，來玩闖關遊戲，挑戰看看你對課文的理解！</p>
+  <a href="https://ijun-ai.com/chinese/lotus-game/app/" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 26px;border-radius:999px;background:linear-gradient(135deg,#80522f,#59351f);color:#fff7e7;text-decoration:none;font-weight:900;box-shadow:0 4px 0 #3e281b">🎮 玩闖關遊戲</a>
+ </section>
+ <h3>《愛蓮說》｜課文句子重組</h3>
  
  <section id="ailianRebuild" class="note" style="background:#fff9ed;border:2px solid #d4bd8a;border-radius:18px;padding:20px">
     <div style="font-size:clamp(22px,3vw,30px);font-weight:900;line-height:1.7;margin-bottom:18px" id="ailianPrompt"></div>

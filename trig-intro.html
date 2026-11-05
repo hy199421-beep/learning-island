@@ -48,5 +48,5 @@ const q=Q[qi];miss=0;let hinted=false;$('#quizArea').innerHTML='<p class="sub">�
 $('#hint').onclick=()=>{if(!hinted){hinted=true;hints++;$('#hintText').innerHTML='<p class="hint">'+q.hint+'</p>'}};
 $('#opts').onclick=e=>{if(!e.target.classList.contains('opt')||e.target.disabled)return;if(e.target.textContent===q.ans){document.querySelectorAll('.opt').forEach(b=>b.disabled=true);e.target.classList.add('correct');if(!miss&&!hinted)score++;$('#fb').innerHTML='<p><b>答對了！</b>'+q.ex+'</p><button class="primary" id="nx">'+(qi===Q.length-1?'看結果':'下一題')+'</button>';$('#nx').onclick=()=>{qi++;showQ()}}else{miss++;e.target.disabled=true;e.target.classList.add('wrong');$('#fb').textContent='再想想看，或使用提示。'}};
 }
-draw();setMode('teach');requestAnimationFrame(loop);
+draw();setMode(new URLSearchParams(location.search).get('mode')==='practice'?'practice':'teach');requestAnimationFrame(loop);
 </script></body></html>

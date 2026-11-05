@@ -247,6 +247,24 @@ h2{color:#39271d!important}
 }
 @media(max-width:600px){header{align-items:flex-start!important;flex-direction:column!important;gap:4px!important}}
 
+
+#trainingProgress{margin:0 0 22px;padding:18px 22px;border:2px solid #c9a96d;border-radius:20px;background:linear-gradient(120deg,#fff8e7,#f0e2c4);color:#51351f;box-shadow:0 4px 0 #d8c49b}
+.training-head{display:flex;align-items:center;justify-content:space-between;font-size:19px}
+.training-head strong{font-size:24px;color:#795324}
+.training-track{height:14px;margin:12px 0 7px;background:#e2d5b9;border-radius:99px;overflow:hidden}
+.training-track span{display:block;height:100%;background:linear-gradient(90deg,#e6bd62,#79a66d);border-radius:99px;transition:width .45s ease}
+#trainingProgress p{margin:0;font-size:14px;color:#765b3c}
+.training-victory{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:#24180dcc;opacity:0;transition:opacity .35s ease}
+.training-victory.show{opacity:1}
+.victory-card{width:min(440px,100%);padding:30px 24px;text-align:center;border:4px solid #e6c36e;border-radius:28px;background:linear-gradient(145deg,#fff9e9,#f4e2b8);box-shadow:0 12px 45px #0005;transform:scale(.75);transition:transform .45s cubic-bezier(.2,1.5,.4,1)}
+.training-victory.show .victory-card{transform:scale(1)}
+.victory-stars{font-size:27px}.victory-trophy{font-size:76px;animation:trophyBounce .8s infinite alternate}
+.victory-card h2{margin:8px 0;color:#81551f;font-size:32px}.victory-card p{font-size:18px;color:#5a4028}
+.victory-confetti{font-size:26px;margin:16px 0;animation:confettiFloat 1.2s infinite alternate}
+.victory-card button{padding:12px 26px;border:0;border-radius:14px;background:#765034;color:#fff;font-size:17px;font-weight:bold;cursor:pointer}
+@keyframes trophyBounce{to{transform:translateY(-9px) rotate(5deg)}}
+@keyframes confettiFloat{to{transform:translateY(-7px)}}
+
 </style>
 </head>
 <body>
@@ -258,6 +276,7 @@ h2{color:#39271d!important}
 </div>
 
 <h2 id="lessonTitle">課文學習</h2>
+<div id="trainingProgress" aria-live="polite"></div>
 <nav class="tabs" aria-label="課文學習區塊">
 <button class="active" data-tab="text">📖 課文</button>
 <button data-tab="zhuyin">🔤 國字注音</button>
@@ -272,6 +291,42 @@ const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
 const isBird=key==='bird';
+
+// === 各課文獨立修練進度 ===
+const progressKey='learningIslandTraining_'+key;
+const training={modules:{},answers:{}};
+function registerTrainingModule(id,total){
+ training.modules[id]=total;
+ if(!training.answers[id])training.answers[id]={};
+ renderTrainingProgress();
+}
+function recordTrainingAnswer(id,index,correct){
+ if(!training.answers[id])training.answers[id]={};
+ training.answers[id][index]=!!correct;
+ renderTrainingProgress();
+}
+function renderTrainingProgress(){
+ const total=Object.values(training.modules).reduce((a,b)=>a+b,0);
+ const answered=Object.values(training.answers).reduce((a,v)=>a+Object.keys(v).length,0);
+ const correct=Object.values(training.answers).reduce((a,v)=>a+Object.values(v).filter(Boolean).length,0);
+ const percent=total?Math.round(correct/total*100):0;
+ const box=document.getElementById('trainingProgress');
+ if(!box)return;
+ box.innerHTML='<div class="training-head"><b>🏅 本課修練進度</b><strong>'+percent+'%</strong></div><div class="training-track"><span style="width:'+percent+'%"></span></div><p>答對 '+correct+' / '+total+' 題　｜　已作答 '+answered+' 題</p>';
+ if(total>0&&correct===total&&answered===total&&!box.dataset.complete){
+  box.dataset.complete='1';
+  showTrainingVictory();
+ }
+}
+function showTrainingVictory(){
+ const overlay=document.createElement('div');
+ overlay.className='training-victory';
+ overlay.innerHTML='<div class="victory-card"><div class="victory-stars">✨ ⭐ ✨</div><div class="victory-trophy">🏆</div><h2>修練完成！</h2><p>太棒了！本課所有題目都答對了！</p><div class="victory-confetti">🎉 🌟 🎊 🌸 🎉</div><button type="button">繼續學習</button></div>';
+ document.body.appendChild(overlay);
+ overlay.querySelector('button').addEventListener('click',()=>overlay.remove());
+ setTimeout(()=>overlay.classList.add('show'),30);
+}
+
 document.querySelector('.tabs button[data-tab="meaning"]').textContent='📚 解釋';
 document.getElementById('lessonTitle').textContent=isAilian?'愛蓮說':(isBird?'鳥':'生命中的碎珠');
 let sections=isAilian?{
@@ -449,6 +504,7 @@ if(key==='life-fragments'){
  ];
  const matchLetters=['A','B','C','D'];
  const matchAnswers=Array(paragraphMatchQuestions.length).fill(null);
+ registerTrainingModule('explanation',paragraphMatchQuestions.length);
  let matchIndex=0;
  const matchCard=document.getElementById('matchCard');
  function renderParagraphMatch(){
@@ -475,7 +531,7 @@ if(key==='life-fragments'){
    button.disabled=matchAnswers[matchIndex]!==null;
    button.addEventListener('click',()=>{
     if(matchAnswers[matchIndex]!==null)return;
-    matchAnswers[matchIndex]=index;if(index===q.answer)celebrateCorrect(matchCard);renderParagraphMatch();
+    matchAnswers[matchIndex]=index;recordTrainingAnswer('explanation',matchIndex,index===q.answer);if(index===q.answer)celebrateCorrect(matchCard);renderParagraphMatch();
    });
    choices.appendChild(button);
   });
@@ -585,6 +641,7 @@ const lifeWordQuiz=[
 const wordQuiz=(isAilian||isBird)
  ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,i%4))
  :lifeWordQuiz;
+registerTrainingModule('pronunciation',wordQuiz.length);
 const zy=document.getElementById('zhuyin');
 zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':(isBird?'鳥課文生難字注音練習':'課文指定字詞國字注音練習'))+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
 let wordIndex=0;
@@ -623,6 +680,7 @@ function renderWordQuestion(){
   button.addEventListener('click',()=>{
    if(wordAnswers[wordIndex]!==null)return;
    wordAnswers[wordIndex]=k;
+   recordTrainingAnswer('pronunciation',wordIndex,k===q.answer);
    if(k===q.answer)celebrateCorrect(wordCard);
    renderWordQuestion();
   });
@@ -686,6 +744,7 @@ if(key==='life-fragments'){
  game.innerHTML='<h3>🎮 分段慣用詞句配對・填空挑戰</h3><p class="muted">讀完每一段，選出最適合填入句子的詞語。完成八題看看自己能得幾分！</p><div id="gameScore" class="note">目前得分：0 / 8</div><div id="gameQuestions"></div>';
  document.getElementById('text').appendChild(game);
  const host=game.querySelector('#gameQuestions');
+ registerTrainingModule('paragraphs',paragraphs.length);
  paragraphs.forEach((item,index)=>{
   const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
   const readBtn=document.createElement('button');readBtn.textContent='🔊';readBtn.className='read-aloud-btn';readBtn.type='button';readBtn.setAttribute('aria-label','報讀題目');readBtn.title='報讀題目';readBtn.addEventListener('click',()=>{if(!('speechSynthesis' in window)){feedback.textContent='此裝置暫不支援語音報讀，請由老師協助念題。';return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(item.p.replace(/[｜]/g,'。')+'。'+item.q);utterance.lang='zh-TW';utterance.rate=0.78;speechSynthesis.speak(utterance);feedback.textContent='正在報讀題目，請仔細聆聽。';});
@@ -695,7 +754,7 @@ if(key==='life-fragments'){
   item.opts.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;select.appendChild(o);});
   const check=document.createElement('button');check.textContent='確認答案';check.style.cssText='margin-left:8px;padding:10px 16px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';
   const feedback=document.createElement('p');feedback.setAttribute('aria-live','polite');feedback.style.marginBottom='0';
-  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
+  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';recordTrainingAnswer('paragraphs',index,correct);feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
   card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);
  });
 }
@@ -722,7 +781,7 @@ if(isBird){
   const h=document.createElement('h2');h.textContent=q.prompt;card.appendChild(h);
   const read=document.createElement('button');read.type='button';read.className='read-aloud-btn';read.textContent='🔊';read.title='報讀題目';read.addEventListener('click',()=>{if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.prompt+'。'+q.options.join('。'));u.lang='zh-TW';u.rate=.78;speechSynthesis.speak(u);}});card.appendChild(read);
   const options=document.createElement('div');options.className='match-options';
-  q.options.forEach((v,i)=>{const b=document.createElement('button');b.type='button';b.className='match-choice';b.textContent=letters[i]+'．'+v;b.disabled=answers[current]!==null;b.addEventListener('click',()=>{if(answers[current]!==null)return;answers[current]=i;if(i===q.answer)celebrateCorrect(card);renderBirdMatch();});options.appendChild(b);});
+  q.options.forEach((v,i)=>{const b=document.createElement('button');b.type='button';b.className='match-choice';b.textContent=letters[i]+'．'+v;b.disabled=answers[current]!==null;b.addEventListener('click',()=>{if(answers[current]!==null)return;answers[current]=i;recordTrainingAnswer('explanation',current,i===q.answer);if(i===q.answer)celebrateCorrect(card);renderBirdMatch();});options.appendChild(b);});
   card.appendChild(options);
   if(answers[current]!==null){const ok=answers[current]===q.answer;const p=document.createElement('p');p.style.cssText='margin:18px auto 0;padding:14px;border-radius:14px;text-align:center;font-weight:800;background:'+(ok?'#e7f2df':'#f8e5dc')+';color:'+(ok?'#356b38':'#9b332b');p.textContent=(ok?'🎉 答對了！':'再加油！')+' 正確答案：'+letters[q.answer]+'．'+q.options[q.answer];card.appendChild(p);}
   document.getElementById('matchPrev').disabled=current===0;document.getElementById('matchNext').disabled=current===birdQuestions.length-1;document.getElementById('matchFinish').disabled=answers.some(x=>x===null);

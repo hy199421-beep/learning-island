@@ -679,7 +679,8 @@ const mathChapters=[
 {title:'第四章｜三角形的心',desc:'認識內心、外心、重心與生活中的中心點',emoji:'🔺',questions:[
 {q:'三角形三條中線相交的點，稱為？',a:['內心','外心','重心','垂心'],c:2,why:'三條中線交於重心。'},
 {q:'三角形三邊的垂直平分線交點，稱為？',a:['外心','內心','重心','頂點'],c:0,why:'三邊垂直平分線交於外心。'},
-{q:'三角形三個內角的角平分線交點，稱為？',a:['重心','內心','外心','垂心'],c:1,why:'三個內角的角平分線交於內心。'}]}
+{q:'三角形三個內角的角平分線交點，稱為？',a:['重心','內心','外心','垂心'],c:1,why:'三個內角的角平分線交於內心。'}]},
+ {title:'1-4｜SIN、COS、TAN',desc:'三角函數入門：認識直角三角形邊長的比',emoji:'📐',questions:[]}
 ];
 const quiz=[
 {q:'《愛蓮說》中，作者藉由蓮花主要想表達什麼？',a:['君子的高尚品格','秋天景色的美麗','種植花草的方法','對富貴生活的嚮往'],c:0,why:'作者以蓮花象徵潔身自好、不隨俗浮沉的君子品格。'},
@@ -730,8 +731,14 @@ const mathCourses=[
 ];
 function openMathChapters(){
  const box=document.getElementById('topics');box.innerHTML='';
- document.getElementById('subline').textContent='南一版九年級上學期｜選擇章節開始練習';
- mathChapters.forEach((ch,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+ch.emoji+'</span><span><strong>'+ch.title+'</strong><small>'+ch.desc+'</small></span>';b.onclick=()=>i===0?window.open('math-similarity.html','_blank','noopener'):startMathChapter(i);box.appendChild(b)});
+ document.getElementById('subline').textContent='南一版九年級上學期｜選擇章節開始學習';
+ mathChapters.forEach((ch,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+ch.emoji+'</span><span><strong>'+ch.title+'</strong><small>'+ch.desc+'</small></span>';b.onclick=()=>i===0?window.open('math-similarity.html','_blank','noopener'):i===4?openTrigOptions():startMathChapter(i);box.appendChild(b)});
+ document.getElementById('practice').classList.remove('show');
+}
+function openTrigOptions(){
+ const box=document.getElementById('topics');box.innerHTML='';
+ document.getElementById('subline').textContent='1-4｜三角函數入門：先看教學，再挑戰練習！';
+ [['📘','教學','認識對邊、鄰邊、斜邊與 sin、cos、tan'],['✏️','練習','用五道題目檢查自己的理解']].forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>window.open('trig-intro.html?mode='+(i===0?'teach':'practice'),'_blank','noopener');box.appendChild(b)});
  document.getElementById('practice').classList.remove('show');
 }
 function startMathChapter(i){

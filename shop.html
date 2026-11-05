@@ -18,7 +18,7 @@ const rewards=[
 {emoji:"🍪",name:"點心卷",desc:"扣點 80 分；可獲得一份點心。",cost:80},
 {emoji:"🏅",name:"嘉獎卷",desc:"扣點 150 分；可記一支嘉獎。",cost:150}
 ];
-let db={},selectedGroup="",selectedName="",busy=false;
+let db={},selectedGroup="",selectedName="",busy=false,dataLoaded=false;
 const $=id=>document.getElementById(id);
 function score(name,group){let total=0;Object.keys(db).forEach(date=>{const rec=db[date]?.[group]?.find(x=>x.name===name);if(rec)total+=(Number(rec.bonusScore)||0)+(rec.attendance==="準時"?2:0)});return total}
 function redemptions(){if(!Array.isArray(db.__shopRedemptions))db.__shopRedemptions=[];return db.__shopRedemptions}
@@ -31,7 +31,7 @@ function render(){
 }
 function drawItems(){
  $("items").innerHTML="";
- rewards.forEach((r,i)=>{const d=document.createElement("article");d.className="item";const e=document.createElement("div");e.className="emoji";e.textContent=r.emoji;const h=document.createElement("h3");h.textContent=r.name;const p=document.createElement("p");p.textContent=r.desc;const c=document.createElement("div");c.className="cost";c.textContent=r.cost+" ⭐";const b=document.createElement("button");b.textContent="兌換獎勵";b.disabled=!selectedName||balance()<r.cost||busy;b.addEventListener("click",()=>redeem(i));d.append(e,h,p,c,b);$("items").appendChild(d)});
+ rewards.forEach((r,i)=>{const d=document.createElement("article");d.className="item";const e=document.createElement("div");e.className="emoji";e.textContent=r.emoji;const h=document.createElement("h3");h.textContent=r.name;const p=document.createElement("p");p.textContent=r.desc;const c=document.createElement("div");c.className="cost";c.textContent=r.cost+" ⭐";const b=document.createElement("button");b.textContent="兌換獎勵";b.disabled=!dataLoaded||!selectedName||balance()<r.cost||busy;b.addEventListener("click",()=>redeem(i));d.append(e,h,p,c,b);$("items").appendChild(d)});
 }
 function updateStudent(){
  selectedGroup=$("group").value;selectedName=$("student").value;
@@ -42,19 +42,55 @@ function updateStudent(){
  else{$("history").className="";const ul=document.createElement("ul");ul.className="history";list.forEach(x=>{const li=document.createElement("li");li.textContent=(x.date||"")+ "　"+x.reward+"　-"+x.cost+" 分";ul.appendChild(li)});$("history").replaceChildren(ul)}
  drawItems();
 }
-async function load(){
- $("status").textContent="正在讀取積分資料……";
- try{const r=await fetch(API,{cache:"no-store"});if(!r.ok)throw Error("讀取失敗");db=await r.json()||{};$("status").textContent="✅ 積分已更新";updateStudent()}
- catch(e){$("status").textContent="⚠️ 目前無法連線讀取積分，請稍後再試。";console.error(e)}
+async function readLatest(){
+ const response=await fetch(API,{cache:"no-store"});
+ if(!response.ok)throw Error("讀取試算表失敗");
+ const value=await response.json();
+ if(!value||typeof value!=="object"||Array.isArray(value))throw Error("試算表資料格式不正確");
+ return value;
 }
+async function load(){
+ dataLoaded=false;drawItems();
+ $("status").textContent="正在讀取積分資料……";
+ try{db=await readLatest();dataLoaded=true;$("status").textContent="✅ 積分已更新";updateStudent()}
+ catch(e){dataLoaded=false;$("status").textContent="⚠️ 目前無法確認最新積分，暫停兌換，請稍後再試。";drawItems();console.error(e)}
+}
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function redeem(i){
- const r=rewards[i];if(!selectedName||balance()<r.cost||busy)return;
+ const r=rewards[i];if(!dataLoaded||!selectedName||balance()<r.cost||busy)return;
  if(!confirm("確定使用 "+r.cost+" 點兌換「"+r.name+"」嗎？"))return;
- busy=true;$("status").textContent="正在儲存兌換紀錄……";drawItems();
- db.__shopRedemptions=redemptions();db.__shopRedemptions.push({group:selectedGroup,name:selectedName,reward:r.name,cost:r.cost,date:new Date().toLocaleDateString("sv")});
- try{await fetch(API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(db)});$("status").textContent="🎉 兌換申請已送出！請向老師領取獎勵。"; }
- catch(e){db.__shopRedemptions.pop();$("status").textContent="⚠️ 儲存失敗，積分未扣除。請重新整理後再試。";console.error(e)}
- busy=false;updateStudent();
+ busy=true;$("status").textContent="正在確認最新積分……";drawItems();
+ const group=selectedGroup,name=selectedName;
+ try{
+   db=await readLatest();dataLoaded=true;updateStudent();
+   if(selectedGroup!==group||selectedName!==name)throw Error("學生選擇已變更，請重新確認");
+   if(balance()<r.cost)throw Error("最新積分不足，尚未送出兌換");
+   const redemption={
+     id:"shop-"+Date.now()+"-"+Math.random().toString(36).slice(2,10),
+     group,name,reward:r.name,cost:r.cost,date:new Date().toLocaleDateString("sv")
+   };
+   $("status").textContent="正在送出兌換並核對試算表……";
+   await fetch(API,{
+     method:"POST",mode:"no-cors",
+     headers:{"Content-Type":"text/plain;charset=UTF-8"},
+     body:JSON.stringify({action:"redeem",redemption})
+   });
+   let confirmed=false;
+   for(let attempt=0;attempt<5;attempt++){
+     await wait(700);
+     const latest=await readLatest();
+     if(Array.isArray(latest.__shopRedemptions)&&latest.__shopRedemptions.some(x=>x.id===redemption.id)){
+       db=latest;confirmed=true;break;
+     }
+   }
+   if(!confirmed)throw Error("尚未在試算表查到這筆兌換。請先按「更新積分」確認紀錄，不要立即重複兌換。");
+   $("status").textContent="🎉 試算表已確認兌換紀錄！請向老師領取獎勵。";
+ }catch(e){
+   $("status").textContent="⚠️ "+(e&&e.message?e.message:"同步未能確認")+"；請按「更新積分」重新核對。";
+   console.error(e);
+ }finally{
+   busy=false;updateStudent();
+ }
 }
 $("group").addEventListener("change",render);$("student").addEventListener("change",updateStudent);$("refresh").addEventListener("click",load);
 load();

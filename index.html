@@ -659,7 +659,7 @@ body.math-open .back{background:#24658a}
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" onclick="if(event.target===this)closeModal()"><section class="panel"><div class="panel-head"><h2 id="modalTitle">國文村</h2><button class="close" onclick="closeModal()" aria-label="關閉">×</button></div><p class="subline" id="subline">選擇想挑戰的學習任務</p><div class="topic-grid" id="topics"></div><div class="cn-detail" id="cnDetail"></div><div class="practice" id="practice"><h3 id="question"></h3><div class="answers" id="answers"></div><div class="feedback" id="feedback" aria-live="polite"></div><div class="progress"><span id="bar"></span></div><button class="back" onclick="nextQuestion()">下一題 ➜</button></div><button class="back" onclick="closeModal()">返回學習島</button></section></div>
 <script>
 const data={
-cn:{title:'國文書坊',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命的碎珠','課文閱讀｜重要片段與生命體會']]},
+cn:{title:'國文書坊',desc:'走進古典書院，依照課文選擇閱讀與闖關任務！',topics:[['🪷','愛蓮說','周敦頤｜蓮花意象與君子品格'],['💎','生命的碎珠','課文閱讀｜重要片段與生命體會'],['🐦','鳥','梁實秋｜鳥的姿態、聲音與生命']]},
 math:{title:'🔢 數學村',desc:'選擇年級，從生活例題開始，一步一步練習！',topics:[['🌱','七年級數學','整數、分數、數線與一元一次方程式'],['🧩','八年級數學','乘法公式、根式、因式分解與幾何'],['📐','九年級數學｜南一九上','連比與相似形、圓的性質、推理證明與三角形的心']]},
 en:{title:'🔤 英文村',desc:'Say hello! 從字母、單字到簡單對話。',topics:[['🔠','字母與發音','認識英文字母與基本發音'],['🍎','生活單字','累積常見生活英語單字'],['💬','基礎句型','練習日常問候與句子'],['📗','簡易閱讀','讀懂短句與生活情境']]},
 special:{title:'🤝 特需村',desc:'練習生活中的重要能力，讓每天都更有自信！',topics:[['🤝','社會技巧','打招呼、輪流、合作與交友'],['🧠','學習策略','訂目標、整理步驟與記憶'],['💬','溝通表達','表達需求、傾聽與適當回應'],['🌈','情緒管理','辨認情緒並找到調節方法'],['🎒','自我管理','時間安排、物品整理與負責']]}}
@@ -697,7 +697,8 @@ function closeModal(){document.getElementById('modal').classList.remove('show');
 
 function openLesson(i){
  const lesson=data.cn.topics[i];
- const url='lesson.html?lesson='+encodeURIComponent(i===0?'ailian':'life-fragments');
+ const lessonKey=['ailian','life-fragments','bird'][i]||'ailian';
+ const url='lesson.html?lesson='+encodeURIComponent(lessonKey);
  window.open(url,'_blank','noopener');
 }
 

@@ -271,9 +271,10 @@ h2{color:#39271d!important}
 const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
+const isBird=key==='bird';
 document.querySelector('.tabs button[data-tab="meaning"]').textContent='📚 解釋';
-document.getElementById('lessonTitle').textContent=isAilian?'愛蓮說':'生命中的碎珠';
-const sections=isAilian?{
+document.getElementById('lessonTitle').textContent=isAilian?'愛蓮說':(isBird?'鳥':'生命中的碎珠');
+let sections=isAilian?{
 text:`<h3>《愛蓮說》｜周敦頤</h3><div class="poem">水陸草木之花，可愛者甚蕃。
 晉陶淵明獨愛菊；自李唐來，世人甚愛牡丹。
 予獨愛蓮之出淤泥而不染，濯清漣而不妖，
@@ -320,6 +321,23 @@ zhuyin:`<h3>國字注音</h3>
 meaning:`<h3>📚 解釋</h3><p class="muted">閱讀課文詞語，選出正確的意思。每題作答後立即公布答案。</p><div id="matchProgress" class="note"></div><div id="matchCard" class="note" style="min-height:250px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="matchPrev" type="button">上一題</button><button id="matchNext" type="button">下一題</button><button id="matchFinish" type="button">查看成績</button></div><p id="matchResult" aria-live="polite"></p>`
 
 };
+if(isBird){
+ sections={
+  text:`<h3>《鳥》｜課文閱讀</h3>
+  <div class="poem" style="text-align:left;font-size:18px;line-height:2.15;white-space:normal">
+   <p>我愛鳥。從前我常見提籠架鳥的人，清早在街上蹓躂（現在這樣有閒的人少了）。我感覺興味的不是那人的悠閒，卻是那鳥的苦悶。</p>
+   <p class="note">課文後續段落請依照班級使用的課本版本閱讀。此處先呈現已提供的開頭，避免擅自補寫或更動原文。</p>
+  </div>
+  <h3>🌿 課文詞語小提示</h3>
+  <div class="note">提籠架鳥：用籠子提著鳥，或把鳥籠架在手上。</div>
+  <div class="note">蹓躂：閒逛、散步。</div>
+  <div class="note">苦悶：心情痛苦、煩悶。</div>
+  <div class="note">羽翮：鳥的羽毛和翅膀。</div>
+  <div class="note">蜷伏：彎曲身體，縮著身子趴伏。</div>`,
+  zhuyin:`<h3>🔤 課文國字注音練習</h3><p class="muted">看國字選注音、看注音選國字。每題作答後立即公布正確答案。</p><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button">上一題</button><button id="wordNext" type="button">下一題</button><button id="wordFinish" type="button">查看成績</button></div><p id="wordResult" aria-live="polite"></p>`,
+  meaning:`<h3>📚 課文注釋解釋練習</h3><p class="muted">閱讀注釋，選出正確的意思。每題作答後立即公布答案。</p><div id="matchProgress" class="note"></div><div id="matchCard" class="note" style="min-height:250px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="matchPrev" type="button">上一題</button><button id="matchNext" type="button">下一題</button><button id="matchFinish" type="button">查看成績</button></div><p id="matchResult" aria-live="polite"></p>`
+ };
+}
 for(const id of ['text','zhuyin','meaning'])document.getElementById(id).innerHTML=sections[id];
 
 /* 愛蓮說課文句子重組：點選詞語卡，依序放入句子格 */
@@ -414,7 +432,7 @@ function celebrateCorrect(target,feedback){
 }
 
 
-if(!isAilian){
+if(key==='life-fragments'){
  const paragraphMatchQuestions=[
   {prompt:'「步履匆忙」的意思是？',answer:0,options:['腳步很急，形容事情很多、很忙。','走路很慢，完全不著急。','坐下來休息。','找不到回家的路。']},
   {prompt:'「關鍵」的意思是？',answer:1,options:['不重要的小事情。','會影響事情結果的重要部分。','每天固定做的事情。','事情已經結束。']},
@@ -486,6 +504,26 @@ if(!isAilian){
 
 /* 課文生難詞語注音四選一：逐題呈現，A～D 正確答案各 3 題 */
 const wordPronunciations={
+ bird:[
+  ['蹓躂','ㄌㄧㄡ ㄉㄚˊ','閒逛、散步。'],
+  ['羽翮','ㄩˇ ㄏㄜˊ','鳥的羽毛和翅膀。'],
+  ['蜷伏','ㄑㄩㄢˊ ㄈㄨˊ','彎曲身體，縮著身子趴伏。'],
+  ['瞵視昂藏','ㄌㄧㄣˊ ㄕˋ ㄤˊ ㄘㄤˊ','形容鳥的眼神銳利、姿態挺拔。'],
+  ['搏扶搖','ㄅㄛˊ ㄈㄨˊ ㄧㄠˊ','奮力乘著旋風向上飛。'],
+  ['呱呱','ㄍㄨ ㄍㄨ','形容鳥叫或嬰兒啼哭的聲音。'],
+  ['鼎沸','ㄉㄧㄥˇ ㄈㄟˋ','形容聲音嘈雜，像水煮沸一樣。'],
+  ['曳','ㄧㄝˋ','拖、拉。'],
+  ['翹','ㄑㄧㄠˋ','抬起、向上。'],
+  ['喙','ㄏㄨㄟˋ','鳥類的嘴。'],
+  ['斑斕','ㄅㄢ ㄌㄢˊ','色彩燦爛、多彩。'],
+  ['豐腴','ㄈㄥ ㄩˊ','豐滿、肥美。'],
+  ['穠纖合度','ㄋㄨㄥˊ ㄒㄧㄢ ㄏㄜˊ ㄉㄨˋ','胖瘦恰到好處，比例勻稱。'],
+  ['踞','ㄐㄩˋ','蹲坐、盤踞。'],
+  ['黛青','ㄉㄞˋ ㄑㄧㄥ','青黑色。'],
+  ['釉綠','ㄧㄡˋ ㄌㄩˋ','像陶瓷釉色的綠色。'],
+  ['煙突','ㄧㄢ ㄊㄨˊ','煙囪。'],
+  ['鼓噪','ㄍㄨˇ ㄗㄠˋ','喧鬧、吵嚷。']
+ ],
  ailian:[
   ['濯清漣','ㄓㄨㄛˊ ㄑㄧㄥ ㄌㄧㄢˊ'],['褻玩','ㄒㄧㄝˋ ㄨㄢˊ'],['隱逸','ㄧㄣˇ ㄧˋ'],
   ['鮮有聞','ㄒㄧㄢˇ ㄧㄡˇ ㄨㄣˊ'],['不蔓不枝','ㄅㄨˋ ㄇㄢˋ ㄅㄨˋ ㄓ'],['淤泥','ㄩ ㄋㄧˊ'],
@@ -507,7 +545,7 @@ const wordPronunciations={
   ['著書立說','ㄓㄨˋ ㄕㄨ ㄌㄧˋ ㄕㄨㄛ','寫書，提出自己的學說或想法。']
  ]
 };
-const wordBank=wordPronunciations[isAilian?'ailian':'life'];
+const wordBank=wordPronunciations[isAilian?'ailian':(isBird?'bird':'life')];
 const wordLetters=['A','B','C','D'];
 function buildWordQuestion(entry,i,askZhuyin,correct){
  const answerText=askZhuyin?entry[0]:entry[1];
@@ -544,11 +582,11 @@ const lifeWordQuiz=[
  {display:'14. 一「ㄗㄨㄥ」財富（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:1,options:['棕','宗','蹤','綜']},
  {display:'15. 「千」字文（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:2,options:['ㄑㄧㄢˊ','ㄑㄧㄢˇ','ㄑㄧㄢ','ㄐㄧㄢ']}
 ];
-const wordQuiz=isAilian
+const wordQuiz=(isAilian||isBird)
  ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,i%4))
  :lifeWordQuiz;
 const zy=document.getElementById('zhuyin');
-zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':'課文指定字詞國字注音練習')+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
+zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':(isBird?'鳥課文生難字注音練習':'課文指定字詞國字注音練習'))+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
 let wordIndex=0;
 const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');
@@ -615,7 +653,7 @@ zy.querySelector('#wordFinish').addEventListener('click',()=>{
 });
 renderWordQuestion();
 
-if(!isAilian){
+if(key==='life-fragments'){
  // 學習中心版本：不顯示長篇課文，只保留題目與圖像提示
  document.getElementById('text').innerHTML='<h3>🌟 看圖想一想・選一選</h3><p class="muted">不用先讀整篇課文，看看圖片、聽聽句子，再選出答案。</p>';
  const visuals=[
@@ -632,7 +670,7 @@ if(!isAilian){
  document.getElementById('text').appendChild(visualBox);
  const gameTitle=document.createElement('h3');gameTitle.textContent='🎯 分段詞語填空';document.getElementById('text').appendChild(gameTitle);
 }
-if(!isAilian){
+if(key==='life-fragments'){
  const paragraphs=[
   {p:"第一段｜現代生活步調快速",q:"現代人連讓電話轉盤撥轉回來的一兩秒時間都不願等待，說明這是個＿＿＿＿的世界。",a:"分秒必爭",opts:["分秒必爭","從容自如","集腋成裘"]},
   {p:"第二段｜珍惜零碎時間",q:"能掌握時間，尤其是＿＿＿＿的人，往往是令人欽佩的智者、成功者。",a:"零碎時間",opts:["休閒時間","零碎時間","睡眠時間"]},
@@ -660,6 +698,39 @@ if(!isAilian){
   check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
   card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);
  });
+}
+
+if(isBird){
+ const birdQuestions=[
+  {prompt:'「蹓躂」的意思是？',answer:0,options:['閒逛、散步。','快速奔跑。','大聲呼喊。','安靜睡覺。']},
+  {prompt:'「羽翮」是指什麼？',answer:1,options:['鳥的叫聲。','鳥的羽毛和翅膀。','鳥的巢。','鳥的腳爪。']},
+  {prompt:'「蜷伏」的意思是？',answer:2,options:['展開翅膀。','站得筆直。','彎曲身體，縮著身子趴伏。','快速飛翔。']},
+  {prompt:'「瞵視昂藏」形容什麼樣子？',answer:3,options:['低頭睡覺的樣子。','害怕躲藏的樣子。','悠閒散步的樣子。','眼神銳利、姿態挺拔的樣子。']},
+  {prompt:'「搏扶搖而直上」的意思是？',answer:0,options:['奮力乘著旋風向上飛。','在地面慢慢走。','躲進樹洞休息。','在水面游泳。']},
+  {prompt:'「喙」是鳥的哪個部位？',answer:1,options:['翅膀。','嘴。','尾巴。','羽毛。']},
+  {prompt:'「斑斕」的意思是？',answer:2,options:['灰暗無光。','單一顏色。','色彩燦爛、多彩。','乾燥粗糙。']},
+  {prompt:'「豐腴」形容什麼？',answer:3,options:['非常瘦小。','顏色鮮豔。','聲音宏亮。','豐滿、肥美。']},
+  {prompt:'「穠纖合度」是指？',answer:0,options:['胖瘦比例恰到好處。','身體非常高大。','動作很快。','羽毛顏色很多。']},
+  {prompt:'「鼓噪」的意思是？',answer:1,options:['輕聲細語。','喧鬧、吵嚷。','安靜無聲。','低聲哭泣。']}
+ ];
+ const letters=['A','B','C','D'],answers=Array(birdQuestions.length).fill(null);
+ let current=0;const card=document.getElementById('matchCard');
+ function renderBirdMatch(){
+  const q=birdQuestions[current];
+  document.getElementById('matchProgress').textContent='第 '+(current+1)+' 題／共 '+birdQuestions.length+' 題　｜　已答 '+answers.filter(x=>x!==null).length+' 題';
+  card.innerHTML='';
+  const h=document.createElement('h2');h.textContent=q.prompt;card.appendChild(h);
+  const read=document.createElement('button');read.type='button';read.className='read-aloud-btn';read.textContent='🔊';read.title='報讀題目';read.addEventListener('click',()=>{if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.prompt+'。'+q.options.join('。'));u.lang='zh-TW';u.rate=.78;speechSynthesis.speak(u);}});card.appendChild(read);
+  const options=document.createElement('div');options.className='match-options';
+  q.options.forEach((v,i)=>{const b=document.createElement('button');b.type='button';b.className='match-choice';b.textContent=letters[i]+'．'+v;b.disabled=answers[current]!==null;b.addEventListener('click',()=>{if(answers[current]!==null)return;answers[current]=i;if(i===q.answer)celebrateCorrect(card);renderBirdMatch();});options.appendChild(b);});
+  card.appendChild(options);
+  if(answers[current]!==null){const ok=answers[current]===q.answer;const p=document.createElement('p');p.style.cssText='margin:18px auto 0;padding:14px;border-radius:14px;text-align:center;font-weight:800;background:'+(ok?'#e7f2df':'#f8e5dc')+';color:'+(ok?'#356b38':'#9b332b');p.textContent=(ok?'🎉 答對了！':'再加油！')+' 正確答案：'+letters[q.answer]+'．'+q.options[q.answer];card.appendChild(p);}
+  document.getElementById('matchPrev').disabled=current===0;document.getElementById('matchNext').disabled=current===birdQuestions.length-1;document.getElementById('matchFinish').disabled=answers.some(x=>x===null);
+ }
+ document.getElementById('matchPrev').addEventListener('click',()=>{if(current>0){current--;renderBirdMatch();}});
+ document.getElementById('matchNext').addEventListener('click',()=>{if(current<birdQuestions.length-1){current++;renderBirdMatch();}});
+ document.getElementById('matchFinish').addEventListener('click',()=>{const score=birdQuestions.filter((q,i)=>answers[i]===q.answer).length;document.getElementById('matchResult').textContent='🎊 練習完成！答對 '+score+'／'+birdQuestions.length+' 題。';});
+ renderBirdMatch();
 }
 
 document.querySelectorAll('.tabs button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===btn.dataset.tab));}));

@@ -738,7 +738,7 @@ function openMathChapters(){
 function openTrigOptions(){
  const box=document.getElementById('topics');box.innerHTML='';
  document.getElementById('subline').textContent='1-4｜三角函數入門：先看教學，再挑戰練習！';
- [['📘','教學','認識對邊、鄰邊、斜邊與 sin、cos、tan'],['✏️','練習','用五道題目檢查自己的理解']].forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>window.open('trig-intro.html?mode='+(i===0?'teach':'practice'),'_blank','noopener');box.appendChild(b)});
+ [['📘','教學','認識對邊、鄰邊、斜邊與 sin、cos、tan'],['✏️','練習','用五道題目檢查自己的理解']].forEach((t,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+t[0]+'</span><span><strong>'+t[1]+'</strong><small>'+t[2]+'</small></span>';b.onclick=()=>window.open('trig-intro.html','_blank','noopener');box.appendChild(b)});
  document.getElementById('practice').classList.remove('show');
 }
 function startMathChapter(i){

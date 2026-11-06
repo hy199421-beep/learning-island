@@ -71,7 +71,7 @@ function detectClock(){
  $("periodDisplay").textContent=active?`第 ${active.n} 節｜${active.s}–${active.e}`:"目前非上課時段";
  const scheduled=active&&weekly[weekday]?.[active.n];
  const selected=$("group").value;
- if(active&&scheduled&&scheduled!==selected){setStatus(`現在是第 ${active.n} 節，課表安排為「${scheduled}」，目前選擇「${selected}」。請切換正確班級。`,"err");}
+ if(active&&scheduled&&scheduled!==selected){setStatus(`現在是第 ${active.n} 節，課表安排為「${scheduled}」；目前選擇「${selected}」。教師後台不受課表限制，仍可加分。`,"ok");}
  else if(!active){setStatus("目前為非課堂時段，教師仍可自由加分。","ok");}
  else if(!scheduled){setStatus("目前時段沒有排定班級；教師仍可自由選班加分。","ok");}
  else if(db){setStatus(`時間已自動判定：${currentDate} 第 ${active.n} 節（課表：${scheduled}）；教師可自由選班加分。`,"ok");}

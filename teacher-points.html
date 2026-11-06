@@ -25,16 +25,14 @@ button.secondary{border:1px solid #cbd6dc;background:white;color:var(--ink);bord
 <div class="wrap">
   <header class="hero">
     <h1>🏝️ 學習島｜教師積分管理</h1>
-    <p>點選學生姓名即可加 1 分。此頁不提供扣分功能。</p>
+    <p>系統依電腦台灣時間自動判定日期與節次；選擇班級後，點選學生姓名即可加 1 分。</p>
   </header>
 
   <section class="panel">
     <div class="controls">
       <div class="field"><label for="group">選擇班級</label><select id="group"><option value="數學9A">數學9A</option><option value="國文8A">國文8A</option><option value="國文8B">國文8B</option></select></div>
-      <div class="field"><label for="date">上課日期</label><input id="date" type="date"></div>
-      <div class="field"><label for="period">上課節次</label><select id="period">
-        <option value="1">第 1 節｜08:15–09:00</option><option value="2">第 2 節｜09:10–09:55</option><option value="3">第 3 節｜10:05–10:50</option><option value="4">第 4 節｜11:00–11:45</option><option value="5">第 5 節｜13:15–14:00</option><option value="6">第 6 節｜14:10–14:55</option><option value="7">第 7 節｜15:05–15:50</option><option value="8">第 8 節｜16:00–16:45</option>
-      </select></div>
+      <div class="field"><label>電腦自動判定日期</label><div class="hint" id="dateDisplay" style="padding:12px;background:#f4f7f8;border:1px solid #d8dfe4;border-radius:11px">讀取中…</div></div>
+      <div class="field"><label>電腦自動判定節次</label><div class="hint" id="periodDisplay" style="padding:12px;background:#f4f7f8;border:1px solid #d8dfe4;border-radius:11px">讀取中…</div></div>
     </div>
   </section>
 
@@ -57,12 +55,30 @@ const API_URL = "https://script.google.com/macros/s/AKfycbyZZ_i7LTq9pxuRAjPI9HUy
 let db = null;
 let busy = new Set();
 const $ = id => document.getElementById(id);
-function taipeiDate(){
-  const parts = new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
-  const o = Object.fromEntries(parts.map(p=>[p.type,p.value]));
-  return `${o.year}-${o.month}-${o.day}`;
+let currentDate="",currentPeriod="",inClassTime=false;
+const periods=[{n:"1",s:"08:15",e:"09:00"},{n:"2",s:"09:10",e:"09:55"},{n:"3",s:"10:05",e:"10:50"},{n:"4",s:"11:00",e:"11:45"},{n:"5",s:"13:15",e:"14:00"},{n:"6",s:"14:10",e:"14:55"},{n:"7",s:"15:05",e:"15:50"},{n:"8",s:"16:00",e:"16:45"}];
+const weekly={"1":{"1":"數學9A","2":"國文8A","7":"國文8B"},"2":{"3":"數學9A","4":"國文8B","7":"國文8A"},"3":{"1":"國文8A","3":"國文8B"},"4":{"3":"數學9A","5":"國文8A","6":"國文8B"},"5":{"1":"國文8B","2":"數學9A","3":"國文8A"}};
+function taipeiParts(){
+ const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit",weekday:"short",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+ return Object.fromEntries(parts.map(p=>[p.type,p.value]));
 }
-function sessionId(){return `${$("date").value}_${$("period").value}_${$("group").value}`;}
+function detectClock(){
+ const p=taipeiParts();currentDate=`${p.year}-${p.month}-${p.day}`;
+ const weekday={"Mon":"1","Tue":"2","Wed":"3","Thu":"4","Fri":"5"}[p.weekday]||"";
+ const now=p.hour*60+Number(p.minute);const active=periods.find(x=>now>=Number(x.s.slice(0,2))*60+Number(x.s.slice(3))&&now<=Number(x.e.slice(0,2))*60+Number(x.e.slice(3)));
+ currentPeriod=active?active.n:"";inClassTime=!!active;
+ $("dateDisplay").textContent=currentDate;
+ $("periodDisplay").textContent=active?`第 ${active.n} 節｜${active.s}–${active.e}`:"目前非上課時段";
+ const scheduled=active&&weekly[weekday]?.[active.n];
+ const selected=$("group").value;
+ if(active&&scheduled&&scheduled!==selected){setStatus(`現在是第 ${active.n} 節，課表安排為「${scheduled}」，目前選擇「${selected}」。請切換正確班級。`,"err");}
+ else if(!active){setStatus("目前不在排定的上課時段，暫停課堂加分。","err");}
+ else if(!scheduled){setStatus("目前時段沒有設定班級課程，暫停課堂加分。","err");}
+ else if(db){setStatus(`時間已自動判定：${currentDate} 第 ${active.n} 節（${scheduled}）。`,"ok");}
+ if(db)render();
+}
+function sessionId(){return `${currentDate}_${currentPeriod}_${$("group").value}`;}
+
 function setStatus(msg,type=""){ $("status").textContent=msg; $("status").className="status "+type; }
 function num(v){return Number(v)||0;}
 function balanceFor(group,name){
@@ -77,13 +93,13 @@ function render(){
   const group=$("group").value, sid=sessionId();
   const roster=db.students.filter(s=>s.group===group && (s.active===true || String(s.active).toUpperCase()==="TRUE"));
   $("classTitle").textContent=group;
-  $("lessonLabel").textContent=`${$("date").value}｜第 ${$("period").value} 節`;
+  $("lessonLabel").textContent=currentPeriod?`${currentDate}｜第 ${currentPeriod} 節`:"目前非上課時段";
   $("studentCount").textContent=`學生：${roster.length} 人`;
   const count=db.pointEvents.filter(x=>x.session_id===sid&&x.event_type==="課堂加分").length;
   $("classPointCount").textContent=`本堂已加分：${count} 次`;
   $("students").innerHTML="";
   roster.forEach(s=>{
-    const b=document.createElement("button"); b.className="student"; b.disabled=busy.has(s.name);
+    const b=document.createElement("button"); b.className="student"; b.disabled=busy.has(s.name)||!inClassTime||weekly[taipeiParts().weekday==="Mon"?"1":taipeiParts().weekday==="Tue"?"2":taipeiParts().weekday==="Wed"?"3":taipeiParts().weekday==="Thu"?"4":taipeiParts().weekday==="Fri"?"5":""]?.[currentPeriod]!==group;
     const n=document.createElement("span");n.className="name";n.textContent=s.name;
     const score=document.createElement("span");score.className="score";score.textContent=`目前總積分：${balanceFor(group,s.name)} 分`;
     const tap=document.createElement("span");tap.className="tap";tap.textContent=busy.has(s.name)?"加分處理中…":"＋ 點一下加 1 分";
@@ -102,8 +118,10 @@ async function loadData(){
 }
 async function addPoint(group,name){
   if(busy.has(name))return;
-  if(!$("date").value){setStatus("請先選擇上課日期。","err");return;}
-  const payload={action:"addClassPoint",group,name,date:$("date").value,sessionId:sessionId(),eventId:"teacher-"+crypto.randomUUID(),note:"教師積分頁點選加分"};
+  detectClock();
+  const weekday=taipeiParts().weekday;const day={"Mon":"1","Tue":"2","Wed":"3","Thu":"4","Fri":"5"}[weekday]||"";
+  if(!inClassTime||weekly[day]?.[currentPeriod]!==group){setStatus("目前時間或班級與課表不符，未送出加分。","err");return;}
+  const payload={action:"addClassPoint",group,name,date:currentDate,sessionId:sessionId(),eventId:"teacher-"+crypto.randomUUID(),note:"教師積分頁依電腦時間自動判定節次"};
   busy.add(name);render();setStatus(`正在為「${name}」送出 +1 分……`);
   try{
     // text/plain avoids a cross-origin JSON preflight; Apps Script parses the JSON body.
@@ -115,11 +133,10 @@ async function addPoint(group,name){
   finally{busy.delete(name);if(db)render();}
 }
 $("group").addEventListener("change",render);
-$("date").addEventListener("change",render);
-$("period").addEventListener("change",render);
 $("refresh").addEventListener("click",loadData);
-$("date").value=taipeiDate();
+detectClock();
 loadData();
+setInterval(detectClock,15000);
 </script>
 </body>
 </html>

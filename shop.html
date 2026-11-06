@@ -52,7 +52,7 @@ async function readLatest(){
  if(!response.ok)throw Error("讀取積分資料失敗");
  const value=await response.json();
  if(!value||typeof value!=="object"||value.ok!==true)throw Error(value&&value.error?value.error:"積分資料格式不正確");
- for(const key of ["students","attendance","pointEvents","redemptions"])if(!Array.isArray(value[key]))throw Error("資料庫缺少 "+key+" 資料，請確認新積分系統已完成初始化");
+ for(const key of ["students","attendance","pointEvents","pointBalances","redemptions"])if(!Array.isArray(value[key]))throw Error("資料庫缺少 "+key+" 資料，請確認新積分系統已完成初始化");
  return value;
 }
 async function load(){

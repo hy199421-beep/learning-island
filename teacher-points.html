@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>學習島｜教師積分管理</title>
+<style>
+:root{--ink:#263746;--blue:#477da8;--gold:#d6ad58;--paper:#fffdf7;--muted:#687887;--line:#e7e1d5;--green:#287a55;--red:#b94a48}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#eaf5fb,#f8f4e9);font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;color:var(--ink)}
+.wrap{max-width:1050px;margin:0 auto;padding:24px 16px 48px}.hero{background:linear-gradient(120deg,#477da8,#6f9eb9);color:white;padding:24px;border-radius:22px;box-shadow:0 10px 26px #315c7a22}
+h1{margin:0 0 8px;font-size:clamp(24px,4vw,34px)}.hero p{margin:0;opacity:.93}.panel{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:16px;box-shadow:0 5px 18px #4353630b}
+.controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.field label{display:block;font-weight:700;font-size:14px;margin:0 0 7px}.field select,.field input{width:100%;padding:12px;border:1px solid #d8dfe4;border-radius:11px;background:white;font:inherit;color:var(--ink)}
+.topline{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.class-title{font-size:21px;font-weight:800}.hint{font-size:13px;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-top:16px}
+.student{border:1px solid var(--line);border-radius:15px;padding:14px;background:white;text-align:left;cursor:pointer;transition:.15s;min-height:104px;color:var(--ink)}
+.student:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 6px 15px #9d824322}.student:disabled{opacity:.55;cursor:wait;transform:none}
+.student .name{font-size:18px;font-weight:800;display:block}.student .score{display:block;color:var(--green);font-size:14px;margin-top:8px}.student .tap{font-size:12px;color:var(--muted);display:block;margin-top:4px}
+.status{margin-top:14px;padding:12px 14px;border-radius:12px;background:#eef4f7;color:#36556b;font-size:14px;min-height:44px}.status.ok{background:#eaf5ee;color:#236744}.status.err{background:#fff0ed;color:#9b3932}
+.summary{display:flex;gap:10px;flex-wrap:wrap}.pill{background:#f4f0e6;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-size:13px}
+button.secondary{border:1px solid #cbd6dc;background:white;color:var(--ink);border-radius:10px;padding:9px 13px;font:inherit;cursor:pointer}
+.foot{font-size:12px;color:var(--muted);line-height:1.7;margin:16px 3px}
+@media(max-width:650px){.controls{grid-template-columns:1fr}.wrap{padding:14px 12px 32px}.hero{padding:20px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>🏝️ 學習島｜教師積分管理</h1>
+    <p>點選學生姓名即可加 1 分。此頁不提供扣分功能。</p>
+  </header>
+
+  <section class="panel">
+    <div class="controls">
+      <div class="field"><label for="group">選擇班級</label><select id="group"><option value="數學9A">數學9A</option><option value="國文8A">國文8A</option><option value="國文8B">國文8B</option></select></div>
+      <div class="field"><label for="date">上課日期</label><input id="date" type="date"></div>
+      <div class="field"><label for="period">上課節次</label><select id="period">
+        <option value="1">第 1 節｜08:15–09:00</option><option value="2">第 2 節｜09:10–09:55</option><option value="3">第 3 節｜10:05–10:50</option><option value="4">第 4 節｜11:00–11:45</option><option value="5">第 5 節｜13:15–14:00</option><option value="6">第 6 節｜14:10–14:55</option><option value="7">第 7 節｜15:05–15:50</option><option value="8">第 8 節｜16:00–16:45</option>
+      </select></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="topline">
+      <div><div class="class-title" id="classTitle">數學9A</div><div class="hint" id="lessonLabel">請選擇日期與節次</div></div>
+      <button class="secondary" id="refresh">↻ 更新積分</button>
+    </div>
+    <div class="summary" style="margin-top:12px">
+      <span class="pill" id="studentCount">學生：讀取中</span>
+      <span class="pill" id="classPointCount">本堂已加分：0 次</span>
+    </div>
+    <div class="grid" id="students"></div>
+    <div class="status" id="status">正在連接新積分資料庫……</div>
+  </section>
+  <p class="foot">資料來源：學習島全新積分系統 v1.0. 每次點選會新增一筆課堂加分紀錄；請確認班級、日期與節次正確後再點選學生。</p>
+</div>
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbyZZ_i7LTq9pxuRAjPI9HUyy07CAK0TfTBcXT7HIfzxGPQpy3n5o6VsbE00daDZuHAd/exec";
+let db = null;
+let busy = new Set();
+const $ = id => document.getElementById(id);
+function taipeiDate(){
+  const parts = new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+  const o = Object.fromEntries(parts.map(p=>[p.type,p.value]));
+  return `${o.year}-${o.month}-${o.day}`;
+}
+function sessionId(){return `${$("date").value}_${$("period").value}_${$("group").value}`;}
+function setStatus(msg,type=""){ $("status").textContent=msg; $("status").className="status "+type; }
+function num(v){return Number(v)||0;}
+function balanceFor(group,name){
+  if(!db)return 0;
+  const a=db.attendance.filter(x=>x.group===group&&x.name===name).reduce((s,x)=>s+num(x.points),0);
+  const p=db.pointEvents.filter(x=>x.group===group&&x.name===name).reduce((s,x)=>s+num(x.points),0);
+  const r=db.redemptions.filter(x=>x.group===group&&x.name===name).reduce((s,x)=>s+num(x.cost),0);
+  return a+p-r;
+}
+function render(){
+  if(!db)return;
+  const group=$("group").value, sid=sessionId();
+  const roster=db.students.filter(s=>s.group===group && (s.active===true || String(s.active).toUpperCase()==="TRUE"));
+  $("classTitle").textContent=group;
+  $("lessonLabel").textContent=`${$("date").value}｜第 ${$("period").value} 節`;
+  $("studentCount").textContent=`學生：${roster.length} 人`;
+  const count=db.pointEvents.filter(x=>x.session_id===sid&&x.event_type==="課堂加分").length;
+  $("classPointCount").textContent=`本堂已加分：${count} 次`;
+  $("students").innerHTML="";
+  roster.forEach(s=>{
+    const b=document.createElement("button"); b.className="student"; b.disabled=busy.has(s.name);
+    const n=document.createElement("span");n.className="name";n.textContent=s.name;
+    const score=document.createElement("span");score.className="score";score.textContent=`目前總積分：${balanceFor(group,s.name)} 分`;
+    const tap=document.createElement("span");tap.className="tap";tap.textContent=busy.has(s.name)?"加分處理中…":"＋ 點一下加 1 分";
+    b.append(n,score,tap);b.addEventListener("click",()=>addPoint(group,s.name));$("students").appendChild(b);
+  });
+}
+async function loadData(){
+  setStatus("正在讀取最新積分資料……");
+  try{
+    const res=await fetch(API_URL+"?action=getData&t="+Date.now(),{method:"GET",cache:"no-store"});
+    if(!res.ok)throw new Error("資料庫回應異常："+res.status);
+    const data=await res.json();
+    if(!data.ok)throw new Error(data.error||"讀取資料失敗");
+    db=data;render();setStatus("資料庫連線成功，學生名單與積分已更新。","ok");
+  }catch(e){setStatus("目前無法讀取資料庫："+e.message+"。若持續發生，請把此畫面截圖給我協助排查。","err");}
+}
+async function addPoint(group,name){
+  if(busy.has(name))return;
+  if(!$("date").value){setStatus("請先選擇上課日期。","err");return;}
+  const payload={action:"addClassPoint",group,name,date:$("date").value,sessionId:sessionId(),eventId:"teacher-"+crypto.randomUUID(),note:"教師積分頁點選加分"};
+  busy.add(name);render();setStatus(`正在為「${name}」送出 +1 分……`);
+  try{
+    // text/plain avoids a cross-origin JSON preflight; Apps Script parses the JSON body.
+    await fetch(API_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});
+    setStatus(`已送出「${name}」+1 分，正在重新讀取試算表確認……`);
+    await new Promise(r=>setTimeout(r,1000));
+    await loadData();
+  }catch(e){setStatus("加分送出時發生問題："+e.message,"err");}
+  finally{busy.delete(name);if(db)render();}
+}
+$("group").addEventListener("change",render);
+$("date").addEventListener("change",render);
+$("period").addEventListener("change",render);
+$("refresh").addEventListener("click",loadData);
+$("date").value=taipeiDate();
+loadData();
+</script>
+</body>
+</html>

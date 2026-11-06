@@ -25,7 +25,7 @@ button.secondary{border:1px solid #cbd6dc;background:white;color:var(--ink);bord
 <div class="wrap">
   <header class="hero">
     <h1>🏝️ 學習島｜教師積分管理</h1>
-    <p>系統依電腦台灣時間自動判定日期與節次；選擇班級後，點選學生姓名即可加 1 分。</p>
+    <p>日期由電腦台灣時間自動帶入；教師後台不限上課時段，任何時間選擇班級並點選學生即可加 1 分。</p>
   </header>
 
   <section class="panel">
@@ -72,12 +72,12 @@ function detectClock(){
  const scheduled=active&&weekly[weekday]?.[active.n];
  const selected=$("group").value;
  if(active&&scheduled&&scheduled!==selected){setStatus(`現在是第 ${active.n} 節，課表安排為「${scheduled}」，目前選擇「${selected}」。請切換正確班級。`,"err");}
- else if(!active){setStatus("目前不在排定的上課時段，暫停課堂加分。","err");}
- else if(!scheduled){setStatus("目前時段沒有設定班級課程，暫停課堂加分。","err");}
- else if(db){setStatus(`時間已自動判定：${currentDate} 第 ${active.n} 節（${scheduled}）。`,"ok");}
+ else if(!active){setStatus("目前為非課堂時段，教師仍可自由加分。","ok");}
+ else if(!scheduled){setStatus("目前時段沒有排定班級；教師仍可自由選班加分。","ok");}
+ else if(db){setStatus(`時間已自動判定：${currentDate} 第 ${active.n} 節（課表：${scheduled}）；教師可自由選班加分。`,"ok");}
  if(db)render();
 }
-function sessionId(){return `${currentDate}_${currentPeriod}_${$("group").value}`;}
+function sessionId(){return `${currentDate}_${currentPeriod||"課後"}_${$("group").value}`;}
 
 function setStatus(msg,type=""){ $("status").textContent=msg; $("status").className="status "+type; }
 function num(v){return Number(v)||0;}
@@ -93,13 +93,13 @@ function render(){
   const group=$("group").value, sid=sessionId();
   const roster=db.students.filter(s=>s.group===group && (s.active===true || String(s.active).toUpperCase()==="TRUE"));
   $("classTitle").textContent=group;
-  $("lessonLabel").textContent=currentPeriod?`${currentDate}｜第 ${currentPeriod} 節`:"目前非上課時段";
+  $("lessonLabel").textContent=currentPeriod?`${currentDate}｜第 ${currentPeriod} 節`:`${currentDate}｜教師自由加分（非課堂時段）`;
   $("studentCount").textContent=`學生：${roster.length} 人`;
   const count=db.pointEvents.filter(x=>x.session_id===sid&&x.event_type==="課堂加分").length;
   $("classPointCount").textContent=`本堂已加分：${count} 次`;
   $("students").innerHTML="";
   roster.forEach(s=>{
-    const b=document.createElement("button"); b.className="student"; b.disabled=busy.has(s.name)||!inClassTime||weekly[taipeiParts().weekday==="Mon"?"1":taipeiParts().weekday==="Tue"?"2":taipeiParts().weekday==="Wed"?"3":taipeiParts().weekday==="Thu"?"4":taipeiParts().weekday==="Fri"?"5":""]?.[currentPeriod]!==group;
+    const b=document.createElement("button"); b.className="student"; b.disabled=busy.has(s.name);
     const n=document.createElement("span");n.className="name";n.textContent=s.name;
     const score=document.createElement("span");score.className="score";score.textContent=`目前總積分：${balanceFor(group,s.name)} 分`;
     const tap=document.createElement("span");tap.className="tap";tap.textContent=busy.has(s.name)?"加分處理中…":"＋ 點一下加 1 分";
@@ -119,9 +119,7 @@ async function loadData(){
 async function addPoint(group,name){
   if(busy.has(name))return;
   detectClock();
-  const weekday=taipeiParts().weekday;const day={"Mon":"1","Tue":"2","Wed":"3","Thu":"4","Fri":"5"}[weekday]||"";
-  if(!inClassTime||weekly[day]?.[currentPeriod]!==group){setStatus("目前時間或班級與課表不符，未送出加分。","err");return;}
-  const payload={action:"addClassPoint",group,name,date:currentDate,sessionId:sessionId(),eventId:"teacher-"+crypto.randomUUID(),note:"教師積分頁依電腦時間自動判定節次"};
+  const payload={action:"addClassPoint",group,name,date:currentDate,sessionId:sessionId(),eventId:"teacher-"+crypto.randomUUID(),note:currentPeriod?`教師後台加分｜第 ${currentPeriod} 節`:"教師後台自由加分｜非課堂時段"};
   busy.add(name);render();setStatus(`正在為「${name}」送出 +1 分……`);
   try{
     // text/plain avoids a cross-origin JSON preflight; Apps Script parses the JSON body.

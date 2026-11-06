@@ -22,22 +22,27 @@ label{display:block;font-weight:800;margin:0 0 8px}select{width:100%;padding:14p
 <div class="note">上課開始後 5 分鐘內簽到：準時 +2 點；超過 5 分鐘：遲到打卡 +0 點。每位學生同一天只能簽到一次。請勿代替同學簽到。</div>
 </section></main>
 <script>
-const API="https://script.google.com/macros/s/AKfycbz1Q2vZHbTXuoVXg7Mma_ALo1pdzEUH5un0FhxzBQrgwNXA8nvVnybhhNb2BSXkMXWB/exec";
+const API="https://script.google.com/macros/s/AKfycbyZZ_i7LTq9pxuRAjPI9HUyy07CAK0TfTBcXT7HIfzxGPQpy3n5o6VsbE00daDZuHAd/exec";
 const rosters={"數學9A":["慶豐","詠甯","祺叡","冠閔","鴻昱","聖民","柏曜"],"國文8A":["淮喆","鼎杰","佳瑋","子田","司浩"],"國文8B":["昱佑","奕訢","日良","羽琪","世賢","宣澔"]};
 const $=id=>document.getElementById(id);let attendance=[];let busy=new Set();
 function today(){const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());const o=Object.fromEntries(p.map(x=>[x.type,x.value]));return `${o.year}-${o.month}-${o.day}`}
 const date=today();let scheduleCache=[];$("today").textContent=`簽到日期：${date}`;
 function eventId(group,name){return `daily-${date}-${group}-${name}`}
 function getAttendanceStatus(group,data){
- const weekdays=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
- const weekday=weekdays[new Date().getDay()];
+ const parts=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Taipei",weekday:"short",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+ const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));
+ const weekdayMap={Sun:"星期日",Mon:"星期一",Tue:"星期二",Wed:"星期三",Thu:"星期四",Fri:"星期五",Sat:"星期六"};
+ const weekday=weekdayMap[p.weekday];
  const lesson=(data.schedule||[]).find(x=>x.group===group&&x.weekday===weekday);
  if(!lesson) throw Error("今天課表中沒有這個班級的課程，請確認組別。");
  const m=String(lesson.start_time||"").match(/(\d{1,2}):(\d{2})/);
  if(!m) throw Error("課表未設定正確的上課開始時間。");
- const now=new Date(); const startMinutes=Number(m[1])*60+Number(m[2]);
- const elapsed=now.getHours()*60+now.getMinutes()+now.getSeconds()/60-startMinutes;
- return {status:elapsed<=5?"準時":"遲到",points:elapsed<=5?2:0,start:String(lesson.start_time),elapsed};
+ const nowMinutes=Number(p.hour)*60+Number(p.minute)+Number(p.second)/60;
+ const startMinutes=Number(m[1])*60+Number(m[2]);
+ const elapsed=nowMinutes-startMinutes;
+ if(elapsed<0) throw Error("尚未到上課時間，請上課開始後再簽到。");
+ const punctual=elapsed<=5;
+ return {status:punctual?"準時":"遲到",points:punctual?2:0,start:String(lesson.start_time),elapsed};
 }
 function msg(s,c=""){ $("status").className="status "+c;$("status").textContent=s }
 function hasChecked(group,name){return attendance.some(x=>x.event_id===eventId(group,name))}

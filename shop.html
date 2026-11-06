@@ -7,7 +7,7 @@
 <section class="panel"><h2>👋 找到你的積分</h2><div class="row"><div class="field"><label for="group">選擇班級</label><select id="group"><option value="">請選擇班級</option><option>數學9A</option><option>國文8A</option><option>國文8B</option></select></div><div class="field"><label for="student">選擇姓名</label><select id="student" disabled><option value="">請先選班級</option></select></div><button class="action" id="refresh">🔄 更新積分</button></div><div class="balance"><div><strong id="who">尚未選擇學生</strong><div class="hint">積分依出缺席與課堂加分紀錄計算</div></div><div><div class="hint">目前可用積分</div><div class="points" id="balance">— ⭐</div></div></div><div class="status" id="status" aria-live="polite"></div></section>
 <section class="panel"><h2>🎁 挑選你的獎勵</h2><div class="grid" id="items"></div></section>
 <section class="panel"><h2>🧾 我的兌換紀錄</h2><div id="history" class="empty">選擇學生後，就能查看兌換紀錄。</div></section>
-<p class="foot">積分依每日準時 +2 分及老師課堂加分累計。兌換後會同步記錄。</p></main>
+<p class="foot">積分依每堂準時簽到 +2 分、舊有每日點名及老師課堂加分累計。兌換後會同步記錄。</p></main>
 <script>
 const API="https://script.google.com/macros/s/AKfycby4hyOeWPXPvbqPCgr-xcuzR_nRw3K0z2Ao17sz7EsaWRbVbF3Dephdl-4r7EdT-Sva/exec";
 const groups={"數學9A":["慶豐","詠甯","祺叡","冠閔","鴻昱","聖民","柏曜"],"國文8A":["淮喆","鼎杰","佳瑋","子田","司浩"],"國文8B":["昱佑","奕訢","日良","羽琪","世賢","宣澔"]};
@@ -20,7 +20,7 @@ const rewards=[
 ];
 let db={},selectedGroup="",selectedName="",busy=false,dataLoaded=false;
 const $=id=>document.getElementById(id);
-function score(name,group){let total=0;Object.keys(db).forEach(date=>{const rec=db[date]?.[group]?.find(x=>x.name===name);if(rec)total+=(Number(rec.bonusScore)||0)+(rec.attendance==="準時"?2:0)});return total}
+function score(name,group){let total=0;Object.keys(db).forEach(date=>{if(date.startsWith("__"))return;const rec=db[date]?.[group]?.find(x=>x.name===name);if(rec){const legacy=(Number(rec.bonusScore)||0)+(rec.attendance==="準時"?2:0);const lessons=rec.lessonAttendance&&typeof rec.lessonAttendance==="object"?Object.values(rec.lessonAttendance):[];const lessonPoints=lessons.filter(x=>x&&x.status==="準時").length*2;total+=legacy+lessonPoints}});return total}
 function redemptions(){if(!Array.isArray(db.__shopRedemptions))db.__shopRedemptions=[];return db.__shopRedemptions}
 function spent(){return redemptions().filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((n,x)=>n+Number(x.cost||0),0)}
 function balance(){return Math.max(0,score(selectedName,selectedGroup)-spent())}

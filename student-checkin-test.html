@@ -26,7 +26,7 @@ const API="https://script.google.com/macros/s/AKfycbyZZ_i7LTq9pxuRAjPI9HUyy07CAK
 const rosters={"數學9A":["慶豐","詠甯","祺叡","冠閔","鴻昱","聖民","柏曜"],"國文8A":["淮喆","鼎杰","佳瑋","子田","司浩"],"國文8B":["昱佑","奕訢","日良","羽琪","世賢","宣澔"]};
 const $=id=>document.getElementById(id);let attendance=[];let busy=new Set();
 function today(){const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());const o=Object.fromEntries(p.map(x=>[x.type,x.value]));return `${o.year}-${o.month}-${o.day}`}
-const date=today();$("today").textContent=`簽到日期：${date}`;
+const date=today();let scheduleCache=[];$("today").textContent=`簽到日期：${date}`;
 function eventId(group,name){return `daily-${date}-${group}-${name}`}
 function getAttendanceStatus(group,data){
  const weekdays=["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];
@@ -43,12 +43,11 @@ function msg(s,c=""){ $("status").className="status "+c;$("status").textContent=
 function hasChecked(group,name){return attendance.some(x=>x.event_id===eventId(group,name))}
 function render(){const group=$("group").value;const root=$("roster");root.innerHTML="";rosters[group].forEach(name=>{const b=document.createElement("button");b.className="student";b.disabled=busy.has(name)||hasChecked(group,name);b.textContent=name;const small=document.createElement("small");small.textContent=busy.has(name)?"簽到處理中…":hasChecked(group,name)?"今日已簽到 ✓":"點我簽到";b.appendChild(small);b.addEventListener("click",()=>checkin(group,name));root.appendChild(b)})}
 async function getData(){const r=await fetch(API+"?action=getData&t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("讀取資料庫失敗");const d=await r.json();if(!d.ok)throw Error(d.error||"資料庫回應錯誤");return d}
-async function refresh(){try{const d=await getData();attendance=d.attendance||[];render()}catch(e){msg("暫時無法讀取簽到狀態："+e.message,"err")}}
+async function refresh(){try{const d=await getData();attendance=d.attendance||[];scheduleCache=d.schedule||[];render()}catch(e){msg("暫時無法讀取簽到狀態："+e.message,"err")}}
 async function checkin(group,name){if(busy.has(name))return;if(hasChecked(group,name)){msg(`${name} 今天已經簽到過囉！`);return}busy.add(name);render();msg(`正在為 ${name} 簽到，請稍候……`);
-const id=eventId(group,name);try{const d=await getData();attendance=d.attendance||[];if(hasChecked(group,name)){msg(`${name} 今天已經簽到過囉！`);return}
-const timing=getAttendanceStatus(group,d);
+const id=eventId(group,name);try{const timing=getAttendanceStatus(group,{schedule:scheduleCache});
 await fetch(API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"markAttendance",eventId:id,date,group,name,status:timing.status})});
-await new Promise(r=>setTimeout(r,1200));const after=await getData();attendance=after.attendance||[];if(hasChecked(group,name)){msg(timing.points===2?`🎉 ${name} 準時簽到成功！上課時間 ${timing.start}，獲得 +2 點。`:`${name} 已完成遲到打卡。上課時間 ${timing.start}，超過 5 分鐘，本次 +0 點。`,"ok")}else{msg("簽到送出後尚未在資料庫確認到紀錄，請稍後重新整理或請老師協助。","err")}
+let after=null;for(const delay of [350,650,1000,1500]){await new Promise(r=>setTimeout(r,delay));after=await getData();attendance=after.attendance||[];if(hasChecked(group,name))break;}if(hasChecked(group,name)){msg(timing.points===2?`🎉 ${name} 準時簽到成功！上課時間 ${timing.start}，獲得 +2 點。`:`${name} 已完成遲到打卡。上課時間 ${timing.start}，超過 5 分鐘，本次 +0 點。`,"ok")}else{msg("簽到送出後尚未在資料庫確認到紀錄，請稍後重新整理或請老師協助。","err")}
 }catch(e){msg("簽到未完成："+e.message,"err")}finally{busy.delete(name);render()}}
 $("group").addEventListener("change",()=>{render();msg(`已切換至 ${$("group").value}，請點選自己的姓名。`)});render();refresh();
 </script></body></html>

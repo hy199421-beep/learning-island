@@ -73,8 +73,8 @@ async function redeem(i){
    $("status").textContent="正在送出兌換並同步扣除總積分……";
    await fetch(API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify({action:"redeem",redemption})});
    let confirmed=false;
-   for(let attempt=0;attempt<8;attempt++){
-     await wait(700);
+   for(const delay of [350,650,1000,1500]){
+     await wait(delay);
      const latest=await readLatest();
      if(latest.redemptions.some(x=>x.id===redemption.id)){
        db=latest;confirmed=true;break;

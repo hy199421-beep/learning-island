@@ -122,7 +122,8 @@ async function loadData(){
 async function addPoint(group,name){
   if(busy.has(name))return;
   detectClock();
-  const before=balanceFor(group,name);
+  const beforeRow=(db.pointBalances||[]).find(x=>x.group===group&&x.name===name);
+  const before=beforeRow?num(beforeRow.total_points):0;
   const payload={action:"addClassPoint",group,name,date:currentDate,sessionId:sessionId(),eventId:"teacher-"+crypto.randomUUID(),note:currentPeriod?`教師後台加分｜第 ${currentPeriod} 節`:"教師後台自由加分｜非課堂時段"};
   busy.add(name);render();setStatus(`正在為「${name}」送出 +1 分……`);
   try{

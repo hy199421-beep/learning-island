@@ -7,9 +7,9 @@
 <section class="panel"><h2>👋 找到你的積分</h2><div class="row"><div class="field"><label for="group">選擇班級</label><select id="group"><option value="">請選擇班級</option><option>數學9A</option><option>國文8A</option><option>國文8B</option></select></div><div class="field"><label for="student">選擇姓名</label><select id="student" disabled><option value="">請先選班級</option></select></div><button class="action" id="refresh">🔄 更新積分</button></div><div class="balance"><div><strong id="who">尚未選擇學生</strong><div class="hint">積分依出缺席與課堂加分紀錄計算</div></div><div><div class="hint">目前可用積分</div><div class="points" id="balance">— ⭐</div></div></div><div class="status" id="status" aria-live="polite"></div></section>
 <section class="panel"><h2>🎁 挑選你的獎勵</h2><div class="grid" id="items"></div></section>
 <section class="panel"><h2>🧾 我的兌換紀錄</h2><div id="history" class="empty">選擇學生後，就能查看兌換紀錄。</div></section>
-<p class="foot">積分依每堂準時簽到 +2 分、舊有每日點名及老師課堂加分累計。兌換後會同步記錄。</p></main>
+<p class="foot">總積分＝準時簽到積分＋教師課堂加分－商店兌換積分。資料與教師積分管理共用同一資料庫。</p></main>
 <script>
-const API="https://script.google.com/macros/s/AKfycby4hyOeWPXPvbqPCgr-xcuzR_nRw3K0z2Ao17sz7EsaWRbVbF3Dephdl-4r7EdT-Sva/exec";
+const API="https://script.google.com/macros/s/AKfycbyZZ_i7LTq9pxuRAjPI9HUyy07CAK0TfTBcXT7HIfzxGPQpy3n5o6VsbE00daDZuHAd/exec";
 const groups={"數學9A":["慶豐","詠甯","祺叡","冠閔","鴻昱","聖民","柏曜"],"國文8A":["淮喆","鼎杰","佳瑋","子田","司浩"],"國文8B":["昱佑","奕訢","日良","羽琪","世賢","宣澔"]};
 const rewards=[
 {emoji:"🎲",name:"桌遊",desc:"扣點 50 分；全班學生一起兌換後，下一節課可以玩桌遊。",cost:50},
@@ -18,12 +18,16 @@ const rewards=[
 {emoji:"🍪",name:"點心卷",desc:"扣點 80 分；可獲得一份點心。",cost:80},
 {emoji:"🏅",name:"嘉獎卷",desc:"扣點 150 分；可記一支嘉獎。",cost:150}
 ];
-let db={},selectedGroup="",selectedName="",busy=false,dataLoaded=false;
+let db=null,selectedGroup="",selectedName="",busy=false,dataLoaded=false;
 const $=id=>document.getElementById(id);
-function score(name,group){let total=0;Object.keys(db).forEach(date=>{if(date.startsWith("__"))return;const rec=db[date]?.[group]?.find(x=>x.name===name);if(rec){const legacy=(Number(rec.bonusScore)||0)+(rec.attendance==="準時"?2:0);const lessons=rec.lessonAttendance&&typeof rec.lessonAttendance==="object"?Object.values(rec.lessonAttendance):[];const lessonPoints=lessons.filter(x=>x&&x.status==="準時").length*2;total+=legacy+lessonPoints}});return total}
-function redemptions(){if(!Array.isArray(db.__shopRedemptions))db.__shopRedemptions=[];return db.__shopRedemptions}
-function spent(){return redemptions().filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((n,x)=>n+Number(x.cost||0),0)}
-function balance(){return Math.max(0,score(selectedName,selectedGroup)-spent())}
+const num=v=>Number(v)||0;
+function balance(){
+ if(!db||!selectedName)return 0;
+ const a=(db.attendance||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((s,x)=>s+num(x.points),0);
+ const p=(db.pointEvents||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((s,x)=>s+num(x.points),0);
+ const r=(db.redemptions||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((s,x)=>s+num(x.cost),0);
+ return Math.max(0,a+p-r);
+}
 function render(){
  const g=$("group").value,sel=$("student");sel.innerHTML='<option value="">請選擇姓名</option>';
  (groups[g]||[]).forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o)});sel.disabled=!g;
@@ -37,61 +41,49 @@ function updateStudent(){
  selectedGroup=$("group").value;selectedName=$("student").value;
  if(!selectedName){$("who").textContent="尚未選擇學生";$("balance").textContent="— ⭐";$("history").textContent="選擇學生後，就能查看兌換紀錄。";drawItems();return}
  $("who").textContent=selectedGroup+"・"+selectedName;$("balance").textContent=balance()+" ⭐";
- const list=redemptions().filter(x=>x.group===selectedGroup&&x.name===selectedName).slice().reverse();
+ const list=(db?.redemptions||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).slice().reverse();
  if(!list.length){$("history").textContent="目前還沒有兌換紀錄。";$("history").className="empty"}
- else{$("history").className="";const ul=document.createElement("ul");ul.className="history";list.forEach(x=>{const li=document.createElement("li");li.textContent=(x.date||"")+ "　"+x.reward+"　-"+x.cost+" 分";ul.appendChild(li)});$("history").replaceChildren(ul)}
+ else{$("history").className="";const ul=document.createElement("ul");ul.className="history";list.forEach(x=>{const li=document.createElement("li");li.textContent=(x.date||"")+"　"+(x.reward||x.item||"獎勵")+"　-"+num(x.cost)+" 分";ul.appendChild(li)});$("history").replaceChildren(ul)}
  drawItems();
 }
 async function readLatest(){
- const response=await fetch(API,{cache:"no-store"});
- if(!response.ok)throw Error("讀取試算表失敗");
+ const response=await fetch(API+"?action=getData&t="+Date.now(),{cache:"no-store"});
+ if(!response.ok)throw Error("讀取積分資料失敗");
  const value=await response.json();
- if(!value||typeof value!=="object"||Array.isArray(value)||value.status==="error")throw Error(value&&value.message?value.message:"試算表資料格式不正確");
- if(value.__apiVersion!==2)throw Error("積分 API 尚未升級。為保護歷史積分及商店紀錄，已暫停兌換；請先更新並重新部署 Apps Script。");
+ if(!value||typeof value!=="object"||value.ok!==true)throw Error(value&&value.error?value.error:"積分資料格式不正確");
+ for(const key of ["students","attendance","pointEvents","redemptions"])if(!Array.isArray(value[key]))throw Error("資料庫缺少 "+key+" 資料，請確認新積分系統已完成初始化");
  return value;
 }
 async function load(){
- dataLoaded=false;drawItems();
- $("status").textContent="正在讀取積分資料……";
- try{db=await readLatest();dataLoaded=true;$("status").textContent="✅ 積分已更新";updateStudent()}
- catch(e){dataLoaded=false;$("status").textContent="⚠️ 目前無法確認最新積分，暫停兌換，請稍後再試。";drawItems();console.error(e)}
+ dataLoaded=false;drawItems();$("status").textContent="正在讀取最新總積分……";
+ try{db=await readLatest();dataLoaded=true;$("status").textContent="✅ 已連線新積分系統，總積分已更新";updateStudent()}
+ catch(e){dataLoaded=false;$("status").textContent="⚠️ 無法讀取新積分資料，暫停兌換："+e.message;drawItems();console.error(e)}
 }
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function redeem(i){
  const r=rewards[i];if(!dataLoaded||!selectedName||balance()<r.cost||busy)return;
  if(!confirm("確定使用 "+r.cost+" 點兌換「"+r.name+"」嗎？"))return;
- busy=true;$("status").textContent="正在確認最新積分……";drawItems();
+ busy=true;$("status").textContent="正在確認最新總積分……";drawItems();
  const group=selectedGroup,name=selectedName;
  try{
    db=await readLatest();dataLoaded=true;updateStudent();
    if(selectedGroup!==group||selectedName!==name)throw Error("學生選擇已變更，請重新確認");
    if(balance()<r.cost)throw Error("最新積分不足，尚未送出兌換");
-   const redemption={
-     id:"shop-"+Date.now()+"-"+Math.random().toString(36).slice(2,10),
-     group,name,reward:r.name,cost:r.cost,date:new Date().toLocaleDateString("sv")
-   };
-   $("status").textContent="正在送出兌換並核對試算表……";
-   await fetch(API,{
-     method:"POST",mode:"no-cors",
-     headers:{"Content-Type":"text/plain;charset=UTF-8"},
-     body:JSON.stringify({action:"redeem",redemption})
-   });
+   const redemption={id:"shop-"+Date.now()+"-"+Math.random().toString(36).slice(2,10),group,name,reward:r.name,cost:r.cost,date:new Date().toLocaleDateString("sv")};
+   $("status").textContent="正在送出兌換並同步扣除總積分……";
+   await fetch(API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify({action:"redeem",redemption})});
    let confirmed=false;
-   for(let attempt=0;attempt<5;attempt++){
+   for(let attempt=0;attempt<8;attempt++){
      await wait(700);
      const latest=await readLatest();
-     if(Array.isArray(latest.__shopRedemptions)&&latest.__shopRedemptions.some(x=>x.id===redemption.id)){
+     if(latest.redemptions.some(x=>x.id===redemption.id)){
        db=latest;confirmed=true;break;
      }
    }
-   if(!confirmed)throw Error("尚未在試算表查到這筆兌換。請先按「更新積分」確認紀錄，不要立即重複兌換。");
-   $("status").textContent="🎉 試算表已確認兌換紀錄！請向老師領取獎勵。";
- }catch(e){
-   $("status").textContent="⚠️ "+(e&&e.message?e.message:"同步未能確認")+"；請按「更新積分」重新核對。";
-   console.error(e);
- }finally{
-   busy=false;updateStudent();
- }
+   if(!confirmed)throw Error("尚未在資料庫確認兌換紀錄。請先按「更新積分」核對，勿立即重複兌換。");
+   $("status").textContent="🎉 兌換成功！總積分已扣除 "+r.cost+" 點。";
+ }catch(e){$("status").textContent="⚠️ "+(e&&e.message?e.message:"同步未能確認")+"；請按「更新積分」重新核對。";console.error(e)}
+ finally{busy=false;updateStudent()}
 }
 $("group").addEventListener("change",render);$("student").addEventListener("change",updateStudent);$("refresh").addEventListener("click",load);
 load();

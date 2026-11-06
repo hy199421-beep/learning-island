@@ -47,6 +47,7 @@ async function readLatest(){
  if(!response.ok)throw Error("讀取試算表失敗");
  const value=await response.json();
  if(!value||typeof value!=="object"||Array.isArray(value)||value.status==="error")throw Error(value&&value.message?value.message:"試算表資料格式不正確");
+ if(value.__apiVersion!==2)throw Error("積分 API 尚未升級。為保護歷史積分及商店紀錄，已暫停兌換；請先更新並重新部署 Apps Script。");
  return value;
 }
 async function load(){

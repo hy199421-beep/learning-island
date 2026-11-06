@@ -24,7 +24,8 @@ const num=v=>Number(v)||0;
 function balance(){
  if(!db||!selectedName)return 0;
  const a=(db.attendance||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((s,x)=>s+num(x.points),0);
- const p=(db.pointEvents||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((s,x)=>s+num(x.points),0);
+ const row=(db.pointBalances||[]).find(x=>x.group===selectedGroup&&x.name===selectedName);
+ const p=row?num(row.total_points):0;
  const r=(db.redemptions||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((s,x)=>s+num(x.cost),0);
  return Math.max(0,a+p-r);
 }
@@ -69,14 +70,16 @@ async function redeem(i){
    db=await readLatest();dataLoaded=true;updateStudent();
    if(selectedGroup!==group||selectedName!==name)throw Error("學生選擇已變更，請重新確認");
    if(balance()<r.cost)throw Error("最新積分不足，尚未送出兌換");
-   const redemption={id:"shop-"+Date.now()+"-"+Math.random().toString(36).slice(2,10),group,name,reward:r.name,cost:r.cost,date:new Date().toLocaleDateString("sv")};
+   const redemptionId="shop-"+Date.now()+"-"+Math.random().toString(36).slice(2,10);
+   const itemId=({桌遊:"SHOP-001",習作生字寫一遍:"SHOP-002",KTV:"SHOP-003",點心卷:"SHOP-004",嘉獎卷:"SHOP-005"})[r.name];
+   const redemption={redemptionId,group,name,itemId,date:new Date().toLocaleDateString("sv")};
    $("status").textContent="正在送出兌換並同步扣除總積分……";
-   await fetch(API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify({action:"redeem",redemption})});
+   await fetch(API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=UTF-8"},body:JSON.stringify({action:"redeem",...redemption})});
    let confirmed=false;
    for(const delay of [350,650,1000,1500]){
      await wait(delay);
      const latest=await readLatest();
-     if(latest.redemptions.some(x=>x.id===redemption.id)){
+     if(latest.redemptions.some(x=>x.redemption_id===redemptionId || x.redemptionId===redemptionId)){
        db=latest;confirmed=true;break;
      }
    }

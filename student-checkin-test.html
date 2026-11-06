@@ -22,7 +22,7 @@ label{display:block;font-weight:800;margin:0 0 8px}select{width:100%;padding:14p
 <div class="note">上課開始後 5 分鐘內簽到：準時 +2 點；超過 5 分鐘：遲到打卡 +0 點。每位學生同一天只能簽到一次。請勿代替同學簽到。</div>
 </section></main>
 <script>
-const API="https://script.google.com/macros/s/AKfycbyZZ_i7LTq9pxuRAjPI9HUyy07CAK0TfTBcXT7HIfzxGPQpy3n5o6VsbE00daDZuHAd/exec";
+const API="https://script.google.com/macros/s/AKfycbz1Q2vZHbTXuoVXg7Mma_ALo1pdzEUH5un0FhxzBQrgwNXA8nvVnybhhNb2BSXkMXWB/exec";
 const rosters={"數學9A":["慶豐","詠甯","祺叡","冠閔","鴻昱","聖民","柏曜"],"國文8A":["淮喆","鼎杰","佳瑋","子田","司浩"],"國文8B":["昱佑","奕訢","日良","羽琪","世賢","宣澔"]};
 const $=id=>document.getElementById(id);let attendance=[];let busy=new Set();
 function today(){const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());const o=Object.fromEntries(p.map(x=>[x.type,x.value]));return `${o.year}-${o.month}-${o.day}`}

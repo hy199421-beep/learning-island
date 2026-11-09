@@ -487,7 +487,7 @@ const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
 const isBird=key==='bird';
 
-// 學徒模式先看正確答案閃卡；挑戰模式直接進入原有練習。
+// 學徒模式：每張正確答案閃卡停留 5 秒，自動播放完畢後進入練習；挑戰模式直接作答。
 let learningMode=localStorage.getItem('learningIslandMode_'+key)||'challenge';
 const flashcardModules=[];
 function registerFlashcardModule(practiceEl,cards,title){
@@ -500,17 +500,24 @@ function registerFlashcardModule(practiceEl,cards,title){
  const front=document.createElement('div');front.className='flashcard-front';
  const answer=document.createElement('div');answer.className='flashcard-answer';
  const note=document.createElement('div');note.className='flashcard-note';
- const actions=document.createElement('div');actions.className='flashcard-actions';
- const prev=document.createElement('button');prev.type='button';prev.textContent='上一張';
- const next=document.createElement('button');next.type='button';next.textContent='下一張';
- const start=document.createElement('button');start.type='button';start.className='flashcard-start';start.textContent='看完了，開始練習';
- actions.append(prev,next,start);face.append(front,answer,note);stage.append(heading,count,face,actions);
- let index=0,started=false;
- function draw(){const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+' / '+cards.length;front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent=item.note||'先記住正確答案，再進入練習。';prev.disabled=index===0;next.disabled=index===cards.length-1;}
- function apply(reset){if(reset){index=0;started=false;}const show=learningMode==='apprentice'&&!started;stage.hidden=!show;practiceEl.hidden=learningMode==='apprentice'&&!started;if(show)draw();}
- prev.addEventListener('click',()=>{if(index>0){index--;draw();}});
- next.addEventListener('click',()=>{if(index<cards.length-1){index++;draw();}});
- start.addEventListener('click',()=>{started=true;apply(false);});
+ face.append(front,answer,note);stage.append(heading,count,face);
+ let index=0,started=false,timer=null,poll=null,runId=0;
+ function stop(){runId++;if(timer){clearTimeout(timer);timer=null;}if(poll){clearInterval(poll);poll=null;}}
+ function draw(){const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+' / '+cards.length+'｜每張 5 秒';front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent=item.note||'請仔細看一看，5 秒後自動換下一張。';}
+ function finish(){stop();started=true;stage.hidden=true;practiceEl.hidden=false;}
+ function play(id){
+  if(id!==runId||learningMode!=='apprentice'||started)return;
+  if(!stage.getClientRects().length){poll=setInterval(()=>{if(id!==runId)return;if(stage.getClientRects().length){clearInterval(poll);poll=null;play(id);}},200);return;}
+  draw();
+  timer=setTimeout(()=>{if(id!==runId)return;if(index<cards.length-1){index++;play(id);}else finish();},5000);
+ }
+ function apply(reset){
+  stop();
+  if(reset){index=0;started=false;}
+  const show=learningMode==='apprentice'&&!started;
+  stage.hidden=!show;practiceEl.hidden=learningMode==='apprentice'&&!started;
+  if(show){const id=runId;play(id);}
+ }
  practiceEl.classList.add('flashcard-practice');practiceEl.parentNode.insertBefore(stage,practiceEl);
  flashcardModules.push({apply});apply(true);
 }

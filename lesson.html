@@ -903,13 +903,16 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
  for(let k=0;k<4;k++){
   options.push(k===correct?answerText:wrong[(cursor++)%wrong.length]);
  }
+ const context=entry[3]||entry[0];
+ const targetChar=entry[0];
  return {
   word:entry[0],
   stimulus:askZhuyin?entry[1]:entry[0],
-  display:isBird?(askZhuyin?'注音「'+entry[1]+'」是哪個國字？（'+(entry[3]||entry[0])+'）':'「'+entry[0]+'」的注音是？（'+(entry[3]||entry[0])+'）'):undefined,
+  display:isBird?(askZhuyin?context.replace(targetChar,'「'+targetChar+'」'):context.replace(targetChar,'「'+entry[1]+'」')):undefined,
+  question:isBird?(askZhuyin?'「'+targetChar+'」的注音是？':'這個注音是哪個國字？'):undefined,
   hint:entry[2]||'請仔細辨認這個語詞。',
   askZhuyin,
-  prompt:askZhuyin?'請依照注音選出正確的國字：':'請依照國字選出正確的注音：',
+  prompt:askZhuyin?'請依照國字選出正確的注音：':'請依照注音選出正確的國字：',
   answer:correct,
   options
  };
@@ -949,6 +952,7 @@ function renderWordQuestion(){
  heading.style.cssText='font-size:30px;text-align:center;margin:16px 0 22px;color:#68452e';
  heading.textContent=(q.display||((q.askZhuyin?'注音：':'國字：')+q.stimulus)).replace(/（　　　　）/g,'');
  wordCard.appendChild(heading);
+ if(isBird&&q.question){const prompt=document.createElement('p');prompt.textContent=q.question;prompt.style.cssText='margin:0 auto 18px;text-align:center;font-size:22px;font-weight:800;color:#765034';wordCard.appendChild(prompt);}
  if(isBird&&q.hint){const hint=document.createElement('p');hint.textContent='詞語提示：'+q.hint;hint.style.cssText='margin:0 auto 18px;padding:10px 14px;max-width:680px;border-radius:12px;background:#fff3dc;color:#765b37;text-align:center;font-size:16px;line-height:1.6';wordCard.appendChild(hint);}
  const choices=document.createElement('div');
  choices.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';

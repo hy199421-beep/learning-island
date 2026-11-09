@@ -487,13 +487,12 @@ const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
 const isBird=key==='bird';
 
-// 學徒模式：每張正確答案閃卡停留 5 秒，自動播放完畢後進入練習；挑戰模式直接作答。
+// 學徒模式：每題先看 5 秒閃卡，接著練習同一道題；答題後再看下一張。
 let learningMode=localStorage.getItem('learningIslandMode_'+key)||'challenge';
 const flashcardModules=[];
 function registerFlashcardModule(practiceEl,cards,title){
- if(!practiceEl||!cards||!cards.length)return;
- const stage=document.createElement('section');
- stage.className='flashcard-stage';
+ if(!practiceEl||!cards||!cards.length)return null;
+ const stage=document.createElement('section');stage.className='flashcard-stage';
  const heading=document.createElement('h3');heading.className='flashcard-heading';heading.textContent='🎓 學徒閃卡｜'+title;
  const count=document.createElement('div');count.className='flashcard-count';
  const face=document.createElement('div');face.className='flashcard-face';
@@ -501,26 +500,22 @@ function registerFlashcardModule(practiceEl,cards,title){
  const answer=document.createElement('div');answer.className='flashcard-answer';
  const note=document.createElement('div');note.className='flashcard-note';
  face.append(front,answer,note);stage.append(heading,count,face);
- let index=0,started=false,timer=null,poll=null,runId=0;
- function stop(){runId++;if(timer){clearTimeout(timer);timer=null;}if(poll){clearInterval(poll);poll=null;}}
- function draw(){const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+' / '+cards.length+'｜每張 5 秒';front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent=item.note||'請仔細看一看，5 秒後自動換下一張。';}
- function finish(){stop();started=true;stage.hidden=true;practiceEl.hidden=false;}
- function play(id){
-  if(id!==runId||learningMode!=='apprentice'||started)return;
-  if(!stage.getClientRects().length){poll=setInterval(()=>{if(id!==runId)return;if(stage.getClientRects().length){clearInterval(poll);poll=null;play(id);}},200);return;}
-  draw();
-  timer=setTimeout(()=>{if(id!==runId)return;if(index<cards.length-1){index++;play(id);}else finish();},5000);
+ let index=0,timer=null,waiter=null,token=0,renderer=null,nextTimer=null;
+ function stop(){token++;clearTimeout(timer);clearTimeout(waiter);clearTimeout(nextTimer);}
+ function show(i){
+  stop();index=i;
+  if(learningMode!=='apprentice'){stage.hidden=true;practiceEl.hidden=false;renderer?.(i);return;}
+  stage.hidden=false;practiceEl.hidden=true;const t=token;
+  const begin=()=>{if(t!==token)return;if(!stage.getClientRects().length){waiter=setTimeout(begin,150);return;}
+   const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+'／'+cards.length+'｜5 秒後練習本題';front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent='5 秒後直接練習這一道題目。';
+   timer=setTimeout(()=>{if(t!==token)return;stage.hidden=true;practiceEl.hidden=false;renderer?.(index);},5000);
+  };begin();
  }
- function apply(reset){
-  stop();
-  if(reset){index=0;started=false;}
-  const show=learningMode==='apprentice'&&!started;
-  stage.hidden=!show;practiceEl.hidden=learningMode==='apprentice'&&!started;
-  if(show){const id=runId;play(id);}
- }
+ function advance(i){if(learningMode!=='apprentice'||i!==index)return;if(i<cards.length-1)nextTimer=setTimeout(()=>show(i+1),800);}
+ function apply(reset){if(reset)index=0;if(learningMode==='apprentice')show(0);else{stop();stage.hidden=true;practiceEl.hidden=false;renderer?.(index);}}
  practiceEl.classList.add('flashcard-practice');practiceEl.parentNode.insertBefore(stage,practiceEl);
- flashcardModules.push({apply});apply(true);
-}
+ const api={apply,advance,setRenderer(fn){renderer=fn;}};flashcardModules.push(api);apply(true);return api;
+ }
 function setLearningMode(mode){
  learningMode=mode;localStorage.setItem('learningIslandMode_'+key,mode);
  const apprentice=mode==='apprentice';
@@ -683,7 +678,7 @@ if(isAilian){
   {prompt:'第三段｜請重組句子：',parts:['噫！','菊之愛，陶後鮮有聞。','蓮之愛，同予者何人？','牡丹之愛，宜乎眾矣。']}
  ];
  let rebuildIndex=0,placed=[];
- registerFlashcardModule(document.getElementById('ailianRebuild'),rebuildItems.map((q,i)=>({front:'第 '+(i+1)+' 張｜句子重組重點',back:q.parts.join(''),note:'先看正確語句順序，再進行詞語卡重組。'})),'愛蓮說課文句子');
+ const rebuildFlash=registerFlashcardModule(document.getElementById('ailianRebuild'),rebuildItems.map((q,i)=>({front:'第 '+(i+1)+' 張｜句子重組重點',back:q.parts.join(''),note:'先看正確語句順序，再進行詞語卡重組。'})),'愛蓮說課文句子');
  const tileHost=document.getElementById('ailianTiles'),slotHost=document.getElementById('ailianSlots');
  const feedback=document.getElementById('ailianFeedback');
  function drawRebuild(){
@@ -714,7 +709,7 @@ if(isAilian){
   const correct=placed.every((x,i)=>x===i);
   feedback.textContent=correct?'🎉 答對了！太棒了！':'再試一次，點選格子可以把詞語拿回來。';
   feedback.style.color=correct?'#26734d':'#a33d2e';
-  if(correct)celebrateCorrect(document.getElementById('ailianRebuild'),feedback);
+  if(correct){celebrateCorrect(document.getElementById('ailianRebuild'),feedback);rebuildFlash?.advance(rebuildIndex);}
  });
  document.getElementById('ailianReset').addEventListener('click',drawRebuild);
  document.getElementById('ailianNext').addEventListener('click',()=>{rebuildIndex=(rebuildIndex+1)%rebuildItems.length;drawRebuild();});
@@ -772,7 +767,7 @@ if(key==='life-fragments'){
  const explanationPractice=document.createElement('div');
  while(explanationPanel.firstChild)explanationPractice.appendChild(explanationPanel.firstChild);
  explanationPanel.appendChild(explanationPractice);
- registerFlashcardModule(explanationPractice,paragraphMatchQuestions.map(q=>({
+ const explanationFlash=registerFlashcardModule(explanationPractice,paragraphMatchQuestions.map(q=>({
   front:q.prompt,
   back:q.options[q.answer],
   note:'先記住詞語的意思，再進入選擇練習。'
@@ -804,7 +799,7 @@ if(key==='life-fragments'){
    button.disabled=matchAnswers[matchIndex]!==null;
    button.addEventListener('click',()=>{
     if(matchAnswers[matchIndex]!==null)return;
-    matchAnswers[matchIndex]=index;recordTrainingAnswer('explanation',matchIndex,index===q.answer);if(index===q.answer)celebrateCorrect(matchCard);renderParagraphMatch();
+    matchAnswers[matchIndex]=index;recordTrainingAnswer('explanation',matchIndex,index===q.answer);if(index===q.answer)celebrateCorrect(matchCard);renderParagraphMatch();explanationFlash?.advance(matchIndex);
    });
    choices.appendChild(button);
   });
@@ -827,6 +822,7 @@ if(key==='life-fragments'){
   const score=paragraphMatchQuestions.filter((q,i)=>matchAnswers[i]===q.answer).length;
   document.getElementById('matchResult').textContent='🎊 練習完成！答對 '+score+'／'+paragraphMatchQuestions.length+' 題。';
  });
+ explanationFlash?.setRenderer(i=>{matchIndex=i;renderParagraphMatch();});
  renderParagraphMatch();
 }
 
@@ -920,7 +916,7 @@ zy.innerHTML='<div id="wordPractice"><h3>🔤 '+(isAilian?'課文國字注音練
 let wordIndex=0;
 const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');
-registerFlashcardModule(zy.querySelector('#wordPractice'),wordQuiz.map(q=>({front:q.display||q.stimulus,back:q.options[q.answer],note:q.hint||'記住正確的國字與注音。'})),'國字注音');
+const wordFlash=registerFlashcardModule(zy.querySelector('#wordPractice'),wordQuiz.map(q=>({front:q.display||q.stimulus,back:q.options[q.answer],note:q.hint||'記住正確的國字與注音。'})),'國字注音');
 function renderWordQuestion(){
  const q=wordQuiz[wordIndex];
  zy.querySelector('#wordProgress').textContent='第 '+(wordIndex+1)+' 題／共 '+wordQuiz.length+' 題　｜　已答 '+wordAnswers.filter(x=>x!==null).length+' 題';
@@ -950,7 +946,7 @@ function renderWordQuestion(){
    wordAnswers[wordIndex]=k;
    recordTrainingAnswer('pronunciation',wordIndex,k===q.answer);
    if(k===q.answer)celebrateCorrect(wordCard);
-   renderWordQuestion();
+   renderWordQuestion();wordFlash?.advance(wordIndex);
   });
   choices.appendChild(button);
  });
@@ -977,6 +973,7 @@ zy.querySelector('#wordFinish').addEventListener('click',()=>{
  const score=wordQuiz.filter((q,i)=>wordAnswers[i]===q.answer).length;
  zy.querySelector('#wordResult').textContent='🎊 挑戰完成！答對 '+score+'／'+wordQuiz.length+' 題。';
 });
+wordFlash?.setRenderer(i=>{wordIndex=i;renderWordQuestion();});
 renderWordQuestion();
 
 if(key==='life-fragments'){
@@ -1012,7 +1009,7 @@ if(key==='life-fragments'){
  game.innerHTML='<h3>🎮 分段慣用詞句配對・填空挑戰</h3><p class="muted">讀完每一段，選出最適合填入句子的詞語。完成八題看看自己能得幾分！</p><div id="gameScore" class="note">目前得分：0 / 8</div><div id="gameQuestions"></div>';
  document.getElementById('text').appendChild(game);
  const host=game.querySelector('#gameQuestions');
- registerFlashcardModule(game,paragraphs.map(item=>({front:item.p+'｜'+item.q,back:item.a,note:'先記住這一段的關鍵詞語，再自己完成填空。'})),'生命中的碎珠分段詞語');
+ const paragraphFlash=registerFlashcardModule(game,paragraphs.map(item=>({front:item.p+'｜'+item.q,back:item.a,note:'先記住這一段的關鍵詞語，再自己完成填空。'})),'生命中的碎珠分段詞語');
  registerTrainingModule('paragraphs',paragraphs.length);
  paragraphs.forEach((item,index)=>{
   const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
@@ -1023,7 +1020,7 @@ if(key==='life-fragments'){
   item.opts.forEach(opt=>{const o=document.createElement('option');o.value=opt;o.textContent=opt;select.appendChild(o);});
   const check=document.createElement('button');check.textContent='確認答案';check.style.cssText='margin-left:8px;padding:10px 16px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';
   const feedback=document.createElement('p');feedback.setAttribute('aria-live','polite');feedback.style.marginBottom='0';
-  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';recordTrainingAnswer('paragraphs',index,correct);feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';});
+  check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';recordTrainingAnswer('paragraphs',index,correct);feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';paragraphFlash?.advance(index);});
   card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);
  });
 }
@@ -1046,7 +1043,7 @@ if(isAilian){
  practice.innerHTML='<h3>🌸 愛蓮說｜語句解釋練習</h3><p class="muted">選出課文語句正確的意思。每題作答後公布答案。</p><div id="lotusProgress" class="note"></div><div id="lotusCard" class="note" style="min-height:250px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="lotusPrev" type="button">上一題</button><button id="lotusNext" type="button">下一題</button><button id="lotusFinish" type="button">查看成績</button></div><p id="lotusResult" aria-live="polite"></p>';
  panel.innerHTML='';
  panel.appendChild(practice);
- registerFlashcardModule(practice,lotusQuestions.map(q=>({front:q.prompt,back:q.options[q.answer],note:'先記住這句課文的意思，再進入選擇練習。'})),'愛蓮說語句解釋');
+ const lotusFlash=registerFlashcardModule(practice,lotusQuestions.map(q=>({front:q.prompt,back:q.options[q.answer],note:'先記住這句課文的意思，再進入選擇練習。'})),'愛蓮說語句解釋');
  registerTrainingModule('explanation',lotusQuestions.length);
  let index=0;
  const card=practice.querySelector('#lotusCard');
@@ -1058,7 +1055,7 @@ if(isAilian){
   const choices=document.createElement('div');choices.className='match-options';
   q.options.forEach((option,i)=>{
    const b=document.createElement('button');b.type='button';b.className='match-choice';b.textContent=letters[i]+'．'+option;b.disabled=answers[index]!==null;
-   b.addEventListener('click',()=>{if(answers[index]!==null)return;answers[index]=i;recordTrainingAnswer('explanation',index,i===q.answer);if(i===q.answer)celebrateCorrect(card);renderLotus();});
+   b.addEventListener('click',()=>{if(answers[index]!==null)return;answers[index]=i;recordTrainingAnswer('explanation',index,i===q.answer);if(i===q.answer)celebrateCorrect(card);renderLotus();lotusFlash?.advance(index);});
    choices.appendChild(b);
   });
   card.appendChild(choices);
@@ -1091,7 +1088,7 @@ if(isBird){
  const birdPractice=document.createElement('div');
  while(meaningPanel.firstChild)birdPractice.appendChild(meaningPanel.firstChild);
  meaningPanel.appendChild(birdPractice);
- registerFlashcardModule(birdPractice,birdQuestions.map(q=>({front:q.prompt,back:q.options[q.answer],note:'先記住詞語的正確意思，再進入選擇題。'})),'鳥課文詞語解釋');
+ const birdFlash=registerFlashcardModule(birdPractice,birdQuestions.map(q=>({front:q.prompt,back:q.options[q.answer],note:'先記住詞語的正確意思，再進入選擇題。'})),'鳥課文詞語解釋');
  let current=0;const card=document.getElementById('matchCard');
  function renderBirdMatch(){
   const q=birdQuestions[current];
@@ -1100,7 +1097,7 @@ if(isBird){
   const h=document.createElement('h2');h.textContent=q.prompt;card.appendChild(h);
   const read=document.createElement('button');read.type='button';read.className='read-aloud-btn';read.textContent='🔊';read.title='報讀題目';read.addEventListener('click',()=>{if('speechSynthesis'in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.prompt+'。'+q.options.join('。'));u.lang='zh-TW';u.rate=.78;speechSynthesis.speak(u);}});card.appendChild(read);
   const options=document.createElement('div');options.className='match-options';
-  q.options.forEach((v,i)=>{const b=document.createElement('button');b.type='button';b.className='match-choice';b.textContent=letters[i]+'．'+v;b.disabled=answers[current]!==null;b.addEventListener('click',()=>{if(answers[current]!==null)return;answers[current]=i;recordTrainingAnswer('explanation',current,i===q.answer);if(i===q.answer)celebrateCorrect(card);renderBirdMatch();});options.appendChild(b);});
+  q.options.forEach((v,i)=>{const b=document.createElement('button');b.type='button';b.className='match-choice';b.textContent=letters[i]+'．'+v;b.disabled=answers[current]!==null;b.addEventListener('click',()=>{if(answers[current]!==null)return;answers[current]=i;recordTrainingAnswer('explanation',current,i===q.answer);if(i===q.answer)celebrateCorrect(card);renderBirdMatch();birdFlash?.advance(current);});options.appendChild(b);});
   card.appendChild(options);
   if(answers[current]!==null){const ok=answers[current]===q.answer;const p=document.createElement('p');p.style.cssText='margin:18px auto 0;padding:14px;border-radius:14px;text-align:center;font-weight:800;background:'+(ok?'#e7f2df':'#f8e5dc')+';color:'+(ok?'#356b38':'#9b332b');p.textContent=(ok?'🎉 答對了！':'再加油！')+' 正確答案：'+letters[q.answer]+'．'+q.options[q.answer];card.appendChild(p);}
   document.getElementById('matchPrev').disabled=current===0;document.getElementById('matchNext').disabled=current===birdQuestions.length-1;document.getElementById('matchFinish').disabled=answers.some(x=>x===null);

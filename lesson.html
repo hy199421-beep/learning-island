@@ -1070,6 +1070,7 @@ if(isAilian){
  practice.querySelector('#lotusPrev').addEventListener('click',()=>{if(index>0){index--;renderLotus();}});
  practice.querySelector('#lotusNext').addEventListener('click',()=>{if(index<lotusQuestions.length-1){index++;renderLotus();}});
  practice.querySelector('#lotusFinish').addEventListener('click',()=>{const score=lotusQuestions.filter((q,i)=>answers[i]===q.answer).length;practice.querySelector('#lotusResult').textContent='🎊 練習完成！答對 '+score+'／'+lotusQuestions.length+' 題。';});
+ lotusFlash?.setRenderer(i=>{index=i;renderLotus();});
  renderLotus();
 }
 
@@ -1108,6 +1109,7 @@ if(isBird){
  document.getElementById('matchPrev').addEventListener('click',()=>{if(current>0){current--;renderBirdMatch();}});
  document.getElementById('matchNext').addEventListener('click',()=>{if(current<birdQuestions.length-1){current++;renderBirdMatch();}});
  document.getElementById('matchFinish').addEventListener('click',()=>{const score=birdQuestions.filter((q,i)=>answers[i]===q.answer).length;document.getElementById('matchResult').textContent='🎊 練習完成！答對 '+score+'／'+birdQuestions.length+' 題。';});
+ birdFlash?.setRenderer(i=>{current=i;renderBirdMatch();});
  renderBirdMatch();
 }
 

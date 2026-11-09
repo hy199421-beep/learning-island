@@ -472,7 +472,6 @@ main{
 </div>
 
 <h2 id="lessonTitle">課文學習</h2>
-<div id="trainingProgress" aria-live="polite"></div>
 <nav class="tabs" aria-label="課文學習區塊">
 <button class="active" data-tab="text">📖 課文</button>
 <button data-tab="zhuyin">🔤 國字注音</button>
@@ -546,14 +545,19 @@ function renderTrainingProgress(){
  const total=Object.values(training.modules).reduce((a,b)=>a+b,0);
  const answered=Object.values(training.answers).reduce((a,v)=>a+Object.keys(v).length,0);
  const correct=Object.values(training.answers).reduce((a,v)=>a+Object.values(v).filter(Boolean).length,0);
- const percent=total?Math.round(correct/total*100):0;
- const box=document.getElementById('trainingProgress');
- if(!box)return;
- box.innerHTML='<div class="training-head"><b>🏅 本課修練進度</b><strong>'+percent+'%</strong></div><div class="training-track"><span style="width:'+percent+'%"></span></div><p>答對 '+correct+' / '+total+' 題　｜　已作答 '+answered+' 題</p>';
- if(total>0&&correct===total&&answered===total&&!box.dataset.complete){
-  box.dataset.complete='1';
-  showTrainingVictory();
+ if(total>0&&answered>=total&&!training.completed){
+  training.completed=true;
+  const points=Math.max(0,Math.min(10,Math.round(correct/total*10)));
+  showTrainingScore(points,correct,total);
  }
+}
+function showTrainingScore(points,correct,total){
+ const overlay=document.createElement('div');
+ overlay.className='training-victory';
+ overlay.innerHTML='<div class="victory-card"><div class="victory-stars">✨ ⭐ ✨</div><div class="victory-trophy">🏆</div><h2>本課練習完成！</h2><p>答對 '+correct+'／'+total+' 題</p><p style="font-size:24px;font-weight:900;color:#8a5b20">本次加分：+'+points+' 分</p><div class="victory-confetti">🎉 🌟 🎊 🌸 🎉</div><button type="button">繼續學習</button></div>';
+ document.body.appendChild(overlay);
+ overlay.querySelector('button').addEventListener('click',()=>overlay.remove());
+ setTimeout(()=>overlay.classList.add('show'),30);
 }
 function showTrainingVictory(){
  const overlay=document.createElement('div');

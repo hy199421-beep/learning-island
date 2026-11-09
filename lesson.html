@@ -718,6 +718,7 @@ if(isAilian){
   if('speechSynthesis' in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.prompt+line);u.lang='zh-TW';u.rate=.8;speechSynthesis.speak(u);}
   else feedback.textContent='此裝置暫不支援語音報讀。';
  });
+ rebuildFlash?.setRenderer(i=>{rebuildIndex=i;drawRebuild();});
  drawRebuild();
 }
 
@@ -1011,6 +1012,7 @@ if(key==='life-fragments'){
  const host=game.querySelector('#gameQuestions');
  const paragraphFlash=registerFlashcardModule(game,paragraphs.map(item=>({front:item.p+'｜'+item.q,back:item.a,note:'先記住這一段的關鍵詞語，再自己完成填空。'})),'生命中的碎珠分段詞語');
  registerTrainingModule('paragraphs',paragraphs.length);
+ const paragraphCards=[];
  paragraphs.forEach((item,index)=>{
   const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
   const readBtn=document.createElement('button');readBtn.textContent='🔊';readBtn.className='read-aloud-btn';readBtn.type='button';readBtn.setAttribute('aria-label','報讀題目');readBtn.title='報讀題目';readBtn.addEventListener('click',()=>{if(!('speechSynthesis' in window)){feedback.textContent='此裝置暫不支援語音報讀，請由老師協助念題。';return;}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(item.p.replace(/[｜]/g,'。')+'。'+item.q);utterance.lang='zh-TW';utterance.rate=0.78;speechSynthesis.speak(utterance);feedback.textContent='正在報讀題目，請仔細聆聽。';});
@@ -1021,8 +1023,9 @@ if(key==='life-fragments'){
   const check=document.createElement('button');check.textContent='確認答案';check.style.cssText='margin-left:8px;padding:10px 16px;border:0;border-radius:8px;background:#765034;color:white;font-weight:bold;cursor:pointer;';
   const feedback=document.createElement('p');feedback.setAttribute('aria-live','polite');feedback.style.marginBottom='0';
   check.addEventListener('click',()=>{if(!select.value){feedback.textContent='請先選擇一個答案。';feedback.style.color='#9b5b24';return;}const correct=select.value===item.a;card.dataset.correct=correct?'1':'0';recordTrainingAnswer('paragraphs',index,correct);feedback.textContent=correct?'🎉 答對了！太棒了！':'再想一想，正確答案是「'+item.a+'」。';feedback.style.color=correct?'#26734d':'#a33d2e';if(correct){celebrateCorrect(card,feedback);}select.disabled=true;check.disabled=true;game.querySelector('#gameScore').textContent='目前得分：'+host.querySelectorAll('[data-correct="1"]').length+' / 8';paragraphFlash?.advance(index);});
-  card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);
+  card.appendChild(select);card.appendChild(check);card.appendChild(feedback);host.appendChild(card);paragraphCards.push(card);
  });
+ paragraphFlash?.setRenderer(i=>{paragraphCards.forEach((el,n)=>el.hidden=n!==i);});
 }
 
 

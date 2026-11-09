@@ -278,13 +278,21 @@ h2{color:#39271d!important}
 .flashcard-count{text-align:center;color:#8a795d;font-weight:800;margin-bottom:12px}
 .flashcard-face{position:relative;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;border:2px solid #e0cfaa;border-radius:18px;background:#fffdf6;text-align:center;perspective:1000px;transform-style:preserve-3d}
 .flashcard-face.flashcard-flip-in{animation:flashcardFlipIn .65s cubic-bezier(.2,.75,.25,1) both}
-.flashcard-countdown{display:flex;align-items:center;justify-content:center;width:62px;height:62px;margin:2px auto 12px;border:3px solid #d4ad61;border-radius:50%;background:linear-gradient(145deg,#fff1c9,#e7c477);color:#704b1f;font-size:34px;font-weight:1000;box-shadow:0 5px 0 #c9a45e,0 8px 18px #8b693333;perspective:500px}
-.flashcard-countdown.tick{animation:countdownFlip .48s cubic-bezier(.2,.8,.25,1)}
+.flashcard-countdown{display:flex;align-items:center;justify-content:center;width:66px;height:82px;margin:0 auto 10px;background:transparent;border:0;box-shadow:none;perspective:none}
+.flashcard-hourglass{width:58px;height:78px;overflow:visible}
+.flashcard-hourglass .sand-top{transform-box:fill-box;transform-origin:50% 0%;animation:sandDrain 5s linear forwards}
+.flashcard-hourglass .sand-bottom{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(.08);animation:sandCollect 5s linear forwards}
+.flashcard-hourglass .sand-stream{animation:sandStream 5s linear forwards}
+.flashcard-hourglass .glass-frame{fill:none;stroke:#987343;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.flashcard-hourglass .sand{fill:#d6ad62}
+@keyframes sandDrain{from{transform:scaleY(1)}to{transform:scaleY(0)}}
+@keyframes sandCollect{from{transform:scaleY(.08)}to{transform:scaleY(1)}}
+@keyframes sandStream{0%,92%{opacity:1}100%{opacity:0}}
 .flashcard-practice.flashcard-reveal{transform-origin:center;backface-visibility:visible;animation:questionCardFlip .78s cubic-bezier(.18,.75,.25,1) both}
 @keyframes flashcardFlipIn{0%{opacity:0;transform:rotateY(-88deg) scale(.92)}70%{opacity:1;transform:rotateY(10deg) scale(1.02)}100%{opacity:1;transform:rotateY(0) scale(1)}}
 @keyframes countdownFlip{0%{transform:rotateX(0) scale(1);opacity:1}45%{transform:rotateX(90deg) scale(.82);opacity:.25}55%{transform:rotateX(-90deg) scale(.82);opacity:.25}100%{transform:rotateX(0) scale(1);opacity:1}}
 @keyframes questionCardFlip{0%{opacity:0;transform:perspective(1100px) rotateY(88deg) scale(.94)}65%{opacity:1;transform:perspective(1100px) rotateY(-8deg) scale(1.015)}100%{opacity:1;transform:perspective(1100px) rotateY(0) scale(1)}}
-@media(prefers-reduced-motion:reduce){.flashcard-face.flashcard-flip-in,.flashcard-countdown.tick,.flashcard-practice.flashcard-reveal{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.flashcard-face.flashcard-flip-in,.flashcard-hourglass .sand-top,.flashcard-hourglass .sand-bottom,.flashcard-hourglass .sand-stream,.flashcard-practice.flashcard-reveal{animation:none!important}}
 .flashcard-front{font-size:clamp(20px,3vw,27px);font-weight:900;line-height:1.7;color:#4f4438}
 .flashcard-answer{font-size:clamp(22px,3.4vw,31px);font-weight:900;line-height:1.6;color:#38734a}
 .flashcard-note{font-size:16px;line-height:1.7;color:#806c50}
@@ -503,7 +511,8 @@ function registerFlashcardModule(practiceEl,cards,title){
  const stage=document.createElement('section');stage.className='flashcard-stage';
  const heading=document.createElement('h3');heading.className='flashcard-heading';heading.textContent='🎓 學徒閃卡｜'+title;
  const count=document.createElement('div');count.className='flashcard-count';
- const countdown=document.createElement('div');countdown.className='flashcard-countdown';countdown.setAttribute('aria-label','閃卡倒數');
+ const countdown=document.createElement('div');countdown.className='flashcard-countdown';countdown.setAttribute('role','img');countdown.setAttribute('aria-label','沙漏倒數五秒');
+ countdown.innerHTML='<svg class="flashcard-hourglass" viewBox="0 0 60 84" aria-hidden="true"><path class="glass-frame" d="M9 4H51 M9 80H51 M13 6C13 24 23 29 30 42C37 55 47 60 47 78 M47 6C47 24 37 29 30 42C23 55 13 60 13 78"/><path class="sand sand-top" d="M16 10H44C43 22 36 28 30 36C24 28 17 22 16 10Z"/><path class="sand sand-bottom" d="M30 48C36 57 43 63 44 74H16C17 63 24 57 30 48Z"/><path class="sand sand-stream" d="M29 35H31V51H29Z"/></svg>';
  const face=document.createElement('div');face.className='flashcard-face';
  const front=document.createElement('div');front.className='flashcard-front';
  const answer=document.createElement('div');answer.className='flashcard-answer';
@@ -511,10 +520,6 @@ function registerFlashcardModule(practiceEl,cards,title){
  face.append(front,answer,note);stage.append(heading,count,countdown,face);
  let index=0,timer=null,waiter=null,token=0,renderer=null,nextTimer=null,countdownTimer=null,revealTimer=null;
  function stop(){token++;clearTimeout(timer);clearTimeout(waiter);clearTimeout(nextTimer);clearTimeout(revealTimer);clearInterval(countdownTimer);}
- function tickCountdown(value){
-  countdown.textContent=String(value);
-  countdown.classList.remove('tick');void countdown.offsetWidth;countdown.classList.add('tick');
- }
  function show(i){
   stop();index=i;
   if(learningMode!=='apprentice'){stage.hidden=true;practiceEl.hidden=false;practiceEl.classList.remove('flashcard-reveal');renderer?.(i);return;}
@@ -522,8 +527,7 @@ function registerFlashcardModule(practiceEl,cards,title){
   const begin=()=>{if(t!==token)return;if(!stage.getClientRects().length){waiter=setTimeout(begin,150);return;}
    const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+'／'+cards.length+'｜記住答案，倒數後作答';front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent='倒數結束，這一題就會翻轉出現！';
    face.classList.remove('flashcard-flip-in');void face.offsetWidth;face.classList.add('flashcard-flip-in');
-   tickCountdown(5);
-   countdownTimer=setInterval(()=>{const current=Number(countdown.textContent);if(current>1)tickCountdown(current-1);},1000);
+   countdownTimer=setTimeout(()=>{},5000);
    timer=setTimeout(()=>{if(t!==token)return;clearInterval(countdownTimer);stage.hidden=true;practiceEl.hidden=false;renderer?.(index);practiceEl.classList.remove('flashcard-reveal');void practiceEl.offsetWidth;practiceEl.classList.add('flashcard-reveal');revealTimer=setTimeout(()=>practiceEl.classList.remove('flashcard-reveal'),900);},5000);
   };begin();
  }

@@ -526,7 +526,7 @@ function registerFlashcardModule(practiceEl,cards,title){
   const begin=()=>{if(t!==token)return;if(!stage.getClientRects().length){waiter=setTimeout(begin,150);return;}
    const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+'／'+cards.length+'｜記住答案，倒數後作答';front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent='倒數結束，這一題就會翻轉出現！';
    face.classList.remove('flashcard-flip-in');void face.offsetWidth;face.classList.add('flashcard-flip-in');
-   timer=setTimeout(()=>{if(t!==token)return;clearInterval(countdownTimer);stage.hidden=true;practiceEl.hidden=false;renderer?.(index);practiceEl.classList.remove('flashcard-reveal');void practiceEl.offsetWidth;practiceEl.classList.add('flashcard-reveal');revealTimer=setTimeout(()=>practiceEl.classList.remove('flashcard-reveal'),900);},5000);
+   timer=setTimeout(()=>{if(t!==token)return;stage.hidden=true;practiceEl.hidden=false;renderer?.(index);practiceEl.classList.remove('flashcard-reveal');void practiceEl.offsetWidth;practiceEl.classList.add('flashcard-reveal');revealTimer=setTimeout(()=>practiceEl.classList.remove('flashcard-reveal'),900);},5000);
   };begin();
  }
  function advance(i){if(learningMode!=='apprentice'||i!==index)return;if(i<cards.length-1)nextTimer=setTimeout(()=>show(i+1),800);}

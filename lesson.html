@@ -276,7 +276,15 @@ h2{color:#39271d!important}
 .flashcard-stage[hidden],.flashcard-practice[hidden]{display:none!important}
 .flashcard-heading{text-align:center;font-size:20px;font-weight:900;color:#76502e;margin:0 0 8px}
 .flashcard-count{text-align:center;color:#8a795d;font-weight:800;margin-bottom:12px}
-.flashcard-face{min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;border:2px solid #e0cfaa;border-radius:18px;background:#fffdf6;text-align:center}
+.flashcard-face{position:relative;min-height:190px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;border:2px solid #e0cfaa;border-radius:18px;background:#fffdf6;text-align:center;perspective:1000px;transform-style:preserve-3d}
+.flashcard-face.flashcard-flip-in{animation:flashcardFlipIn .65s cubic-bezier(.2,.75,.25,1) both}
+.flashcard-countdown{display:flex;align-items:center;justify-content:center;width:62px;height:62px;margin:2px auto 12px;border:3px solid #d4ad61;border-radius:50%;background:linear-gradient(145deg,#fff1c9,#e7c477);color:#704b1f;font-size:34px;font-weight:1000;box-shadow:0 5px 0 #c9a45e,0 8px 18px #8b693333;perspective:500px}
+.flashcard-countdown.tick{animation:countdownFlip .48s cubic-bezier(.2,.8,.25,1)}
+.flashcard-practice.flashcard-reveal{transform-origin:center;backface-visibility:visible;animation:questionCardFlip .78s cubic-bezier(.18,.75,.25,1) both}
+@keyframes flashcardFlipIn{0%{opacity:0;transform:rotateY(-88deg) scale(.92)}70%{opacity:1;transform:rotateY(10deg) scale(1.02)}100%{opacity:1;transform:rotateY(0) scale(1)}}
+@keyframes countdownFlip{0%{transform:rotateX(0) scale(1);opacity:1}45%{transform:rotateX(90deg) scale(.82);opacity:.25}55%{transform:rotateX(-90deg) scale(.82);opacity:.25}100%{transform:rotateX(0) scale(1);opacity:1}}
+@keyframes questionCardFlip{0%{opacity:0;transform:perspective(1100px) rotateY(88deg) scale(.94)}65%{opacity:1;transform:perspective(1100px) rotateY(-8deg) scale(1.015)}100%{opacity:1;transform:perspective(1100px) rotateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.flashcard-face.flashcard-flip-in,.flashcard-countdown.tick,.flashcard-practice.flashcard-reveal{animation:none!important}}
 .flashcard-front{font-size:clamp(20px,3vw,27px);font-weight:900;line-height:1.7;color:#4f4438}
 .flashcard-answer{font-size:clamp(22px,3.4vw,31px);font-weight:900;line-height:1.6;color:#38734a}
 .flashcard-note{font-size:16px;line-height:1.7;color:#806c50}
@@ -495,20 +503,28 @@ function registerFlashcardModule(practiceEl,cards,title){
  const stage=document.createElement('section');stage.className='flashcard-stage';
  const heading=document.createElement('h3');heading.className='flashcard-heading';heading.textContent='🎓 學徒閃卡｜'+title;
  const count=document.createElement('div');count.className='flashcard-count';
+ const countdown=document.createElement('div');countdown.className='flashcard-countdown';countdown.setAttribute('aria-label','閃卡倒數');
  const face=document.createElement('div');face.className='flashcard-face';
  const front=document.createElement('div');front.className='flashcard-front';
  const answer=document.createElement('div');answer.className='flashcard-answer';
  const note=document.createElement('div');note.className='flashcard-note';
- face.append(front,answer,note);stage.append(heading,count,face);
- let index=0,timer=null,waiter=null,token=0,renderer=null,nextTimer=null;
- function stop(){token++;clearTimeout(timer);clearTimeout(waiter);clearTimeout(nextTimer);}
+ face.append(front,answer,note);stage.append(heading,count,countdown,face);
+ let index=0,timer=null,waiter=null,token=0,renderer=null,nextTimer=null,countdownTimer=null,revealTimer=null;
+ function stop(){token++;clearTimeout(timer);clearTimeout(waiter);clearTimeout(nextTimer);clearTimeout(revealTimer);clearInterval(countdownTimer);}
+ function tickCountdown(value){
+  countdown.textContent=String(value);
+  countdown.classList.remove('tick');void countdown.offsetWidth;countdown.classList.add('tick');
+ }
  function show(i){
   stop();index=i;
-  if(learningMode!=='apprentice'){stage.hidden=true;practiceEl.hidden=false;renderer?.(i);return;}
+  if(learningMode!=='apprentice'){stage.hidden=true;practiceEl.hidden=false;practiceEl.classList.remove('flashcard-reveal');renderer?.(i);return;}
   stage.hidden=false;practiceEl.hidden=true;const t=token;
   const begin=()=>{if(t!==token)return;if(!stage.getClientRects().length){waiter=setTimeout(begin,150);return;}
-   const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+'／'+cards.length+'｜5 秒後練習本題';front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent='5 秒後直接練習這一道題目。';
-   timer=setTimeout(()=>{if(t!==token)return;stage.hidden=true;practiceEl.hidden=false;renderer?.(index);},5000);
+   const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+'／'+cards.length+'｜記住答案，倒數後作答';front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent='倒數結束，這一題就會翻轉出現！';
+   face.classList.remove('flashcard-flip-in');void face.offsetWidth;face.classList.add('flashcard-flip-in');
+   tickCountdown(5);
+   countdownTimer=setInterval(()=>{const current=Number(countdown.textContent);if(current>1)tickCountdown(current-1);},1000);
+   timer=setTimeout(()=>{if(t!==token)return;clearInterval(countdownTimer);stage.hidden=true;practiceEl.hidden=false;renderer?.(index);practiceEl.classList.remove('flashcard-reveal');void practiceEl.offsetWidth;practiceEl.classList.add('flashcard-reveal');revealTimer=setTimeout(()=>practiceEl.classList.remove('flashcard-reveal'),900);},5000);
   };begin();
  }
  function advance(i){if(learningMode!=='apprentice'||i!==index)return;if(i<cards.length-1)nextTimer=setTimeout(()=>show(i+1),800);}

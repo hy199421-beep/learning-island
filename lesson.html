@@ -901,17 +901,65 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
  if(isBird){
   const marked=context.replace(targetChar,'「'+targetChar+'」');
   const answerText=entry[1];
-  const wrong=[...new Set(wordBank.filter((w,j)=>j!==i).map(w=>w[1]).filter(v=>v!==answerText))];
-  let cursor=(i*3)%wrong.length;
-  const options=[];
-  for(let k=0;k<4;k++) options.push(k===correct?answerText:wrong[(cursor++)%wrong.length]);
-  if(i===0){options.splice(0,4,'ㄏㄜˊ','ㄍㄜˊ','ㄍㄜˇ','ㄏㄜˇ');}
+  const birdChoiceSets=[
+   ['ㄏㄜˊ','ㄍㄜˊ','ㄍㄜˇ','ㄏㄜˇ'],
+   ['ㄐㄩㄢˊ','ㄑㄩㄢˊ','ㄑㄩㄢˇ','ㄐㄩㄢˇ'],
+   ['ㄌㄧㄥˊ','ㄌㄧㄣˊ','ㄌㄧㄣˇ','ㄌㄧㄥˇ'],
+   ['ㄆㄛˊ','ㄅㄛˊ','ㄅㄛˇ','ㄅㄛˋ'],
+   ['ㄍㄨㄚ','ㄍㄨㄚˇ','ㄍㄨㄚˋ','ㄍㄨㄚˊ'],
+   ['ㄉㄧㄥ','ㄉㄧㄥˇ','ㄉㄧㄥˋ','ㄉㄧㄣˇ'],
+   ['ㄎㄜ','ㄎㄜˋ','ㄎㄜˇ','ㄍㄜˋ'],
+   ['ㄔㄨ','ㄔㄨˇ','ㄔㄨˋ','ㄔㄨˊ'],
+   ['ㄧ','ㄧˋ','ㄧˇ','ㄧㄝˋ'],
+   ['ㄑㄧㄠ','ㄑㄧㄠˊ','ㄑㄧㄠˇ','ㄐㄧㄠˊ'],
+   ['ㄏㄨㄟ','ㄏㄨㄟˋ','ㄏㄨㄟˇ','ㄏㄨㄟˊ'],
+   ['ㄓㄠ','ㄓㄠˋ','ㄓㄠˇ','ㄓㄠˊ'],
+   ['ㄌㄢ','ㄌㄢˊ','ㄌㄢˇ','ㄌㄢˋ'],
+   ['ㄅㄧㄝ','ㄅㄧㄝˇ','ㄅㄧㄝˋ','ㄆㄧㄝˇ'],
+   ['ㄩ','ㄩˊ','ㄩˇ','ㄩˋ'],
+   ['ㄋㄨㄥ','ㄋㄨㄥˊ','ㄋㄨㄥˇ','ㄌㄨㄥˊ'],
+   ['ㄐㄩ','ㄐㄩˋ','ㄐㄩˇ','ㄑㄩˋ'],
+   ['ㄌㄨ','ㄌㄨˋ','ㄌㄨˇ','ㄌㄨˊ'],
+   ['ㄉㄞ','ㄉㄞˋ','ㄉㄞˇ','ㄊㄞˋ'],
+   ['ㄧㄡ','ㄧㄡˋ','ㄧㄡˇ','ㄧㄡˊ'],
+   ['ㄊㄨ','ㄊㄨˊ','ㄊㄨˇ','ㄊㄨˋ'],
+   ['ㄗㄠ','ㄗㄠˋ','ㄗㄠˇ','ㄘㄠˋ']
+  ];
+  const base=birdChoiceSets[i]||[answerText,answerText,answerText,answerText];
+  const options=base.slice();
+  const correctValue=options.splice(1,1)[0];
+  options.splice(correct,0,correctValue);
+  const birdExplanations=[
+   '此指羽毛。翮：鳥類羽毛的莖管。',
+   '彎曲著身體。',
+   '左顧右盼、神采飛揚的樣子。瞵：注視。昂藏：神采飛揚。',
+   '拍著翅膀，乘著旋風向天空飛去。語出《莊子．逍遙遊》。搏：拍擊。',
+   '形容烏鴉的叫聲。',
+   '形容市街上的喧譁聲，像鼎裡的水沸騰起來一樣。鼎：古代用來烹煮食物的器具。',
+   '作客他鄉的夜晚。',
+   '辛酸悲苦。',
+   '拖。',
+   '向上舉起。',
+   '鳥嘴。',
+   '耀眼醒目。',
+   '形容花紋鮮麗，光彩奪目。',
+   '枯瘦；不飽滿、凹陷。',
+   '豐滿圓潤。',
+   '大小肥瘦都恰到好處。穠：花木繁盛的樣子，引申為肥胖。',
+   '蹲、坐，這裡有盤踞之意。',
+   '語出杜甫〈絕句〉。鷺：鷺鷥。',
+   '青黑色。',
+   '油亮的綠色。釉：陶、瓷器上所塗的藥料，燒製後可使東西發亮。',
+   '煙囪。',
+   '喧譁吵鬧。'
+  ];
   return {
    word:targetChar,
    stimulus:answerText,
    display:marked+'的注音是？',
    flashFront:marked,
    hint:entry[2]||'',
+   explanation:birdExplanations[i]||'',
    askZhuyin:true,
    prompt:'請選出正確的注音：',
    answer:correct,
@@ -962,7 +1010,7 @@ zy.innerHTML='<div id="wordPractice"><h3>🔤 '+(isAilian?'課文國字注音練
 let wordIndex=0;
 const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');
-const wordFlash=registerFlashcardModule(zy.querySelector('#wordPractice'),wordQuiz.map(q=>({front:q.flashFront||q.display||q.stimulus,back:q.options[q.answer],note:q.hint||'記住正確的國字與注音。'})),'國字注音');
+const wordFlash=registerFlashcardModule(zy.querySelector('#wordPractice'),wordQuiz.map(q=>({front:q.flashFront||q.display||q.stimulus,back:q.options[q.answer],note:q.explanation||q.hint||'記住正確的國字與注音。'})),'國字注音');
 function renderWordQuestion(){
  const q=wordQuiz[wordIndex];
  zy.querySelector('#wordProgress').textContent='第 '+(wordIndex+1)+' 題／共 '+wordQuiz.length+' 題　｜　已答 '+wordAnswers.filter(x=>x!==null).length+' 題';

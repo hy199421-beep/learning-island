@@ -423,23 +423,55 @@ main{
  .page-actions a{font-size:12px!important}
 }
 
+
+/* 學習方式移至右上角，改為精簡標籤切換 */
+.page-actions{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;flex-wrap:wrap!important}
+.page-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.mode-picker{
+ display:flex!important;align-items:center!important;justify-content:flex-end!important;
+ gap:4px!important;width:auto!important;max-width:none!important;margin:0 0 0 auto!important;
+ padding:4px!important;border:1px solid #d9c79f!important;border-radius:14px!important;
+ background:#f3ead7!important;box-shadow:inset 0 1px 2px #6d51201a!important;
+}
+.mode-picker button{
+ min-width:0!important;width:auto!important;min-height:38px!important;padding:8px 13px!important;
+ border:1px solid transparent!important;border-radius:10px!important;
+ background:transparent!important;color:#765b3b!important;box-shadow:none!important;
+ font-size:14px!important;font-weight:900!important;white-space:nowrap!important;
+}
+.mode-picker button[aria-pressed="true"]{
+ border-color:#b8955b!important;background:linear-gradient(#765034,#56351f)!important;
+ color:#fff4dc!important;box-shadow:0 2px 0 #d0b47e!important;
+}
+.mode-picker .mode-description{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+@media(max-width:650px){
+ .page-actions{align-items:stretch!important}
+ .page-links{width:100%;justify-content:space-between}
+ .mode-picker{margin:0 0 0 auto!important}
+}
+@media(max-width:390px){
+ .page-links a{font-size:12px!important}
+ .mode-picker button{min-height:36px!important;padding:7px 10px!important;font-size:13px!important}
+}
+
 </style>
 </head>
 <body>
 <header><h1>國 文 書 坊</h1><p>靜心閱讀・認識文字・理解文意</p></header>
 <main>
 <div class="page-actions">
-<a class="back-island" href="./index.html">🏝 返回學習島</a>
-<a class="back" href="javascript:window.close()">✕ 關閉課文分頁</a>
+ <div class="page-links">
+  <a class="back-island" href="./index.html">🏝 返回學習島</a>
+  <a class="back" href="javascript:window.close()">✕ 關閉課文分頁</a>
+ </div>
+ <div class="mode-picker" id="modePicker" role="group" aria-label="切換學習方式">
+  <button type="button" id="apprenticeMode" aria-pressed="false" title="先看正確答案閃卡，再開始練習">🎓 學徒模式</button>
+  <button type="button" id="challengeMode" aria-pressed="true" title="不看提示，直接開始作答">🏆 挑戰模式</button>
+  <span class="mode-description" id="modeDescription" aria-live="polite">目前是挑戰模式：直接作答，作答後才公布正確答案。</span>
+ </div>
 </div>
 
 <h2 id="lessonTitle">課文學習</h2>
-<div class="mode-picker" id="modePicker">
- <div class="mode-picker-title">🌱 選擇今天的學習方式</div>
- <button type="button" id="apprenticeMode" aria-pressed="false">🎓 學徒模式<small>先看正確答案閃卡，再開始練習</small></button>
- <button type="button" id="challengeMode" aria-pressed="true">🏆 挑戰模式<small>不看提示，直接開始作答</small></button>
- <p class="mode-description" id="modeDescription">目前是挑戰模式：直接作答，作答後才公布正確答案。</p>
-</div>
 <div id="trainingProgress" aria-live="polite"></div>
 <nav class="tabs" aria-label="課文學習區塊">
 <button class="active" data-tab="text">📖 課文</button>

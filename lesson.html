@@ -432,6 +432,7 @@ if(isAilian){
   {prompt:'第三段｜請重組句子：',parts:['噫！','菊之愛，陶後鮮有聞。','蓮之愛，同予者何人？','牡丹之愛，宜乎眾矣。']}
  ];
  let rebuildIndex=0,placed=[];
+ registerFlashcardModule(document.getElementById('ailianRebuild'),rebuildItems.map((q,i)=>({front:'第 '+(i+1)+' 張｜句子重組重點',back:q.parts.join(''),note:'先看正確語句順序，再進行詞語卡重組。'})),'愛蓮說課文句子');
  const tileHost=document.getElementById('ailianTiles'),slotHost=document.getElementById('ailianSlots');
  const feedback=document.getElementById('ailianFeedback');
  function drawRebuild(){
@@ -654,10 +655,11 @@ const wordQuiz=(isAilian||isBird)
  :lifeWordQuiz;
 registerTrainingModule('pronunciation',wordQuiz.length);
 const zy=document.getElementById('zhuyin');
-zy.innerHTML='<h3>🔤 '+(isAilian?'課文國字注音練習':(isBird?'鳥課文生難字注音練習':'課文指定字詞國字注音練習'))+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p>';
+zy.innerHTML='<div id="wordPractice"><h3>🔤 '+(isAilian?'課文國字注音練習':(isBird?'鳥課文生難字注音練習':'課文指定字詞國字注音練習'))+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p></div>';
 let wordIndex=0;
 const wordAnswers=Array(wordQuiz.length).fill(null);
 const wordCard=zy.querySelector('#wordCard');
+registerFlashcardModule(zy.querySelector('#wordPractice'),wordQuiz.map(q=>({front:q.display||q.stimulus,back:q.options[q.answer],note:q.hint||'記住正確的國字與注音。'})),'國字注音');
 function renderWordQuestion(){
  const q=wordQuiz[wordIndex];
  zy.querySelector('#wordProgress').textContent='第 '+(wordIndex+1)+' 題／共 '+wordQuiz.length+' 題　｜　已答 '+wordAnswers.filter(x=>x!==null).length+' 題';
@@ -666,12 +668,6 @@ function renderWordQuestion(){
  heading.style.cssText='font-size:30px;text-align:center;margin:16px 0 22px;color:#68452e';
  heading.textContent=(q.display||((q.askZhuyin?'注音：':'國字：')+q.stimulus)).replace(/（　　　　）/g,'');
  wordCard.appendChild(heading);
- if(q.hint){
-  const hint=document.createElement('p');
-  hint.style.cssText='font-size:17px;line-height:1.8;text-align:left;margin:0 0 18px';
-  hint.textContent=q.hint;
-  wordCard.appendChild(hint);
- }
  const choices=document.createElement('div');
  choices.style.cssText='display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px';
  q.options.forEach((opt,k)=>{
@@ -755,6 +751,7 @@ if(key==='life-fragments'){
  game.innerHTML='<h3>🎮 分段慣用詞句配對・填空挑戰</h3><p class="muted">讀完每一段，選出最適合填入句子的詞語。完成八題看看自己能得幾分！</p><div id="gameScore" class="note">目前得分：0 / 8</div><div id="gameQuestions"></div>';
  document.getElementById('text').appendChild(game);
  const host=game.querySelector('#gameQuestions');
+ registerFlashcardModule(game,paragraphs.map(item=>({front:item.p+'｜'+item.q,back:item.a,note:'先記住這一段的關鍵詞語，再自己完成填空。'})),'生命中的碎珠分段詞語');
  registerTrainingModule('paragraphs',paragraphs.length);
  paragraphs.forEach((item,index)=>{
   const card=document.createElement('div');card.className='note';card.style.margin='18px 0';card.innerHTML='<b>'+item.p+'</b><p>'+item.q+'</p>';
@@ -784,6 +781,11 @@ if(isBird){
   {prompt:'「鼓噪」的意思是？',answer:1,options:['輕聲細語。','喧鬧、吵嚷。','安靜無聲。','低聲哭泣。']}
  ];
  const letters=['A','B','C','D'],answers=Array(birdQuestions.length).fill(null);
+ const meaningPanel=document.getElementById('meaning');
+ const birdPractice=document.createElement('div');
+ while(meaningPanel.firstChild)birdPractice.appendChild(meaningPanel.firstChild);
+ meaningPanel.appendChild(birdPractice);
+ registerFlashcardModule(birdPractice,birdQuestions.map(q=>({front:q.prompt,back:q.options[q.answer],note:'先記住詞語的正確意思，再進入選擇題。'})),'鳥課文詞語解釋');
  let current=0;const card=document.getElementById('matchCard');
  function renderBirdMatch(){
   const q=birdQuestions[current];

@@ -676,7 +676,7 @@ const mathChapters=[
 {q:'地圖上 1 公分代表實際 2 公里。地圖距離 3 公分，實際距離是？',a:['2 公里','3 公里','5 公里','6 公里'],c:3,why:'1 公分代表 2 公里，3 公分就是 2×3＝6 公里。'},
 {q:'兩個三角形的對應角相等、對應邊成比例，稱為？',a:['相似三角形','直角三角形','等腰三角形','正三角形'],c:0,why:'這是相似三角形的特徵。'},
 {q:'照片長寬都放大 2 倍，原本長 5 公分，放大後多長？',a:['7 公分','10 公分','12 公分','15 公分'],c:1,why:'5×2＝10 公分，長度放大 2 倍。'}]},
-{title:'第二章｜圓形',desc:'認識圓心、半徑、直徑與圓的基本性質',emoji:'⭕',questions:[
+{title:'第二章｜圓的性質',desc:'分成 2-1 點、直線與圓的關係，以及 2-2 弧與圓周角',emoji:'⭕',questions:[
 {q:'圓心到圓周上任一點的線段，稱為？',a:['直徑','半徑','弦','弧'],c:1,why:'圓心到圓周的距離是半徑。'},
 {q:'一個圓的直徑是 10 公分，半徑是多少？',a:['2 公分','5 公分','10 公分','20 公分'],c:1,why:'半徑是直徑的一半：10÷2＝5。'},
 {q:'通過圓心，而且兩端都在圓周上的線段是？',a:['半徑','弦','直徑','切線'],c:2,why:'通過圓心的弦就是直徑。'}]},
@@ -739,9 +739,45 @@ const mathCourses=[
 function openMathChapters(){
  const box=document.getElementById('topics');box.innerHTML='';
  document.getElementById('subline').textContent='南一版九年級上學期｜選擇章節開始學習';
- mathChapters.forEach((ch,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+ch.emoji+'</span><span><strong>'+ch.title+'</strong><small>'+ch.desc+'</small></span>';b.onclick=()=>i===0?window.open('math-similarity.html','_blank','noopener'):startMathChapter(i);box.appendChild(b)});
+ mathChapters.forEach((ch,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+ch.emoji+'</span><span><strong>'+ch.title+'</strong><small>'+ch.desc+'</small></span>';b.onclick=()=>i===0?window.open('math-similarity.html','_blank','noopener'):(i===1?openCircleSections():startMathChapter(i));box.appendChild(b)});
  document.getElementById('practice').classList.remove('show');
 }
+
+const circleSections=[
+ {title:'2-1｜圓形及點、直線、圓之間的關係',desc:'認識圓心、半徑、弦、切線，以及點和直線與圓的位置關係。',emoji:'📍',questions:[
+  {q:'點到圓心的距離小於半徑，這個點在圓的哪裡？',a:['圓內','圓上','圓外','無法判斷'],c:0,why:'點到圓心的距離小於半徑，表示點在圓內。'},
+  {q:'點到圓心的距離等於半徑，這個點在圓的哪裡？',a:['圓外','圓上','圓內','圓心'],c:1,why:'距離剛好等於半徑，點就在圓周上。'},
+  {q:'一條直線與圓只有一個交點，這條直線稱為？',a:['割線','弦','切線','直徑'],c:2,why:'切線與圓只有一個交點，這個交點稱為切點。'},
+  {q:'切線與通過切點的半徑有什麼關係？',a:['互相平行','互相垂直','完全重合','夾角 45 度'],c:1,why:'圓的切線垂直於通過切點的半徑。'},
+  {q:'直線與圓有兩個交點，這條直線稱為？',a:['切線','外離線','割線','半徑'],c:2,why:'直線與圓相交於兩點，稱為割線。'}
+ ]},
+ {title:'2-2｜弧與圓周角',desc:'認識弧的度數、圓心角、圓周角，以及同弧所對的角。',emoji:'🌙',questions:[
+  {q:'圓心角的度數與它所對的弧有什麼關係？',a:['弧度數是圓心角的一半','兩者度數相等','弧度數是圓心角的兩倍','沒有關係'],c:1,why:'弧的度數等於所對圓心角的度數。'},
+  {q:'同一弧所對的圓周角，等於所對圓心角的幾分之幾？',a:['二分之一','二倍','三分之一','相等'],c:0,why:'同弧所對的圓周角等於圓心角的一半。'},
+  {q:'若某弧所對的圓心角是 100°，同弧所對的圓周角是多少？',a:['100°','200°','50°','25°'],c:2,why:'圓周角＝圓心角÷2＝100°÷2＝50°。'},
+  {q:'同一圓中，同弧所對的圓周角有什麼關係？',a:['互相垂直','互相平行','度數相等','度數相加為 180°'],c:2,why:'同弧所對的圓周角相等。'},
+  {q:'直徑所對的圓周角是幾度？',a:['45°','60°','90°','180°'],c:2,why:'半圓所對的圓周角是直角，也就是 90°。'}
+ ]}
+];
+function openCircleSections(){
+ const box=document.getElementById('topics');box.innerHTML='';
+ document.getElementById('subline').textContent='第二章｜圓的性質：請選擇 2-1 或 2-2';
+ circleSections.forEach((section,i)=>{
+  const b=document.createElement('button');b.className='topic';
+  b.innerHTML='<span class="emoji">'+section.emoji+'</span><span><strong>'+section.title+'</strong><small>'+section.desc+'</small></span>';
+  b.onclick=()=>startCircleSection(i);box.appendChild(b);
+ });
+ document.getElementById('practice').classList.remove('show');
+}
+function startCircleSection(i){
+ const section=circleSections[i];activeQuestions=section.questions;activeQuiz=0;
+ document.getElementById('question').textContent=section.title+'｜'+section.desc;
+ document.getElementById('buddyLine').innerHTML='數學博士：先觀察圖形，再找出圓的性質！';
+ document.getElementById('practice').classList.add('show');
+ document.getElementById('feedback').textContent='';
+ renderQuestion();
+}
+
 function openTrigOptions(){
  const box=document.getElementById('topics');box.innerHTML='';
  document.getElementById('subline').textContent='1-4｜三角函數入門：先看教學，再挑戰練習！';

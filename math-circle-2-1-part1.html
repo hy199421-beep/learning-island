@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>圓圓探險隊｜圓的基本概念練習</title>
+<style>
+:root{--bg:#f4f8ff;--card:#fff;--tx:#1f2a44;--mu:#5d6b8a;--pri:#3b6cff;--on:#fff;--ok:#1fa366;--bad:#e5484d;--line:#3b4a6b;--fill:#cfe0ff;--bd:#d6def0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10162a;--card:#1a2340;--tx:#e8edff;--mu:#9aa8cc;--pri:#7c9bff;--on:#10162a;--ok:#3ccf8e;--bad:#ff6b70;--line:#b8c4e8;--fill:#35509a;--bd:#2c3860;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10162a;--card:#1a2340;--tx:#e8edff;--mu:#9aa8cc;--pri:#7c9bff;--on:#10162a;--ok:#3ccf8e;--bad:#ff6b70;--line:#b8c4e8;--fill:#35509a;--bd:#2c3860;color-scheme:dark}
+html,body{height:100%}body{margin:0;background:var(--bg);color:var(--tx);font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.6}#app{max-width:560px;margin:0 auto;padding:12px 14px 28px}
+header{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:18px}#sc{background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:2px 12px;font-size:15px}.bar{height:8px;background:var(--bd);border-radius:6px;margin:10px 0 14px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--pri);transition:width .4s}.card{background:var(--card);border:2px solid var(--bd);border-radius:18px;padding:16px}.tag{color:var(--pri);font-weight:800;font-size:14px}h1,h2{margin:4px 0 10px}h2{font-size:20px}svg{width:100%;max-height:340px;display:block;margin:0 auto}.cc{fill:none;stroke:var(--line);stroke-width:3}.ln{stroke:var(--line);stroke-width:2.5}.dsh{stroke:var(--mu);stroke-width:2;stroke-dasharray:5 4}.dt{fill:var(--tx)}.lb{font:700 15px sans-serif;fill:var(--tx)}.pk{cursor:pointer}.pk .h{stroke:transparent;stroke-width:26;fill:none;stroke-linecap:round}.pk .v{stroke:var(--line);stroke-width:3;fill:none;stroke-linecap:round}.pk:hover .v{stroke:var(--pri);stroke-width:6}.pk.ok .v{stroke:var(--ok);stroke-width:7}.pk.no .v{stroke:var(--bad);stroke-width:7}.rg{fill:var(--fill);fill-opacity:.55;stroke:var(--line);stroke-width:2;cursor:pointer}.rg:hover{fill-opacity:1;fill:var(--pri)}.rg.ok{fill:var(--ok);fill-opacity:.8}.rg.no{fill:var(--bad);fill-opacity:.8}
+.fb{min-height:48px;margin:10px 0;padding:10px 12px;border-radius:12px;font-size:15px;display:none}.fb.show{display:block}.fb.ok{background:rgba(31,163,102,.15);border:2px solid var(--ok)}.fb.no{background:rgba(229,72,77,.13);border:2px solid var(--bad)}.fb.hint{background:rgba(59,108,255,.12);border:2px solid var(--pri)}.row{display:flex;gap:10px;flex-wrap:wrap}.btn{border:0;border-radius:12px;padding:12px 18px;font-size:16px;font-weight:700;background:var(--pri);color:var(--on);cursor:pointer;font-family:inherit}.btn.g{background:transparent;color:var(--pri);border:2px solid var(--pri)}.op{display:block;width:100%;text-align:left;padding:14px;margin:8px 0;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--tx);font-size:16px;cursor:pointer;font-family:inherit}.op:hover{border-color:var(--pri)}.op.ok{border-color:var(--ok);background:rgba(31,163,102,.15)}.op.no{border-color:var(--bad);background:rgba(229,72,77,.13)}.big{font-size:56px;text-align:center}ul{padding-left:20px}
+</style></head><body>
+<div id="app"><header><span>🧭 圓圓探險隊</span><span id="sc">0 分</span></header><div class="bar"><i id="pg"></i></div><main id="main"></main></div>
+<script>
+const $=s=>document.querySelector(s),main=$('#main'),pg=$('#pg'),scr=$('#sc');
+const f=n=>n.toFixed(1),pt=(x,y,r,d)=>[x+r*Math.cos(d*Math.PI/180),y-r*Math.sin(d*Math.PI/180)];
+const mv=q=>`M${f(q[0])} ${f(q[1])}`;
+const arc=(x,y,r,a,b)=>{const q=pt(x,y,r,b);return `A${r} ${r} 0 ${((b-a+360)%360)>180?1:0} 0 ${f(q[0])} ${f(q[1])}`};
+const dr=(V,W)=>Math.atan2(-(W[1]-V[1]),W[0]-V[0])*180/Math.PI;
+const xy=(a,b)=>`x1="${f(a[0])}" y1="${f(a[1])}" x2="${f(b[0])}" y2="${f(b[1])}"`;
+const g=(k,s)=>`<g class="pk" data-k="${k}">${s}</g>`;
+const seg=(k,a,b)=>g(k,`<line class="h" ${xy(a,b)}/><line class="v" ${xy(a,b)}/>`);
+const pth=(k,d)=>g(k,`<path class="h" d="${d}"/><path class="v" d="${d}"/>`);
+const reg=(k,d)=>`<path class="rg" data-k="${k}" d="${d}"/>`;
+const sv=(w,h,s)=>`<svg viewBox="0 0 ${w} ${h}" role="img">${s}</svg>`;
+const O=[150,150],p=d=>pt(150,150,100,d),ap=(a,b)=>mv(p(a))+arc(150,150,100,a,b);
+const base=`<circle class="cc" cx="150" cy="150" r="100"/>`;
+const ctr=`<circle class="dt" cx="150" cy="150" r="4"/><text class="lb" x="158" y="168">O</text>`;
+const pts=m=>Object.entries(m).map(([n,d])=>{const a=p(d),b=pt(150,150,116,d);return `<circle class="dt" cx="${f(a[0])}" cy="${f(a[1])}" r="4.5"/><text class="lb" x="${f(b[0])}" y="${f(b[1]+5)}" text-anchor="middle">${n}</text>`}).join('');
+const wd=(V,A,B,r)=>{let a=dr(V,A),b=dr(V,B);if(((b-a+360)%360)>180)[a,b]=[b,a];return mv(V)+'L'+f(pt(V[0],V[1],r,a)[0])+' '+f(pt(V[0],V[1],r,a)[1])+arc(V[0],V[1],r,a,b)+'Z'};
+const sec=(x,y,r,a,b)=>mv([x,y])+'L'+f(pt(x,y,r,a)[0])+' '+f(pt(x,y,r,a)[1])+arc(x,y,r,a,b)+'Z';
+const sgm=(x,y,r,a,b)=>mv(pt(x,y,r,a))+arc(x,y,r,a,b)+'Z';
+const S={
+lines:()=>sv(300,300,base+seg('rad',O,p(270))+seg('dia',p(180),p(0))+seg('chd',p(60),p(150))+ctr+pts({A:180,B:0,C:60,D:150,E:270})),
+arcs:()=>sv(300,300,base+`<line class="dsh" ${xy(p(20),p(160))}/>`+pth('min',ap(20,160))+pth('maj',ap(160,20))+ctr+pts({A:20,B:160,C:270})),
+semi:()=>sv(300,300,base+`<line class="dsh" ${xy(p(180),p(0))}/>`+pth('up',ap(0,180))+pth('lo',ap(180,360))+ctr+pts({P:180,Q:0})),
+ang:()=>{const A=p(30),B=p(120),C=p(250);return sv(300,300,base+[[O,A],[O,B],[C,A],[C,B]].map(([a,b])=>`<line class="ln" ${xy(a,b)}/>`).join('')+pth('min',ap(30,120))+pth('maj',ap(120,30))+reg('wO',wd(O,A,B,30))+reg('wA',wd(A,O,B,26))+reg('wC',wd(C,A,B,26))+ctr+pts({A:30,B:120,C:250}))},
+reg3:()=>{const c=[75,225,375],y=80,r=58;return sv(450,175,c.map(x=>`<circle class="cc" cx="${x}" cy="${y}" r="${r}"/>`).join('')+reg('s1',sec(75,y,r,20,110))+reg('seg',sgm(225,y,r,30,150))+reg('s3',sec(375,y,r,330,210))+['①','②','③'].map((t,i)=>`<text class="lb" x="${c[i]}" y="165" text-anchor="middle">${t}</text>`).join(''))}
+};
+const L=['認識線段','弧的探險','圓心角','扇形與弓形','快問快答'],LE=['📏','🌈','📐','🍕','⚡'];
+const Q=[
+{lv:0,s:'lines',t:'點出一條「半徑」',a:['rad'],h:'半徑的一端是圓心 O，另一端在圓上。',e:'半徑連接圓心與圓上一點，OE 就是半徑。'},
+{lv:0,s:'lines',t:'點出「直徑」',a:['dia'],h:'通過圓心的弦，就是直徑。',e:'AB 兩端點在圓上，又通過圓心 O，所以是直徑。'},
+{lv:0,s:'lines',t:'點出一條「不是直徑的弦」',a:['chd'],h:'弦的兩個端點都在圓上，而且這條沒有經過圓心。',e:'CD 兩端點都在圓上、沒通過圓心，是一般的弦。'},
+{lv:0,s:'lines',t:'點出圖中「最長的弦」',a:['dia'],h:'比一比：哪一條弦通過圓心？',e:'直徑是圓裡最長的弦。'},
+{lv:1,s:'arcs',t:'點出「劣弧 AB」（較小的弧）',a:['min'],h:'弦 AB 把圓分成一大一小兩段，要選小的那一段。',e:'不是直徑的弦會把圓分成一大一小兩個弧，小的叫劣弧。'},
+{lv:1,s:'arcs',t:'點出「優弧 ACB」（較大的弧）',a:['maj'],h:'優弧要多取一點 C 來標記，所以會經過 C。',e:'較大的弧叫優弧，要用三個點 A、C、B 來表示。'},
+{lv:1,s:'semi',t:'弦 PQ 是直徑。請點出一個「半圓弧」',a:['up','lo'],h:'直徑把圓分成兩段一樣長的弧，點哪一段都可以。',e:'當弦是直徑時，圓被等分成兩個相等的半圓弧。'},
+{lv:2,s:'ang',t:'點出「圓心角」',a:['wO'],h:'圓心角的頂點在圓心 O，兩邊是兩條半徑。',e:'∠AOB 的頂點是圓心 O，兩邊是半徑 OA、OB，所以是圓心角。'},
+{lv:2,s:'ang',t:'點出圓心角 ∠AOB 所對的弧',a:['min'],h:'∠AOB 張開的口，正對著 A、B 之間較小的那段弧。',e:'∠AOB 所對的弧，是 A、B 之間夾在角裡面的劣弧。'},
+{lv:3,s:'reg3',t:'點出「弓形」（由一條弦和一條弧圍成）',a:['seg'],h:'弓形裡面沒有圓心，只有一條弦和一段弧。',e:'②由一條弦與一條弧圍成，是弓形。'},
+{lv:3,s:'reg3',t:'點出「圓心角是 90° 的扇形」（兩條半徑互相垂直）',a:['s1'],h:'扇形像一片披薩，找找看哪一個的兩條半徑像直角一樣互相垂直。',e:'①的兩條半徑互相垂直，圓心角是 90°，由兩條半徑與一條弧圍成，是扇形。'},
+{lv:3,s:'reg3',t:'哪一個扇形的圓心角最大？',a:['s3'],h:'比一比：哪一片「披薩」被吃掉的缺口最小？',e:'③的圓心角超過 180°，比①的 90° 大。'},
+{lv:4,t:'半徑是不是弦？',o:['不是，因為有一端在圓心 O，不在圓上','是，因為它連接圓上的兩點','是，因為它是直徑的一半'],h:'弦的兩個端點都要在圓上。',e:'半徑的一端是圓心，不在圓上，所以半徑不是弦。'},
+{lv:4,t:'當弦剛好是直徑時，會把圓分成什麼？',o:['兩個相等的半圓弧','一個優弧和一個劣弧','三個扇形'],h:'直徑通過圓心，把圓平分。',e:'直徑把圓等分成兩個半圓弧。'},
+{lv:4,t:'圓心角的頂點在哪裡？',o:['圓心','圓上','圓外'],h:'名字裡就有答案喔！',e:'圓心角以圓心為頂點，兩條半徑為邊。'}
+];
+let i=0,sc=0,st=0,tr=0,hn=false,dn=false,res=[];
+const sh=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+function start(){i=sc=st=0;res=[];scr.textContent='0 分';pg.style.width='0';main.innerHTML=`<div class="card"><div class="big">🧭</div><h1 style="text-align:center">圓圓探險隊</h1><p>隊員，歡迎加入！跟著地圖闖過 5 關，找出圓裡藏著的線段、弧、角和圖形。</p><ul><li>共 5 關、15 題，直接在圖上點選答案</li><li>一次就對 +10 分；用提示或第二次才對 +5 分</li><li>卡住時按「💡 提示」</li></ul><button class="btn" id="go">出發！</button></div>`;
+$('#go').onclick=show}
+function show(){const q=Q[i];tr=0;hn=false;dn=false;pg.style.width=(i/Q.length*100)+'%';let fig=q.s?S[q.s]():sh(q.o.map((t,k)=>[t,k])).map(([t,k])=>`<button class="op" data-k="${k}">${t}</button>`).join('');main.innerHTML=`<div class="card"><div class="tag">${LE[q.lv]} 第 ${q.lv+1} 關・${L[q.lv]}　(${i+1}/${Q.length})</div><h2>${q.t}</h2><div id="fig">${fig}</div><div class="fb" id="fb"></div><div class="row"><button class="btn g" id="hb">💡 提示</button><button class="btn" id="nx" hidden>${i==Q.length-1?'看成績 🏁':'下一題 ➜'}</button></div></div>`;
+$('#fig').onclick=e=>{const t=e.target.closest('[data-k]');if(t&&!dn)chk(t.dataset.k)};$('#hb').onclick=()=>{if(dn)return;hn=true;fb('hint','💡 '+q.h)};$('#nx').onclick=()=>{i++;i<Q.length?show():end()}}
+function fb(c,h){const b=$('#fb');b.className='fb show '+c;b.innerHTML=h}
+function mk(k,c){const el=$('#fig').querySelector(`[data-k="${k}"]`);if(el)el.classList.add(c)}
+function fin(pts){dn=true;res.push({lv:Q[i].lv,p:pts});sc+=pts;scr.textContent=sc+' 分';$('#nx').hidden=false;$('#hb').hidden=true}
+function chk(k){const q=Q[i];if(q.o?k=='0':q.a.includes(k)){const first=tr==0&&!hn;mk(k,'ok');st=first?st+1:0;fin(first?10:5);fb('ok',`✅ 答對了！${first?'+10 分':'+5 分'}${st>=2?`　🔥 連續 ${st} 題一次就對`:''}<br>${q.e}`)}else{tr++;mk(k,'no');if(tr>=2){(q.o?['0']:q.a).forEach(x=>mk(x,'ok'));st=0;fin(0);fb('no',`答案在綠色的地方喔。<br>${q.e}`)}else fb('no','❌ 不對喔，再試一次！需要的話按「💡 提示」。')}}
+function end(){pg.style.width='100%';const pc=sc/(Q.length*10),r=pc>=.9?['🏆','圓圓大師',3]:pc>=.6?['🥈','圓圓探險家',2]:['🌱','圓圓小學徒',1];const per=L.map((n,l)=>{const z=res.filter(x=>x.lv==l);return `<li>${LE[l]} ${n}：${z.filter(x=>x.p==10).length}/${z.length} 題一次就對</li>`}).join('');main.innerHTML=`<div class="card"><div class="big">${r[0]}</div><h1 style="text-align:center">${'⭐'.repeat(r[2])}<br>${r[1]}</h1><p style="text-align:center">總分 ${sc} / ${Q.length*10}</p><ul>${per}</ul><button class="btn" id="again">再玩一次</button></div>`;$('#again').onclick=start}
+start();
+</script></body></html>

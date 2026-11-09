@@ -739,7 +739,7 @@ const mathCourses=[
 function openMathChapters(){
  const box=document.getElementById('topics');box.innerHTML='';
  document.getElementById('subline').textContent='南一版九年級上學期｜選擇章節開始學習';
- mathChapters.forEach((ch,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+ch.emoji+'</span><span><strong>'+ch.title+'</strong><small>'+ch.desc+'</small></span>';b.onclick=()=>i===0?window.open('math-similarity.html','_blank','noopener'):(i===1?openCircleSections():startMathChapter(i));box.appendChild(b)});
+ mathChapters.forEach((ch,i)=>{const b=document.createElement('button');b.className='topic';b.innerHTML='<span class="emoji">'+ch.emoji+'</span><span><strong>'+ch.title+'</strong><small>'+ch.desc+'</small></span>';b.onclick=()=>i===0?window.open('math-similarity.html','_blank','noopener'):(i===1?window.open('math-circle.html','_blank','noopener'):startMathChapter(i));box.appendChild(b)});
  document.getElementById('practice').classList.remove('show');
 }
 

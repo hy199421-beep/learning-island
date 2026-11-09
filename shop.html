@@ -4,10 +4,10 @@
 *{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;color:#4b3a2b;background:linear-gradient(#c9eff5,#f8edce);min-height:100vh;padding:24px 14px 50px}.wrap{max-width:1000px;margin:auto}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.back{color:#6d5138;text-decoration:none;font-weight:800;background:#fff8e8;padding:10px 16px;border-radius:14px;box-shadow:0 4px #d6bd8c}.hero{text-align:center;padding:22px 12px}.hero .icon{font-size:64px}.hero h1{margin:5px 0;font-size:clamp(27px,5vw,42px);color:#8b5a2b}.hero p{margin:5px;color:#79654d}.panel{background:#fffaf0;border:3px solid #e5c98f;border-radius:24px;padding:18px;margin:14px 0;box-shadow:0 7px 0 #d6bd8c}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}.field{flex:1;min-width:180px}label{display:block;font-weight:800;margin:0 0 6px}select{width:100%;padding:12px;border:2px solid #ddc89e;border-radius:12px;background:white;font:inherit;color:#4b3a2b}.balance{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#fff0bd;border-radius:18px;padding:16px;margin-top:14px}.points{font-size:clamp(28px,5vw,40px);font-weight:900;color:#a76a0a}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:14px}.item{background:#fff;border:2px solid #ead8b6;border-radius:18px;padding:16px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}.item .emoji{font-size:46px}.item h3{margin:0;font-size:19px}.item p{margin:0;color:#796c5c;font-size:14px;min-height:38px}.cost{font-weight:900;color:#a76a0a}.item button,.action{border:0;border-radius:12px;padding:10px 16px;background:#79a95c;color:white;font-weight:900;font-size:15px;cursor:pointer}.item button:disabled{background:#b8b8b8;cursor:not-allowed}.history{padding-left:20px;margin-bottom:0}.hint{font-size:13px;color:#82735e;line-height:1.7}.status{font-weight:800;margin-top:10px;min-height:24px}.empty{color:#8c7860}.foot{text-align:center;color:#8b7b66;font-size:12px;margin-top:20px}
 </style></head><body><main class="wrap"><div class="top"><a class="back" href="./index.html">← 返回學習島</a><span>🏝️ 學習島獎勵中心</span></div>
 <header class="hero"><div class="icon">🏪</div><h1>歡樂積分商店</h1><p>努力學習、累積星星，挑選喜歡的獎勵！</p></header>
-<section class="panel"><h2>👋 找到你的積分</h2><div class="row"><div class="field"><label for="group">選擇班級</label><select id="group"><option value="">請選擇班級</option><option>數學9A</option><option>國文8A</option><option>國文8B</option></select></div><div class="field"><label for="student">選擇姓名</label><select id="student" disabled><option value="">請先選班級</option></select></div><button class="action" id="refresh">🔄 更新積分</button></div><div class="balance"><div><strong id="who">尚未選擇學生</strong><div class="hint">積分依出缺席與課堂加分紀錄計算</div></div><div><div class="hint">目前可用積分</div><div class="points" id="balance">— ⭐</div></div></div><div class="status" id="status" aria-live="polite"></div></section>
+<section class="panel"><h2>👋 找到你的積分</h2><div class="row"><div class="field"><label for="group">選擇班級</label><select id="group"><option value="">請選擇班級</option><option>數學9A</option><option>國文8A</option><option>國文8B</option></select></div><div class="field"><label for="student">選擇姓名</label><select id="student" disabled><option value="">請先選班級</option></select></div><button class="action" id="refresh">🔄 更新積分</button></div><div class="balance"><div><strong id="who">尚未選擇學生</strong><div class="hint">個人即時總積分（與簽到、教師後台同步）</div></div><div><div class="hint">目前可用積分</div><div class="points" id="balance">— ⭐</div></div></div><div class="status" id="status" aria-live="polite"></div></section>
 <section class="panel"><h2>🎁 挑選你的獎勵</h2><div class="grid" id="items"></div></section>
 <section class="panel"><h2>🧾 我的兌換紀錄</h2><div id="history" class="empty">選擇學生後，就能查看兌換紀錄。</div></section>
-<p class="foot">總積分＝準時簽到積分＋教師課堂加分－商店兌換積分。資料與教師積分管理共用同一資料庫。</p></main>
+<p class="foot">總積分直接讀取學生個人的 current_points；簽到、教師加分與商店兌換都會即時更新同一份餘額。</p></main>
 <script>
 const API="https://script.google.com/macros/s/AKfycbyZZ_i7LTq9pxuRAjPI9HUyy07CAK0TfTBcXT7HIfzxGPQpy3n5o6VsbE00daDZuHAd/exec";
 const groups={"數學9A":["慶豐","詠甯","祺叡","冠閔","鴻昱","聖民","柏曜"],"國文8A":["淮喆","鼎杰","佳瑋","子田","司浩"],"國文8B":["昱佑","奕訢","日良","羽琪","世賢","宣澔"]};
@@ -23,11 +23,8 @@ const $=id=>document.getElementById(id);
 const num=v=>Number(v)||0;
 function balance(){
  if(!db||!selectedName)return 0;
- const a=(db.attendance||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((s,x)=>s+num(x.points),0);
- const row=(db.pointBalances||[]).find(x=>x.group===selectedGroup&&x.name===selectedName);
- const p=row?num(row.total_points):0;
- const r=(db.redemptions||[]).filter(x=>x.group===selectedGroup&&x.name===selectedName).reduce((s,x)=>s+num(x.cost),0);
- return Math.max(0,a+p-r);
+ const student=(db.students||[]).find(x=>x.group===selectedGroup&&x.name===selectedName);
+ return student?num(student.current_points):0;
 }
 function render(){
  const g=$("group").value,sel=$("student");sel.innerHTML='<option value="">請選擇姓名</option>';

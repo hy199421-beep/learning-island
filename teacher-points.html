@@ -50,7 +50,7 @@ button.secondary{border:1px solid #cbd6dc;background:white;color:var(--ink);bord
     <div class="grid" id="students"></div>
     <div class="status" id="status">正在連接新積分資料庫……</div>
   </section>
-  <p class="foot">資料來源：學習島全新積分系統 v1.3。 每次點選會新增一筆課堂加分紀錄；請確認班級、日期與節次正確後再點選學生。</p>
+  <p class="foot">資料來源：學習島個人即時總積分系統 v2.0.0。點選學生框格會直接為該生 +1 分，不新增教師加分歷程。</p>
 </div>
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbyZZ_i7LTq9pxuRAjPI9HUyy07CAK0TfTBcXT7HIfzxGPQpy3n5o6VsbE00daDZuHAd/exec";
@@ -92,12 +92,8 @@ function setStatus(msg,type=""){ $("status").textContent=msg; $("status").classN
 function num(v){return Number(v)||0;}
 function balanceFor(group,name){
   if(!db)return 0;
-  const opening=(db.openingBalances||[]).filter(x=>x.group===group&&x.name===name).reduce((s,x)=>s+num(x.points),0);
-  const a=db.attendance.filter(x=>x.group===group&&x.name===name).reduce((s,x)=>s+num(x.points),0);
-  const row=(db.pointBalances||[]).find(x=>x.group===group&&x.name===name);
-  const p=row?num(row.total_points):0;
-  const r=db.redemptions.filter(x=>x.group===group&&x.name===name).reduce((s,x)=>s+num(x.cost),0);
-  return opening+a+p-r;
+  const student=(db.students||[]).find(x=>x.group===group&&x.name===name);
+  return student?num(student.current_points):0;
 }
 function render(){
   if(!db)return;
@@ -106,7 +102,7 @@ function render(){
   $("classTitle").textContent=group;
   $("lessonLabel").textContent=currentPeriod?`${currentDate}｜第 ${currentPeriod} 節`:`${currentDate}｜教師自由加分（非課堂時段）`;
   $("studentCount").textContent=`學生：${roster.length} 人`;
-  $("classPointCount").textContent="教師加分採累計制";
+  $("classPointCount").textContent="個人餘額即時更新";
   $("students").innerHTML="";
   roster.forEach(s=>{
     const card=document.createElement("div");
@@ -139,8 +135,7 @@ async function addPoint(group,name,rawPoints=1){
   const points=Number(rawPoints);
   if(!Number.isSafeInteger(points)||points<1||points>1000){setStatus("加分數量請輸入 1 到 1000 的正整數。","err");return;}
   detectClock();
-  const beforeRow=(db.pointBalances||[]).find(x=>x.group===group&&x.name===name);
-  const before=beforeRow?num(beforeRow.total_points):0;
+  const before=balanceFor(group,name);
   const payload={action:"addClassPoint",group,name,date:currentDate,sessionId:sessionId(),eventId:"teacher-"+crypto.randomUUID(),points,note:currentPeriod?(`教師後台加分 ${points} 分｜第 ${currentPeriod} 節`):(`教師後台自由加分 ${points} 分｜非課堂時段`)};
   busy.add(name);render();setStatus(`正在為「${name}」送出 +${points} 分……`);
   try{
@@ -152,8 +147,8 @@ async function addPoint(group,name,rawPoints=1){
       await new Promise(r=>setTimeout(r,delay));
       const res=await fetch(API_URL+"?action=getData&t="+Date.now(),{cache:"no-store"});
       const latest=await res.json();
-      const row=(latest.pointBalances||[]).find(x=>x.group===group&&x.name===name);
-      if(latest.ok && row && Number(row.total_points||0)>=before+points) {db=latest;confirmed=true;break;}
+      const row=(latest.students||[]).find(x=>x.group===group&&x.name===name);
+      if(latest.ok && row && Number(row.current_points||0)>=before+points) {db=latest;confirmed=true;break;}
     }
     if(confirmed)setStatus(`✅ 已確認「${name}」+${points} 分，總積分已更新。`,"ok");
     else setStatus(`已送出「${name}」+${points} 分，但尚未確認同步。請按「更新積分」核對，勿立即重複點選。`,"err");

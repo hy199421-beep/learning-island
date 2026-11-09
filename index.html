@@ -628,6 +628,194 @@ body.math-open .back{background:#24658a}
 .teacher-points-link:focus-visible{outline:3px solid white;outline-offset:3px}
 @media(max-width:700px){.header{flex-wrap:wrap}.teacher-points-link{order:3;margin-left:auto;font-size:12px;padding:8px 11px}.stats{margin-left:auto}}
 
+
+/* 國文村版面整理：保留書院背景與既有功能，統一入口卡片層級 */
+body.cn-open .modal{
+  align-items:center;
+  padding:clamp(12px,2.5vw,28px);
+  background-image:
+    linear-gradient(180deg,rgba(30,17,10,.24),rgba(30,17,10,.42)),
+    url('./assets/chinese-academy-bg.webp') !important;
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+}
+body.cn-open .panel{
+  width:min(1000px,96vw);
+  max-height:92vh;
+  overflow-y:auto;
+  padding:clamp(18px,3vw,32px);
+  border:6px solid #70472b;
+  outline:2px solid #d5b36e;
+  border-radius:20px;
+  background:linear-gradient(145deg,rgba(255,251,240,.98),rgba(248,237,214,.98)) !important;
+  box-shadow:0 16px 42px rgba(22,11,5,.42);
+}
+body.cn-open .panel:before{
+  content:"閱讀・理解・表達";
+  display:block;
+  margin:-10px 0 18px;
+  padding:10px 14px;
+  border:0;
+  border-bottom:3px double #c49a57;
+  border-radius:10px;
+  background:linear-gradient(100deg,#68442c,#3d281c);
+  color:#f8e5b6;
+  text-align:center;
+  font:900 clamp(19px,2.8vw,27px) "Noto Serif TC",serif;
+  letter-spacing:.18em;
+  text-shadow:none;
+}
+body.cn-open .panel-head{
+  display:flex;
+  justify-content:center;
+  position:relative;
+  padding:2px 52px 12px;
+  border-bottom:1px solid #d9c49b;
+}
+body.cn-open .panel-head h2{
+  margin:0;
+  color:#593923;
+  font-size:clamp(24px,3vw,31px);
+}
+body.cn-open .panel-head .close{
+  position:absolute;
+  right:0;
+  top:0;
+  width:40px;
+  height:40px;
+  border:1px solid #b88b54;
+  border-radius:12px;
+  background:#f4e5c8;
+  color:#68432a;
+}
+body.cn-open .subline{
+  margin:12px 0 4px;
+  color:#806448;
+  text-align:center;
+  font-size:15px;
+  line-height:1.7;
+}
+body.cn-open .topic-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+  max-width:none;
+  margin:22px 0;
+}
+body.cn-open .topic{
+  min-width:0;
+  min-height:148px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-rows:auto 1fr auto;
+  align-items:center;
+  gap:8px 10px;
+  padding:17px;
+  border:2px solid #d6bd8e;
+  border-radius:16px;
+  background:linear-gradient(145deg,#fffdf7,#f5ead3);
+  box-shadow:0 4px 0 #d8c49d,0 8px 16px rgba(91,62,34,.08);
+  color:#503722;
+  text-align:left;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+body.cn-open .topic:before,
+body.cn-open .topic:after{display:none}
+body.cn-open .topic:hover{
+  transform:translateY(-3px);
+  border-color:#b98c50;
+  background:linear-gradient(145deg,#fffefb,#f8edda);
+  box-shadow:0 6px 0 #cdb487,0 12px 20px rgba(91,62,34,.13);
+}
+body.cn-open .topic:focus-visible{
+  outline:3px solid #7d9a65;
+  outline-offset:3px;
+}
+body.cn-open .topic .cn-code{
+  grid-column:1;
+  grid-row:1;
+  justify-self:start;
+  padding:4px 9px;
+  border:1px solid #c9a66b;
+  border-radius:8px;
+  background:#f5e8c9;
+  color:#81542f;
+  font:800 12px "Noto Sans TC",sans-serif;
+  letter-spacing:.06em;
+}
+body.cn-open .topic .emoji{
+  grid-column:2;
+  grid-row:1;
+  justify-self:end;
+  font-size:30px;
+}
+body.cn-open .topic strong{
+  grid-column:1/-1;
+  grid-row:2;
+  align-self:center;
+  color:#4c3020;
+  font:900 clamp(19px,2vw,23px) "Noto Serif TC",serif;
+  line-height:1.4;
+}
+body.cn-open .topic .cn-status{
+  grid-column:1/-1;
+  grid-row:3;
+  justify-self:start;
+  padding:4px 9px;
+  border-radius:20px;
+  background:#eee7d7;
+  color:#867354;
+  font-size:11px;
+  line-height:1.4;
+  letter-spacing:.04em;
+}
+body.cn-open .cn-detail{
+  max-width:900px;
+  margin:20px auto 8px;
+  padding:clamp(16px,2.5vw,24px);
+  grid-template-columns:minmax(0,1.1fr) minmax(220px,.9fr);
+  gap:20px;
+  border:2px solid #d2b77f;
+  border-radius:16px;
+  background:#fffaf0;
+  box-shadow:0 4px 0 #e1d0ad;
+}
+body.cn-open .cn-detail h3{font-size:clamp(21px,2.5vw,27px)}
+body.cn-open .cn-actions{gap:10px}
+body.cn-open .cn-actions button{
+  border:1px solid #c9a66b;
+  border-radius:12px;
+  background:linear-gradient(#fffdf7,#f4e5c4);
+  padding:13px 15px;
+  box-shadow:0 3px 0 #d5bd91;
+  font-size:16px;
+}
+body.cn-open .cn-actions button:hover{background:#f8edcf}
+body.cn-open .back{
+  display:block;
+  margin:18px auto 0;
+  padding:11px 22px;
+  border-radius:24px;
+  background:#526f4c;
+  box-shadow:0 3px 0 #3d5838;
+}
+@media(max-width:760px){
+  body.cn-open .modal{padding:10px}
+  body.cn-open .panel{width:100%;max-height:94vh;padding:16px 13px;border-width:4px}
+  body.cn-open .topic-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  body.cn-open .topic{min-height:135px;padding:13px}
+  body.cn-open .cn-detail.show{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+  body.cn-open .topic-grid{grid-template-columns:1fr;gap:10px}
+  body.cn-open .topic{min-height:112px;grid-template-columns:1fr auto;grid-template-rows:auto auto}
+  body.cn-open .topic .cn-code{grid-column:1;grid-row:1}
+  body.cn-open .topic .emoji{grid-column:2;grid-row:1/3;font-size:34px}
+  body.cn-open .topic strong{grid-column:1;grid-row:2}
+  body.cn-open .topic .cn-status{display:none}
+}
+
 </style></head>
 <body><main class="game"><div class="sky"></div><span class="cloud c1">☁</span><span class="cloud c2">☁</span>
 <div class="island"><canvas id="world3d" aria-hidden="true"></canvas>

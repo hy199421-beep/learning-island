@@ -909,7 +909,7 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
   word:entry[0],
   stimulus:askZhuyin?entry[1]:entry[0],
   display:isBird?(askZhuyin?context.replace(targetChar,'「'+targetChar+'」'):context.replace(targetChar,'「'+entry[1]+'」')):undefined,
-  question:isBird?(askZhuyin?'「'+targetChar+'」的注音是？':'這個注音是哪個國字？'):undefined,
+  question:isBird?(askZhuyin?context.replace(targetChar,'「'+targetChar+'」')+'的注音是？':context.replace(targetChar,'「'+entry[1]+'」')+'是哪個國字？'):undefined,
   hint:entry[2]||'請仔細辨認這個語詞。',
   askZhuyin,
   prompt:askZhuyin?'請依照國字選出正確的注音：':'請依照注音選出正確的國字：',

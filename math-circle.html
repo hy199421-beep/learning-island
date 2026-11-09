@@ -65,6 +65,20 @@ function startUnit(i){
  document.getElementById('unitNum').textContent=units[i].n;
  document.getElementById('unitTitle').textContent=units[i].title;
  document.getElementById('unitHint').textContent=units[i].hint;
+ if(i===0){
+  document.getElementById('visual').innerHTML='<div class="subunit-grid"><button class="subunit-card" onclick="openCirclePart1()"><span class="num">第一部分</span><strong>圓、扇形與弓形練習題</strong><small>圓圓探險隊｜互動圖形點選、提示與闖關計分</small><span class="go">開始第一部分 →</span></button><button class="subunit-card" onclick="startCircleBasicsPractice()"><span class="num">第二部分</span><strong>點、直線與圓的關係</strong><small>分步提示與計算機輔助練習</small><span class="go">開始第二部分 →</span></button></div>';
+  document.getElementById('question').textContent='請選擇 2-1 的練習部分';
+  document.getElementById('stepCount').textContent='';
+  document.getElementById('stepQuestion').textContent='';
+  document.getElementById('stepPrompt').textContent='';
+  document.getElementById('stepEntry').style.display='none';
+  document.getElementById('stepStatus').textContent='';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('stepCard').style.display='none';
+  document.querySelector('#practice .progress').style.display='none';
+  document.querySelector('#practice .actions .action').style.display='none';
+  return;
+ }
  if(i===3){
   document.getElementById('visual').innerHTML='<div class="subunit-grid"><button class="subunit-card" onclick="startApplicationPractice()"><span class="num">01</span><strong>對應邊的比</strong><small>步驟式練習</small><span class="go">開始練習 →</span></button><button class="subunit-card" onclick="window.open(' + "'./trig-intro.html','_blank','noopener'" + ')"><span class="num">04</span><strong>sin／cos／tan</strong><small>三角比練習題</small><span class="go">前往練習 →</span></button></div>';
   document.getElementById('question').textContent='請選擇下方的練習單元';
@@ -84,6 +98,20 @@ function startUnit(i){
  document.querySelector('#practice .progress').style.display='';
  document.querySelector('#practice .actions .action').style.display='';
  render();
+}
+function openCirclePart1(){window.open('./math-circle-2-1-part1.html','_blank','noopener');}
+function startCircleBasicsPractice(){
+ document.getElementById('stepEntry').style.display='flex';
+ document.getElementById('stepCard').style.display='';
+ document.querySelector('#practice .progress').style.display='';
+ document.querySelector('#practice .actions .action').style.display='';
+ document.getElementById('visual').innerHTML='';
+ document.getElementById('question').textContent=units[0].qs[0].q;
+ document.getElementById('stepCount').textContent='';
+ document.getElementById('stepQuestion').textContent='';
+ document.getElementById('stepPrompt').textContent='';
+ document.getElementById('stepStatus').textContent='';
+ index=0;render();
 }
 function startApplicationPractice(){
  document.getElementById('stepEntry').style.display='flex';

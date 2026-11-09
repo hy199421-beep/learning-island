@@ -285,6 +285,144 @@ h2{color:#39271d!important}
 .flashcard-actions button:disabled{opacity:.4;cursor:default}
 .flashcard-actions .flashcard-start{background:linear-gradient(#e8c985,#d9ad5f);color:#624821;border:1px solid #d0ad6d}
 @media(max-width:600px){.mode-picker button{width:100%;min-width:0}.flashcard-face{min-height:150px;padding:18px}}
+
+/* 國文書坊版面整理：統一三個學習區塊，保留原有米金紙紋與所有練習功能 */
+:root{scroll-padding-top:18px}
+body{min-height:100vh}
+header{
+ min-height:88px!important;
+ padding:16px clamp(16px,4vw,42px)!important;
+}
+header h1{font-size:clamp(24px,3vw,32px)!important;letter-spacing:.12em!important}
+header p{font-size:14px!important;line-height:1.5}
+main{
+ width:min(1000px,calc(100% - 36px))!important;
+ margin:24px auto 64px!important;
+}
+.page-actions{
+ display:flex!important;align-items:center!important;gap:10px!important;
+ margin:0 0 20px!important;
+}
+.page-actions a{
+ min-height:44px!important;padding:9px 16px!important;
+ border-radius:13px!important;font-size:15px!important;
+}
+#lessonTitle{
+ margin:10px 0 18px!important;
+ text-align:center!important;
+ font-size:clamp(27px,4vw,36px)!important;
+ letter-spacing:.06em;
+}
+#lessonTitle:after{
+ content:"";display:block;width:76px;height:3px;
+ margin:12px auto 0;border-radius:5px;background:#c7a66a;
+}
+.mode-picker{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ align-items:stretch!important;
+ gap:10px!important;
+ max-width:780px!important;
+ margin:0 auto 18px!important;
+ padding:16px!important;
+ border:1px solid #dfcfaa!important;
+ border-radius:18px!important;
+ background:rgba(255,251,240,.96)!important;
+ box-shadow:0 3px 0 #e6d9bc!important;
+}
+.mode-picker-title,.mode-description{grid-column:1/-1!important}
+.mode-picker-title{font-size:17px!important;color:#62462d!important}
+.mode-picker button{
+ min-width:0!important;width:100%!important;
+ min-height:68px!important;padding:12px 14px!important;
+ border:1px solid #d4c095!important;border-radius:13px!important;
+ background:#fffdf7!important;color:#634a31!important;
+ box-shadow:0 3px 0 #e5d8bb!important;font-size:16px!important;
+ line-height:1.4!important;
+}
+.mode-picker button[aria-pressed="true"]{
+ border:2px solid #b78d4e!important;
+ background:linear-gradient(#fff2d4,#f2dfb5)!important;
+ color:#63421f!important;box-shadow:0 3px 0 #d7c092!important;
+}
+.mode-picker small{font-size:12px!important;line-height:1.5!important}
+.mode-description{font-size:13px!important;line-height:1.6!important;color:#806d52!important}
+#trainingProgress{
+ max-width:780px;margin:0 auto 18px!important;
+ padding:13px 18px!important;border-radius:15px!important;
+ box-shadow:0 3px 0 #ddcba5!important;
+}
+.training-head{font-size:16px!important}
+.training-head strong{font-size:21px!important}
+.training-track{height:10px!important;margin:9px 0 6px!important}
+.tabs{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:10px!important;max-width:900px;margin:0 auto 16px!important;
+ padding:6px!important;border:1px solid #dfcfaa!important;
+ border-radius:17px!important;background:#eee3ca!important;
+}
+.tabs button{
+ min-width:0!important;min-height:56px!important;padding:12px 8px!important;
+ border:1px solid transparent!important;border-radius:12px!important;
+ background:transparent!important;color:#72583b!important;
+ box-shadow:none!important;font-size:clamp(15px,1.8vw,18px)!important;
+ font-weight:900!important;transition:background .16s,transform .16s!important;
+}
+.tabs button:hover{transform:translateY(-1px)}
+.tabs button.active{
+ border-color:#b8955b!important;
+ background:linear-gradient(#765034,#56351f)!important;
+ color:#fff4dc!important;box-shadow:0 3px 0 #d0b47e!important;
+}
+.tabs button:focus-visible,.mode-picker button:focus-visible,.page-actions a:focus-visible{
+ outline:3px solid #7d9a65!important;outline-offset:3px!important;
+}
+.panel{
+ width:100%;min-height:240px;
+ padding:clamp(20px,3.5vw,36px)!important;
+ border-radius:20px!important;line-height:1.85!important;
+}
+.panel h3{
+ margin:0 0 16px!important;padding:0 0 12px!important;
+ border-bottom:1px solid #e5d6b6;
+ font-size:clamp(21px,2.5vw,26px)!important;
+ line-height:1.5!important;
+}
+.panel>p.muted{line-height:1.7!important;margin:0 0 16px!important}
+#text .poem{
+ max-width:760px;margin:10px auto 18px!important;
+ padding:clamp(16px,3vw,28px)!important;
+ border:1px solid #e5d6b6;border-radius:15px;
+ background:#fffdf7;font-size:clamp(18px,2.2vw,21px)!important;
+ line-height:2.1!important;overflow-wrap:anywhere;
+}
+.panel .note{margin:14px 0!important;padding:15px 17px!important;line-height:1.8!important}
+.panel button{max-width:100%;overflow-wrap:anywhere}
+#zhuyin #wordCard,#meaning #matchCard{
+ margin:16px auto!important;padding:clamp(18px,3vw,32px)!important;
+}
+#zhuyin #wordProgress,#meaning #matchProgress{
+ margin:14px auto 8px!important;padding:12px 16px!important;
+}
+#meaning #matchCard .match-options{gap:10px!important}
+@media(max-width:650px){
+ header{align-items:center!important;text-align:center!important;gap:3px!important}
+ main{width:calc(100% - 22px)!important;margin:16px auto 42px!important}
+ .page-actions{gap:8px!important}
+ .page-actions a{flex:1;min-width:0;padding:9px 8px!important;font-size:13px!important}
+ .mode-picker{padding:12px!important;gap:8px!important}
+ .mode-picker button{min-height:66px!important;padding:10px 7px!important;font-size:14px!important}
+ .tabs{gap:5px!important;padding:4px!important}
+ .tabs button{min-height:50px!important;padding:9px 3px!important;font-size:14px!important}
+ .panel{padding:18px 14px!important;border-radius:17px!important}
+ #text .poem{padding:15px 10px!important}
+}
+@media(max-width:390px){
+ .mode-picker{grid-template-columns:1fr!important}
+ .mode-picker-title,.mode-description{grid-column:1!important}
+ .page-actions a{font-size:12px!important}
+}
+
 </style>
 </head>
 <body>

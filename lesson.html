@@ -542,19 +542,22 @@ function recordTrainingAnswer(id,index,correct){
  renderTrainingProgress();
 }
 function renderTrainingProgress(){
- const total=Object.values(training.modules).reduce((a,b)=>a+b,0);
- const answered=Object.values(training.answers).reduce((a,v)=>a+Object.keys(v).length,0);
- const correct=Object.values(training.answers).reduce((a,v)=>a+Object.values(v).filter(Boolean).length,0);
- if(total>0&&answered>=total&&!training.completed){
-  training.completed=true;
-  const points=Math.max(0,Math.min(10,Math.round(correct/total*10)));
-  showTrainingScore(points,correct,total);
- }
+ Object.entries(training.modules).forEach(([id,total])=>{
+  const answers=training.answers[id]||{};
+  const answered=Object.keys(answers).length;
+  if(total>0&&answered>=total&&!training.completedModules?.[id]){
+   if(!training.completedModules)training.completedModules={};
+   training.completedModules[id]=true;
+   const correct=Object.values(answers).filter(Boolean).length;
+   const points=Math.max(0,Math.min(10,Math.round(correct/total*10)));
+   showTrainingScore(points,correct,total,id);
+  }
+ });
 }
-function showTrainingScore(points,correct,total){
+function showTrainingScore(points,correct,total,moduleId){
  const overlay=document.createElement('div');
  overlay.className='training-victory';
- overlay.innerHTML='<div class="victory-card"><div class="victory-stars">✨ ⭐ ✨</div><div class="victory-trophy">🏆</div><h2>本課練習完成！</h2><p>答對 '+correct+'／'+total+' 題</p><p style="font-size:24px;font-weight:900;color:#8a5b20">本次加分：+'+points+' 分</p><div class="victory-confetti">🎉 🌟 🎊 🌸 🎉</div><button type="button">繼續學習</button></div>';
+ overlay.innerHTML='<div class="victory-card"><div class="victory-stars">✨ ⭐ ✨</div><div class="victory-trophy">🏆</div><h2>本單元練習完成！</h2><p>答對 '+correct+'／'+total+' 題</p><p style="font-size:24px;font-weight:900;color:#8a5b20">本次加分：+'+points+' 分</p><div class="victory-confetti">🎉 🌟 🎊 🌸 🎉</div><button type="button">繼續學習</button></div>';
  document.body.appendChild(overlay);
  overlay.querySelector('button').addEventListener('click',()=>overlay.remove());
  setTimeout(()=>overlay.classList.add('show'),30);

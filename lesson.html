@@ -1171,36 +1171,36 @@ if(isAilian){
 
 if(isBird){
  const birdMeaningEntries=[
-  {term:'羽翮',definition:'此指羽毛。翮是鳥類羽毛中央較堅硬的莖管。'},
-  {term:'蜷伏',definition:'彎曲著身體，縮伏在一處。'},
-  {term:'瞵視昂藏',definition:'左顧右盼、神采飛揚，顯得精神飽滿的樣子。'},
-  {term:'搏扶搖而直上',definition:'拍動翅膀，乘著旋風向天空高高飛去。'},
-  {term:'呱呱',definition:'形容烏鴉發出的叫聲。'},
-  {term:'市聲鼎沸',definition:'形容街市上人聲喧鬧，像水在大鼎裡沸騰一樣。'},
-  {term:'客夜',definition:'在外地作客時度過的夜晚。'},
-  {term:'酸楚',definition:'心裡感到辛酸、悲傷和痛苦。'},
-  {term:'曳',definition:'拖拉、牽引。'},
-  {term:'翹',definition:'把一端向上抬起。'},
-  {term:'喙',definition:'鳥類的嘴巴。'},
-  {term:'照眼',definition:'非常醒目、引人注意。'},
-  {term:'斑斕',definition:'形容花紋或色彩鮮明美麗。'},
-  {term:'乾癟',definition:'乾枯、瘦小，沒有飽滿的樣子。'},
-  {term:'豐腴',definition:'豐滿圓潤，形容身體或外形飽滿。'},
-  {term:'穠纖合度',definition:'不論大小或胖瘦，都恰到好處。'},
-  {term:'踞',definition:'蹲坐或盤據在某個地方。'},
-  {term:'一行白鷺上青天',definition:'一排白鷺鳥飛向高高的青色天空。'},
-  {term:'黛',definition:'青黑色，常用來形容山色或眉色。'},
-  {term:'釉綠',definition:'像陶瓷釉面一樣，油亮而有光澤的綠色。'},
-  {term:'煙突',definition:'煙囪，讓煙往外排出的管道。'},
-  {term:'鼓噪',definition:'大聲喧嘩吵鬧。'}
+  {term:'羽翮',definition:'此指羽毛。翮是鳥類羽毛中央較堅硬的莖管。',distractors:['鳥類尖尖的嘴巴。','鳥類腳上的爪子。','鳥類身上的羽毛顏色。']},
+  {term:'蜷伏',definition:'彎曲著身體，縮伏在一處。',distractors:['伸直身體站立。','快速向前奔跑。','張開雙手伸展身體。']},
+  {term:'瞵視昂藏',definition:'左顧右盼、神采飛揚，顯得精神飽滿的樣子。',distractors:['低著頭，精神萎靡的樣子。','閉著眼睛，正在休息的樣子。','神情緊張，不敢看人的樣子。']},
+  {term:'搏扶搖而直上',definition:'拍動翅膀，乘著旋風向天空高高飛去。',distractors:['停在樹枝上整理羽毛。','逆著風勢，低低地飛行。','沿著地面快速奔跑。']},
+  {term:'呱呱',definition:'形容烏鴉發出的叫聲。',distractors:['形容鳥兒拍動翅膀的聲音。','形容風吹過樹葉的聲音。','形容小狗大聲吠叫的聲音。']},
+  {term:'市聲鼎沸',definition:'形容街市上人聲喧鬧，像水在大鼎裡沸騰一樣。',distractors:['形容街道上非常安靜。','形容市場裡人很少、冷冷清清。','形容大家排隊時整齊又安靜。']},
+  {term:'客夜',definition:'在外地作客時度過的夜晚。',distractors:['在家鄉與家人團聚的夜晚。','旅途中白天休息的時間。','客人來訪時熱鬧的白天。']},
+  {term:'酸楚',definition:'心裡感到辛酸、悲傷和痛苦。',distractors:['心裡感到開心又興奮。','身體感到舒適又放鬆。','因為成功而感到驕傲。']},
+  {term:'曳',definition:'拖拉、牽引。',distractors:['用力推動物品向前。','高高舉起物品。','快速丟出物品。']},
+  {term:'翹',definition:'把一端向上抬起。',distractors:['把一端向下壓低。','將物品左右搖晃。','把物品平放在地面。']},
+  {term:'喙',definition:'鳥類的嘴巴。',distractors:['鳥類的翅膀。','鳥類的尾巴。','鳥類的腳掌。']},
+  {term:'照眼',definition:'非常醒目、引人注意。',distractors:['顏色暗淡，不容易看見。','藏在角落，不容易被發現。','看起來普通，沒有特別之處。']},
+  {term:'斑斕',definition:'形容花紋或色彩鮮明美麗。',distractors:['形容顏色單調又灰暗。','形容表面粗糙、不平整。','形容形狀細小、不明顯。']},
+  {term:'乾癟',definition:'乾枯、瘦小，沒有飽滿的樣子。',distractors:['水分充足，飽滿有彈性。','體型圓潤，看起來豐滿。','表面光滑，閃閃發亮。']},
+  {term:'豐腴',definition:'豐滿圓潤，形容身體或外形飽滿。',distractors:['瘦弱乾枯，沒有精神。','身材高瘦，十分單薄。','外形扁平，缺少厚度。']},
+  {term:'穠纖合度',definition:'不論大小或胖瘦，都恰到好處。',distractors:['過胖或過瘦，比例不協調。','只有體型高大才算合適。','外形越瘦小越好。']},
+  {term:'踞',definition:'蹲坐或盤據在某個地方。',distractors:['快速跳躍離開原地。','站得筆直，一動也不動。','躺下來伸展四肢。']},
+  {term:'一行白鷺上青天',definition:'一排白鷺鳥飛向高高的青色天空。',distractors:['一群黑鳥停在地面上。','一隻白鷺站在河邊喝水。','許多鳥兒飛進茂密的樹林。']},
+  {term:'黛',definition:'青黑色，常用來形容山色或眉色。',distractors:['鮮豔明亮的紅色。','淡淡柔和的黃色。','潔白透明的顏色。']},
+  {term:'釉綠',definition:'像陶瓷釉面一樣，油亮而有光澤的綠色。',distractors:['乾燥暗淡的灰綠色。','鮮紅明亮的顏色。','沒有光澤的土黃色。']},
+  {term:'煙突',definition:'煙囪，讓煙往外排出的管道。',distractors:['用來收集雨水的水管。','讓新鮮空氣進入屋內的窗戶。','用來儲存柴火的小房間。']},
+  {term:'鼓噪',definition:'大聲喧嘩吵鬧。',distractors:['輕聲細語，保持安靜。','整齊有節奏地唱歌。','安靜地坐著聽別人說話。']}
  ];;
  const birdQuestions=birdMeaningEntries.map((entry,index)=>{
   const answer=index%4;
   const options=[];
-  let offset=1;
+  let distractor=0;
   for(let slot=0;slot<4;slot++){
    if(slot===answer){options.push(entry.definition);}
-   else{options.push(birdMeaningEntries[(index+offset)%birdMeaningEntries.length].definition);offset++;}
+   else{options.push(entry.distractors[distractor++]);}
   }
   return {prompt:'「'+entry.term+'」的意思是？',answer,options};
  });

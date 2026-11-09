@@ -265,6 +265,26 @@ h2{color:#39271d!important}
 @keyframes trophyBounce{to{transform:translateY(-9px) rotate(5deg)}}
 @keyframes confettiFloat{to{transform:translateY(-7px)}}
 
+/* 雙模式學習介面 */
+.mode-picker{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:12px;margin:18px auto 22px;padding:16px;border:1px solid #dce9e6;border-radius:20px;background:rgba(255,255,255,.92);box-shadow:0 5px 0 #e7efec}
+.mode-picker-title{width:100%;text-align:center;font-weight:900;color:#536f7b;font-size:19px}
+.mode-picker button{min-width:190px;padding:13px 18px;border:2px solid #d8e4df;border-radius:16px;background:linear-gradient(#fff,#f5faf8);color:#536a70;font-weight:900;font-size:17px;cursor:pointer;box-shadow:0 4px 0 #e3ebe7}
+.mode-picker button[aria-pressed="true"]{border-color:#d6b46f;background:linear-gradient(#fff1d0,#f3dca8);color:#72502a}
+.mode-picker small{display:block;font-size:12px;font-weight:600;margin-top:4px}
+.mode-description{text-align:center;width:100%;margin:0;color:#74878a;font-size:14px}
+.flashcard-stage{margin:18px 0 22px;padding:clamp(18px,3vw,28px);border:2px solid #d8c18d;border-radius:22px;background:linear-gradient(145deg,#fffaf0,#f4e8cb);box-shadow:0 6px 0 #e2d3ae}
+.flashcard-stage[hidden],.flashcard-practice[hidden]{display:none!important}
+.flashcard-heading{text-align:center;font-size:20px;font-weight:900;color:#76502e;margin:0 0 8px}
+.flashcard-count{text-align:center;color:#8a795d;font-weight:800;margin-bottom:12px}
+.flashcard-face{min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;border:2px solid #e0cfaa;border-radius:18px;background:#fffdf6;text-align:center}
+.flashcard-front{font-size:clamp(20px,3vw,27px);font-weight:900;line-height:1.7;color:#4f4438}
+.flashcard-answer{font-size:clamp(22px,3.4vw,31px);font-weight:900;line-height:1.6;color:#38734a}
+.flashcard-note{font-size:16px;line-height:1.7;color:#806c50}
+.flashcard-actions{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}
+.flashcard-actions button{border:0;border-radius:12px;padding:11px 18px;background:#765034;color:#fff8e8;font-weight:900;cursor:pointer}
+.flashcard-actions button:disabled{opacity:.4;cursor:default}
+.flashcard-actions .flashcard-start{background:linear-gradient(#e8c985,#d9ad5f);color:#624821;border:1px solid #d0ad6d}
+@media(max-width:600px){.mode-picker button{width:100%;min-width:0}.flashcard-face{min-height:150px;padding:18px}}
 </style>
 </head>
 <body>
@@ -276,6 +296,12 @@ h2{color:#39271d!important}
 </div>
 
 <h2 id="lessonTitle">課文學習</h2>
+<div class="mode-picker" id="modePicker">
+ <div class="mode-picker-title">🌱 選擇今天的學習方式</div>
+ <button type="button" id="apprenticeMode" aria-pressed="false">🎓 學徒模式<small>先看正確答案閃卡，再開始練習</small></button>
+ <button type="button" id="challengeMode" aria-pressed="true">🏆 挑戰模式<small>不看提示，直接開始作答</small></button>
+ <p class="mode-description" id="modeDescription">目前是挑戰模式：直接作答，作答後才公布正確答案。</p>
+</div>
 <div id="trainingProgress" aria-live="polite"></div>
 <nav class="tabs" aria-label="課文學習區塊">
 <button class="active" data-tab="text">📖 課文</button>
@@ -291,6 +317,47 @@ const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
 const isBird=key==='bird';
+
+// 學徒模式先看正確答案閃卡；挑戰模式直接進入原有練習。
+let learningMode=localStorage.getItem('learningIslandMode_'+key)||'challenge';
+const flashcardModules=[];
+function registerFlashcardModule(practiceEl,cards,title){
+ if(!practiceEl||!cards||!cards.length)return;
+ const stage=document.createElement('section');
+ stage.className='flashcard-stage';
+ const heading=document.createElement('h3');heading.className='flashcard-heading';heading.textContent='🎓 學徒閃卡｜'+title;
+ const count=document.createElement('div');count.className='flashcard-count';
+ const face=document.createElement('div');face.className='flashcard-face';
+ const front=document.createElement('div');front.className='flashcard-front';
+ const answer=document.createElement('div');answer.className='flashcard-answer';
+ const note=document.createElement('div');note.className='flashcard-note';
+ const actions=document.createElement('div');actions.className='flashcard-actions';
+ const prev=document.createElement('button');prev.type='button';prev.textContent='上一張';
+ const next=document.createElement('button');next.type='button';next.textContent='下一張';
+ const start=document.createElement('button');start.type='button';start.className='flashcard-start';start.textContent='看完了，開始練習';
+ actions.append(prev,next,start);face.append(front,answer,note);stage.append(heading,count,face,actions);
+ let index=0,started=false;
+ function draw(){const item=cards[index]||{};count.textContent='閃卡 '+(index+1)+' / '+cards.length;front.textContent=item.front||'請記住這個重點';answer.textContent='正確答案：'+(item.back||'');note.textContent=item.note||'先記住正確答案，再進入練習。';prev.disabled=index===0;next.disabled=index===cards.length-1;}
+ function apply(reset){if(reset){index=0;started=false;}const show=learningMode==='apprentice'&&!started;stage.hidden=!show;practiceEl.hidden=learningMode==='apprentice'&&!started;if(show)draw();}
+ prev.addEventListener('click',()=>{if(index>0){index--;draw();}});
+ next.addEventListener('click',()=>{if(index<cards.length-1){index++;draw();}});
+ start.addEventListener('click',()=>{started=true;apply(false);});
+ practiceEl.classList.add('flashcard-practice');practiceEl.parentNode.insertBefore(stage,practiceEl);
+ flashcardModules.push({apply});apply(true);
+}
+function setLearningMode(mode){
+ learningMode=mode;localStorage.setItem('learningIslandMode_'+key,mode);
+ const apprentice=mode==='apprentice';
+ document.getElementById('apprenticeMode').setAttribute('aria-pressed',String(apprentice));
+ document.getElementById('challengeMode').setAttribute('aria-pressed',String(!apprentice));
+ document.getElementById('modeDescription').textContent=apprentice?'目前是學徒模式：先看每個練習單元的正確答案閃卡，再按「開始練習」。':'目前是挑戰模式：不提供答案提示，直接作答，完成作答後才公布正確答案。';
+ flashcardModules.forEach(module=>module.apply(true));
+}
+document.getElementById('apprenticeMode').addEventListener('click',()=>setLearningMode('apprentice'));
+document.getElementById('challengeMode').addEventListener('click',()=>setLearningMode('challenge'));
+document.getElementById('apprenticeMode').setAttribute('aria-pressed',String(learningMode==='apprentice'));
+document.getElementById('challengeMode').setAttribute('aria-pressed',String(learningMode!=='apprentice'));
+document.getElementById('modeDescription').textContent=learningMode==='apprentice'?'目前是學徒模式：先看每個練習單元的正確答案閃卡，再按「開始練習」。':'目前是挑戰模式：不提供答案提示，直接作答，完成作答後才公布正確答案。';
 
 // === 各課文獨立修練進度 ===
 const progressKey='learningIslandTraining_'+key;

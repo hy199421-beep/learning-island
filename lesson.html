@@ -905,6 +905,7 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
   let cursor=(i*3)%wrong.length;
   const options=[];
   for(let k=0;k<4;k++) options.push(k===correct?answerText:wrong[(cursor++)%wrong.length]);
+  if(i===0){options.splice(0,4,'ㄏㄜˊ','ㄍㄜˊ','ㄍㄜˇ','ㄏㄜˇ');}
   return {
    word:targetChar,
    stimulus:answerText,
@@ -953,7 +954,7 @@ const lifeWordQuiz=[
  {display:'15. 「千」字文（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:2,options:['ㄑㄧㄢˊ','ㄑㄧㄢˇ','ㄑㄧㄢ','ㄐㄧㄢ']}
 ];
 const wordQuiz=(isAilian||isBird)
- ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,i%4))
+ ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,isBird?true:i%2===0,isBird?(i+1)%4:i%4))
  :lifeWordQuiz;
 registerTrainingModule('pronunciation',wordQuiz.length);
 const zy=document.getElementById('zhuyin');

@@ -66,7 +66,7 @@ function startUnit(i){
  document.getElementById('unitTitle').textContent=units[i].title;
  document.getElementById('unitHint').textContent=units[i].hint;
  if(i===0){
-  document.getElementById('visual').innerHTML='<div class="subunit-grid"><button class="subunit-card" onclick="openCirclePart1()"><span class="num">第一部分</span><strong>圓、扇形與弓形練習題</strong><small>圓圓探險隊｜互動圖形點選、提示與闖關計分</small><span class="go">開始第一部分 →</span></button><button class="subunit-card" onclick="startCircleBasicsPractice()"><span class="num">第二部分</span><strong>點、直線與圓的關係</strong><small>分步提示與計算機輔助練習</small><span class="go">開始第二部分 →</span></button></div>';
+  document.getElementById('visual').innerHTML='<div class="subunit-grid"><button class="subunit-card" onclick="openCirclePart1()"><span class="num">第一部分</span><strong>圓、扇形與弓形練習題</strong><small>圓圓探險隊｜互動圖形點選、提示與闖關計分</small><span class="go">開始第一部分 →</span></button><button class="subunit-card" onclick="window.open(\'./math-sector-2-1.html\',\'_blank\',\'noopener\')"><span class="num">第二部分</span><strong>弧長與扇形面積</strong><small>扇形探險隊｜6 關、18 題漸進式計算練習</small><span class="go">開始第二部分 →</span></button><button class="subunit-card" onclick="startCircleBasicsPractice()"><span class="num">第三部分</span><strong>點、直線與圓的關係</strong><small>分步提示與計算機輔助練習</small><span class="go">開始第三部分 →</span></button></div>';
   document.getElementById('question').textContent='請選擇 2-1 的練習部分';
   document.getElementById('stepCount').textContent='';
   document.getElementById('stepQuestion').textContent='';

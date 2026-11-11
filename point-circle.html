@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>點與圓探險隊｜點與圓的位置關係</title>
+<style>
+:root{--bg:#f4f8ff;--card:#fff;--tx:#1f2a44;--mu:#5d6b8a;--pri:#3b6cff;--on:#fff;--ok:#1fa366;--bad:#e5484d;--line:#3b4a6b;--fill:#cfe0ff;--bd:#d6def0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10162a;--card:#1a2340;--tx:#e8edff;--mu:#9aa8cc;--pri:#7c9bff;--on:#10162a;--ok:#3ccf8e;--bad:#ff6b70;--line:#b8c4e8;--fill:#35509a;--bd:#2c3860;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10162a;--card:#1a2340;--tx:#e8edff;--mu:#9aa8cc;--pri:#7c9bff;--on:#10162a;--ok:#3ccf8e;--bad:#ff6b70;--line:#b8c4e8;--fill:#35509a;--bd:#2c3860;color-scheme:dark}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.6}
+#app{max-width:560px;margin:0 auto;padding:12px 14px 28px}
+header{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:18px}
+#sc{background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:2px 12px;font-size:15px}
+.bar{height:8px;background:var(--bd);border-radius:6px;margin:10px 0 14px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--pri);transition:width .4s}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:18px;padding:16px}
+.tag{color:var(--pri);font-weight:800;font-size:14px}
+h1,h2{margin:4px 0 8px}h2{font-size:19px}.sub{color:var(--mu);font-size:14px;margin:0 0 6px}
+svg{width:100%;max-height:270px;display:block;margin:0 auto}
+.cc{fill:none;stroke:var(--line);stroke-width:3}.ax{stroke:var(--mu);stroke-width:1.5}
+.dsh{stroke:var(--mu);stroke-width:2;stroke-dasharray:5 4;fill:none}
+.ln{stroke:var(--pri);stroke-width:3.5}.dt{fill:var(--tx)}.pp{fill:var(--bad)}
+.lb{font:700 15px sans-serif;fill:var(--tx)}.lq{font:800 15px sans-serif;fill:var(--pri)}
+.fm{background:var(--bg);border-radius:12px;padding:10px 14px;margin:10px 0;font-weight:700}
+.sl{font-weight:700;margin-top:8px}
+.in{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}
+input{width:130px;font-size:20px;padding:8px 10px;border-radius:10px;border:2px solid var(--bd);background:var(--card);color:var(--tx);font-family:inherit}
+input:focus{outline:none;border-color:var(--pri)}
+.op{display:block;width:100%;text-align:left;padding:12px 14px;margin:8px 0;border-radius:12px;border:2px solid var(--bd);background:var(--card);color:var(--tx);font-size:17px;cursor:pointer;font-family:inherit}
+.op:hover{border-color:var(--pri)}.op.no{border-color:var(--bad);background:rgba(229,72,77,.13)}
+.dn{padding:8px 12px;border-radius:12px;margin:8px 0;font-size:15px}
+.dn.ok{background:rgba(31,163,102,.13);border:2px solid var(--ok)}.dn.no{background:rgba(229,72,77,.1);border:2px solid var(--bad)}
+.fb{margin:10px 0;padding:10px 12px;border-radius:12px;font-size:15px;display:none}
+.fb.show{display:block}.fb.ok{background:rgba(31,163,102,.15);border:2px solid var(--ok)}.fb.no{background:rgba(229,72,77,.13);border:2px solid var(--bad)}.fb.hint{background:rgba(59,108,255,.12);border:2px solid var(--pri)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-size:16px;font-weight:700;background:var(--pri);color:var(--on);cursor:pointer;font-family:inherit}
+.btn.g{background:transparent;color:var(--pri);border:2px solid var(--pri)}
+.big{font-size:56px;text-align:center}ul{padding-left:20px}
+#cb{position:fixed;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:20;border-radius:28px;padding:12px 16px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#cp{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:420px;z-index:30;box-sizing:border-box;background:var(--card);border:2px solid var(--bd);border-bottom:0;border-radius:18px 18px 0 0;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 18px rgba(0,0,0,.25);display:none}
+#cp.on{display:block}
+.ch{display:flex;justify-content:space-between;align-items:center;font-weight:800}
+.cx{border:0;background:none;color:var(--tx);font-size:22px;cursor:pointer}
+#cd{background:var(--bg);border-radius:12px;padding:6px 12px;margin:6px 0 8px;text-align:right;min-height:58px;overflow:hidden}
+#cd small{display:block;color:var(--mu);min-height:20px;font-size:14px}
+#cd b{font-size:28px;word-break:break-all}
+.kp{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.kp button{height:44px;border:0;border-radius:10px;font-size:20px;font-weight:700;background:var(--bg);color:var(--tx);cursor:pointer;font-family:inherit}
+.kp .o{background:var(--fill)}.kp .eq{background:var(--pri);color:var(--on)}.kp .z{grid-column:span 2}
+body.co #app{padding-bottom:440px}
+</style></head><body>
+<div id="app">
+<header><span>🧭 點與圓探險隊</span><span id="sc">0 分</span></header>
+<div class="bar"><i id="pg"></i></div>
+<main id="main"></main>
+<button class="btn" id="cb">🧮 計算機</button>
+<div id="cp" role="dialog" aria-label="計算機"><div class="ch"><span>🧮 計算機</span><button class="cx" id="cc" aria-label="關閉">✕</button></div><div id="cd"><small id="c1"></small><b id="c2">0</b></div><div class="kp" id="kp"></div><button class="btn" id="cf" style="width:100%;margin-top:8px">填入答案</button></div>
+</div>
+<script>
+const $=s=>document.querySelector(s),main=$('#main'),pg=$('#pg'),scr=$('#sc');
+const f=n=>n.toFixed(1),pt=(x,y,r,d)=>[x+r*Math.cos(d*Math.PI/180),y-r*Math.sin(d*Math.PI/180)];
+const tx=(q,s,c='lb')=>`<text class="${c}" x="${f(q[0])}" y="${f(q[1]+5)}" text-anchor="middle">${s}</text>`;
+const pr=v=>v<0?`(${v})`:v,NM=['圓內','圓上','圓外'];
+function figC(q){const OP=Math.hypot(q.x,q.y),s=95/Math.max(q.r,OP),X=150+q.x*s,Y=150-q.y*s;
+let t=`<line class="ax" x1="10" y1="150" x2="290" y2="150"/><line class="ax" x1="150" y1="10" x2="150" y2="290"/><circle class="cc" cx="150" cy="150" r="${f(q.r*s)}"/>`;
+if(q.lv==3)t+=`<polyline class="dsh" points="150,150 ${f(X)},150 ${f(X)},${f(Y)} 150,150"/>`;
+t+=`<circle class="pp" cx="${f(X)}" cy="${f(Y)}" r="5.5"/>`+tx([X,Y-13],`P(${q.x}, ${q.y})`)+tx(pt(150,150,q.r*s+16,215),`r = ${q.r}`,'lq')+tx([141,166],'O')+tx([284,140],'x')+tx([160,16],'y');
+return `<svg viewBox="0 0 300 300" role="img">${t}</svg>`}
+function fig(q){if(q.mode=='xy')return figC(q);
+const dist=q.mode=='vis'?q.ra*100:Math.min(Math.max(q.op/q.r*100,18),140),an=q.an||50,P=pt(150,150,dist,an);
+let s=`<circle class="cc" cx="150" cy="150" r="100"/><circle class="dt" cx="150" cy="150" r="4"/>`+tx([140,136],'O');
+if(q.mode=='dist'){const M=pt(150,150,dist/2,an);
+s+=`<line class="dsh" x1="150" y1="150" x2="${f(P[0])}" y2="${f(P[1])}"/>`+tx([M[0]+28,M[1]+2],`OP = ${q.op}`,'lq');
+s+=q.c=='r'?`<line class="ln" x1="50" y1="150" x2="150" y2="150"/>`+tx([100,172],`半徑 = ${q.r}`):`<line class="ln" x1="50" y1="150" x2="250" y2="150"/>`+tx([100,172],`直徑 = ${2*q.r}`)}
+s+=`<circle class="pp" cx="${f(P[0])}" cy="${f(P[1])}" r="5.5"/>`+tx([P[0]+11,P[1]-10],'P');
+return `<svg viewBox="0 0 300 300" role="img">${s}</svg>`}
+const Q=[{lv:0,mode:'vis',ra:.5,an:50},{lv:0,mode:'vis',ra:1,an:140},{lv:0,mode:'vis',ra:1.5,an:300},
+{lv:1,mode:'dist',op:5,r:8,c:'r'},{lv:1,mode:'dist',op:7,r:7,c:'r'},{lv:1,mode:'dist',op:10,r:6,c:'r'},
+{lv:2,mode:'dist',op:9,r:8,c:'d'},{lv:2,mode:'dist',op:6,r:6,c:'d'},{lv:2,mode:'dist',op:4.5,r:6,c:'d'},
+{lv:3,mode:'xy',x:3,y:4,r:6},{lv:3,mode:'xy',x:5,y:12,r:13},{lv:3,mode:'xy',x:8,y:6,r:8},
+{lv:4,mode:'xy',x:-6,y:8,r:9},{lv:4,mode:'xy',x:5,y:-12,r:15},{lv:4,mode:'xy',x:-8,y:15,r:17},
+{lv:5,mode:'xy',x:9,y:-12,r:15},{lv:5,mode:'xy',x:-7,y:24,r:20},{lv:5,mode:'xy',x:12,y:-5,r:14}];
+const L=['看圖判斷','比距離・跟著做','比距離・自己找半徑','坐標與畢氏定理','算 OP・兩步驟','獨立挑戰'],LE=['👀','📏','🔎','📐','🚀','🏆'];
+const LN=['一步：看圖判斷點 P 的位置','四步驟：找 OP → 找半徑 → 比大小 → 判斷位置','三步驟：半徑藏在圖上（有時標直徑），自己找','三步驟：用坐標和畢氏定理算 OP，再判斷','兩步驟：算 OP，再判斷','一步到位：自己算 OP（可以用計算機）再判斷'];
+const NUM=['①','②','③','④'],W={1:[10],2:[3,7],3:[2,3,5],4:[1,2,2,5]};
+const text=q=>q.mode=='vis'?'如圖，點 P 在圓 O 的圓內、圓上還是圓外？':q.mode=='dist'?'如圖，點 P 在圓 O 的圓內、圓上還是圓外？（數字要從圖上找）':`在坐標平面上，圓 O 以原點為圓心、半徑 ${q.r}，點 P 的坐標是 (${q.x}, ${q.y})。點 P 在圓內、圓上還是圓外？`;
+function steps(q){const xy=q.mode=='xy',r=q.r,l=q.lv,OP=xy?Math.round(Math.hypot(q.x,q.y)*1e6)/1e6:q.op,sq=xy?q.x*q.x+q.y*q.y:0;
+const rel=q.mode=='vis'?(q.ra<1?0:q.ra==1?1:2):(OP<r?0:OP==r?1:2),sy=['<','=','>'][rel],D=q.c=='d';
+const pos={kind:'opt',o:NM,a:rel,show:NM[rel],
+p:q.mode=='vis'?'點 P 在圓 O 的哪裡？':xy?`OP 和半徑 r = ${r} 比大小，點 P 在圓的哪裡？`:'所以點 P 在圓的哪裡？',
+h:q.mode=='vis'?['看看點 P 在圓的裡面、圓周上，還是外面。','點 P 離圓心 O 比半徑近就在圓內，剛好一樣就在圓上，比較遠就在圓外。']:l==5?['先算 OP = √(x² + y²)。','再把 OP 和半徑 r 比大小。']:['想想：點 P 到圓心的距離 OP，和半徑誰大誰小？','OP < 半徑 → 圓內；OP = 半徑 → 圓上；OP > 半徑 → 圓外。'],
+e:q.mode=='vis'?['點 P 在圓裡面：OP 比半徑短。','點 P 剛好在圓周上：OP = 半徑。','點 P 在圓外面：OP 比半徑長。'][rel]:`OP ${sy} 半徑，所以點 P 在${NM[rel]}。`};
+if(q.mode=='vis')return[pos];
+if(!xy){
+const ops={kind:'num',a:OP,u:'公分',show:OP+' 公分',p:'圓心 O 到點 P 的距離 OP 是多少公分？（從圖上找）',h:['圖上有一條虛線連著 O 和 P。','虛線旁邊寫著 OP = 的那個數字。'],e:`OP = ${OP} 公分`};
+const rs={kind:'num',a:r,u:'公分',show:r+' 公分',p:'從圖上找出圓的半徑是多少公分？',h:D?['先看清楚：圖上標的是「半徑」還是「直徑」？','圖上標的是直徑，半徑是直徑的一半。']:['先看清楚：圖上標的是「半徑」還是「直徑」？','圖上寫的是「半徑」，那個數字就是半徑的長度。'],e:D?`半徑 = ${2*r} ÷ 2 = ${r}（公分）`:`半徑 = ${r} 公分`};
+const cm={kind:'opt',o:['OP < 半徑','OP = 半徑','OP > 半徑'],a:rel,show:['OP < 半徑','OP = 半徑','OP > 半徑'][rel],p:'把 OP 和半徑比一比：',h:['用你剛剛找到的數字比大小。','先確定兩個數字是哪兩個，再比較。'],e:`${OP} ${sy} ${r}`};
+return l==1?[ops,rs,cm,pos]:[rs,cm,pos]}
+const sqs={kind:'num',a:sq,u:'',show:''+sq,p:`OP² = x² + y² = ${pr(q.x)}² + ${pr(q.y)}² = ？`,h:['先算 x 的平方，再算 y 的平方，最後相加。','負數平方會變成正數喔。'],e:`${pr(q.x)}² + ${pr(q.y)}² = ${q.x*q.x} + ${q.y*q.y} = ${sq}`};
+const op={kind:'num',a:OP,u:'',show:''+OP,p:l==3?'OP² 開根號，OP 是多少？':'OP = √(x² + y²)，OP 是多少？',h:l==3?['哪個數字乘自己，會等於 OP²？','也可以用計算機的 √ 鍵。']:[`先算 ${pr(q.x)}² + ${pr(q.y)}²，再開根號。`,'可以用計算機的 √ 鍵。'],e:`OP = √${sq} = ${OP}`};
+return[[],[],[],[sqs,op,pos],[op,pos],[pos]][l]}
+const val=s=>{s=s.replace(/[０-９]/g,c=>c.charCodeAt(0)-65248).replace(/\s|公分|cm/gi,'');return s===''?NaN:Number(s)};
+let i=0,si=0,S=[],sc=0,tr=0,hc=0,dn=false,res=[];
+function start(){i=sc=0;res=[];scr.textContent='0 分';pg.style.width='0';
+main.innerHTML=`<div class="card"><div class="big">🧭</div><h1 style="text-align:center">點與圓探險隊</h1><p>6 關、18 題，學會判斷點在圓內、圓上，還是圓外。前面的關卡一步一步帶你做，越往後步驟越少。</p><div class="fm">圓心 O、半徑 r，點 P 到圓心的距離是 OP<br>OP &lt; r → 點 P 在圓內<br>OP = r → 點 P 在圓上<br>OP &gt; r → 點 P 在圓外</div><ul><li>需要的數字（OP、半徑）要自己從圖上或題目找出來</li><li>每步一次就對拿滿分，用提示或第二次才對拿一半</li><li>不會算的時候，點右下角的 <b>🧮 計算機</b>，有 √ 鍵可以開根號</li></ul><button class="btn" id="go">出發！</button></div>`;
+$('#go').onclick=show}
+function show(){const q=Q[i];S=steps(q);si=0;dn=false;
+main.innerHTML=`<div class="card"><div class="tag">${LE[q.lv]} 第 ${q.lv+1} 關・${L[q.lv]}　(${i+1}/${Q.length})</div><p class="sub">${LN[q.lv]}</p><h2>${text(q)}</h2>${fig(q)}<div id="steps"></div><div class="fb" id="fb"></div><div class="row"><button class="btn g" id="hb">💡 提示</button><button class="btn" id="nx" hidden>${i==Q.length-1?'看成績 🏁':'下一題 ➜'}</button></div></div>`;
+$('#hb').onclick=()=>{if(dn)return;const H=S[si].h;fb('hint','💡 '+H[Math.min(hc,H.length-1)]);hc++;$('#hb').textContent=hc<H.length?'💡 再給我一點提示':'💡 提示已全部顯示'};
+$('#nx').onclick=()=>{i++;i<Q.length?show():end()};addStep()}
+const lab=()=>S.length>1?NUM[si]+' ':'';
+function addStep(){const st=S[si],num=st.kind=='num';tr=0;hc=0;$('#hb').textContent='💡 提示';
+const box=num?`<input id="ip" inputmode="decimal" autocomplete="off" placeholder="答案"><b>${st.u||''}</b><button class="btn" id="ck">送出</button>`:st.o.map((t,k)=>`<button class="op" data-k="${k}">${t}</button>`).join('');
+$('#steps').insertAdjacentHTML('beforeend',`<div id="cur"><div class="sl">${lab()}${st.p}</div><div class="${num?'in':''}" id="bx">${box}</div></div>`);
+if(num){$('#ck').onclick=sub;$('#ip').onkeydown=e=>{if(e.key=='Enter')sub()}}
+else $('#bx').onclick=e=>{const b=e.target.closest('[data-k]');if(!b||dn)return;if(+b.dataset.k==st.a)attempt(true);else{b.classList.add('no');attempt(false)}};
+pg.style.width=((i+si/S.length)/Q.length*100)+'%'}
+function fb(c,h){const b=$('#fb');b.className='fb show '+c;b.innerHTML=h}
+function sub(){if(dn)return;const v=val($('#ip').value);if(isNaN(v)){fb('hint','請輸入數字喔！');return}attempt(Math.abs(v-S[si].a)<.01)}
+function attempt(ok){if(ok){const full=tr==0&&hc==0,w=W[S.length][si];fin(true,full?w:Math.ceil(w/2))}
+else{tr++;if(tr>=2)fin(false,0);else fb('no','❌ 再想想，還有一次機會！可以按「💡 提示」。')}}
+function fin(ok,p){const st=S[si];sc+=p;scr.textContent=sc+' 分';res.push({lv:Q[i].lv,full:ok&&p==W[S.length][si]});
+$('#cur').outerHTML=`<div class="dn ${ok?'ok':'no'}"><b>${lab()}${st.p}</b><br>${ok?'✅':'正確答案：'} <b>${st.show}</b>${ok?`　+${p} 分`:''}</div>`;
+fb(ok?'ok':'no',(ok?'答對了！':'這一步的答案在上面喔。')+'<br>'+st.e);
+si++;if(si<S.length)addStep();else{dn=true;pg.style.width=((i+1)/Q.length*100)+'%';$('#nx').hidden=false;$('#hb').hidden=true}}
+function end(){pg.style.width='100%';const tot=Q.length*10,pc=sc/tot,r=pc>=.9?['🏆','點圓大師',3]:pc>=.6?['🥈','點圓探險家',2]:['🌱','點圓小學徒',1];
+const per=L.map((n,l)=>{const z=res.filter(x=>x.lv==l);return `<li>${LE[l]} ${n}：${z.filter(x=>x.full).length}/${z.length} 步一次就對</li>`}).join('');
+main.innerHTML=`<div class="card"><div class="big">${r[0]}</div><h1 style="text-align:center">${'⭐'.repeat(r[2])}<br>${r[1]}</h1><p style="text-align:center">總分 ${sc} / ${tot}</p><ul>${per}</ul><button class="btn" id="again">再玩一次</button></div>`;
+$('#again').onclick=start}
+let ce='',cr='',cdn=false,lastIn=null;
+const KS=['C','⌫','√','÷','7','8','9','×','4','5','6','-','1','2','3','+','0','.','='];
+$('#kp').innerHTML=KS.map(k=>`<button class="${'C⌫√÷×-+'.includes(k)?'o':''}${k=='='?'eq':''}${k=='0'?'z':''}" data-k="${k}">${k}</button>`).join('');
+function ev(s){const t=s.match(/\d+\.?\d*|\.\d+|[+\-×÷]/g);if(!t||t.join('')!==s)return null;
+if(t[0]=='-'&&t.length>1&&!isNaN(+t[1]))t.splice(0,2,'-'+t[1]);
+const n=[],o=[];for(let i=0;i<t.length;i++){if(i%2==0){if(isNaN(+t[i]))return null;n.push(+t[i])}else{if(t[i].length!=1||'+-×÷'.indexOf(t[i])<0)return null;o.push(t[i])}}
+if(n.length!=o.length+1)return null;
+const m=[n[0]],p=[];for(let i=0;i<o.length;i++){if(o[i]=='×')m[m.length-1]*=n[i+1];else if(o[i]=='÷'){if(n[i+1]==0)return null;m[m.length-1]/=n[i+1]}else{p.push(o[i]);m.push(n[i+1])}}
+let r=m[0];p.forEach((x,i)=>{r=x=='+'?r+m[i+1]:r-m[i+1]});return r}
+const fm=v=>String(+v.toFixed(8));
+function cp(k){const was=cdn;cdn=false;cr='';
+if(k=='C')ce='';
+else if(k=='⌫')ce=was?'':ce.slice(0,-1);
+else if(k=='√'){const v=ev(ce);if(v===null||v<0)cr='先輸入一個數字，再按 √';else{cr='√('+ce+') =';ce=fm(Math.sqrt(v));cdn=true}}
+else if(k=='='){const v=ev(ce);if(v===null)cr=ce?'算式不完整喔':'';else{cr=ce+' =';ce=fm(v);cdn=true}}
+else{if(was&&/[0-9.]/.test(k))ce='';if('÷×-+'.includes(k)&&ce.length>1&&/[÷×\-+]$/.test(ce))ce=ce.slice(0,-1);ce+=k}
+$('#c1').textContent=cr;$('#c2').textContent=ce||'0'}
+$('#kp').onclick=e=>{const b=e.target.closest('button');if(b)cp(b.dataset.k)};
+document.addEventListener('focusin',e=>{if(e.target.matches&&e.target.matches('#ip'))lastIn=e.target});
+$('#cf').onclick=()=>{const v=ev(ce);if(v===null){$('#c1').textContent='先輸入算式，再按 =';return}
+const el=lastIn&&document.body.contains(lastIn)&&!lastIn.disabled?lastIn:$('#ip');
+if(!el){$('#c1').textContent='現在沒有可以填的格子';return}
+el.value=fm(v);$('#c1').textContent='已填入 ✅'};
+$('#cb').onclick=()=>{$('#cp').classList.add('on');document.body.classList.add('co');$('#cb').hidden=true};
+$('#cc').onclick=()=>{$('#cp').classList.remove('on');document.body.classList.remove('co');$('#cb').hidden=false};
+start();
+</script></body></html>

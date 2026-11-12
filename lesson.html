@@ -927,7 +927,8 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
   ];
   const base=birdChoiceSets[i]||[answerText,answerText,answerText,answerText];
   const options=base.slice();
-  const correctValue=options.splice(1,1)[0];
+  const answerIndex=options.indexOf(answerText);
+  const correctValue=options.splice(answerIndex>=0?answerIndex:1,1)[0];
   options.splice(correct,0,correctValue);
   const birdExplanations=[
    '此指羽毛。翮：鳥類羽毛的莖管。',

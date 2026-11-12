@@ -900,7 +900,6 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
  const targetChar=entry[0];
  if(isBird){
   const marked=context.replace(targetChar,'「'+targetChar+'」');
-  const answerText=entry[1];
   const birdChoiceSets=[
    ['ㄏㄜˊ','ㄍㄜˊ','ㄍㄜˇ','ㄏㄜˇ'],
    ['ㄐㄩㄢˊ','ㄑㄩㄢˊ','ㄑㄩㄢˇ','ㄐㄩㄢˇ'],
@@ -925,11 +924,6 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
    ['ㄊㄨ','ㄊㄨˊ','ㄊㄨˇ','ㄊㄨˋ'],
    ['ㄗㄠ','ㄗㄠˋ','ㄗㄠˇ','ㄘㄠˋ']
   ];
-  const base=birdChoiceSets[i]||[answerText,answerText,answerText,answerText];
-  const options=base.slice();
-  const answerIndex=options.indexOf(answerText);
-  const correctValue=options.splice(answerIndex>=0?answerIndex:1,1)[0];
-  options.splice(correct,0,correctValue);
   const birdExplanations=[
    '此指羽毛。翮：鳥類羽毛的莖管。',
    '彎曲著身體。',
@@ -954,15 +948,29 @@ function buildWordQuestion(entry,i,askZhuyin,correct){
    '煙囪。',
    '喧譁吵鬧。'
   ];
+  const answerText=askZhuyin?entry[1]:targetChar;
+  let options;
+  if(askZhuyin){
+   const base=(birdChoiceSets[i]||[answerText,answerText,answerText,answerText]).slice();
+   const answerIndex=base.indexOf(answerText);
+   const correctValue=base.splice(answerIndex>=0?answerIndex:0,1)[0];
+   options=base;
+   options.splice(correct,0,correctValue);
+  }else{
+   const wrongChars=wordBank.filter((w,j)=>j!==i).map(w=>w[0]);
+   options=[];
+   let cursor=(i*3+2)%wrongChars.length;
+   for(let k=0;k<4;k++) options.push(k===correct?targetChar:wrongChars[cursor++%wrongChars.length]);
+  }
   return {
    word:targetChar,
-   stimulus:answerText,
-   display:marked+'的注音是？',
-   flashFront:marked,
+   stimulus:askZhuyin?targetChar:entry[1],
+   display:marked+(askZhuyin?'的注音是？':'的國字是？'),
+   flashFront:marked+(askZhuyin?'的注音是？':'的國字是？'),
    hint:entry[2]||'',
    explanation:birdExplanations[i]||'',
-   askZhuyin:true,
-   prompt:'請選出正確的注音：',
+   askZhuyin,
+   prompt:askZhuyin?'請依照國字選出正確的注音：':'請依照注音選出正確的國字：',
    answer:correct,
    options
   };
@@ -1003,7 +1011,7 @@ const lifeWordQuiz=[
  {display:'15. 「千」字文（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:2,options:['ㄑㄧㄢˊ','ㄑㄧㄢˇ','ㄑㄧㄢ','ㄐㄧㄢ']}
 ];
 const wordQuiz=(isAilian||isBird)
- ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,isBird?true:i%2===0,isBird?(i+1)%4:i%4))
+ ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,isBird?(i+1)%4:i%4))
  :lifeWordQuiz;
 registerTrainingModule('pronunciation',wordQuiz.length);
 const zy=document.getElementById('zhuyin');

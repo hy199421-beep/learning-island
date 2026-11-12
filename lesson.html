@@ -1010,9 +1010,34 @@ const lifeWordQuiz=[
  {display:'14. 一「ㄗㄨㄥ」財富（　　　　）',askZhuyin:false,prompt:'請選出括號中正確的國字：',answer:1,options:['棕','宗','蹤','綜']},
  {display:'15. 「千」字文（　　　　）',askZhuyin:true,prompt:'請選出括號中正確的注音：',answer:2,options:['ㄑㄧㄢˊ','ㄑㄧㄢˇ','ㄑㄧㄢ','ㄐㄧㄢ']}
 ];
-const wordQuiz=(isAilian||isBird)
- ?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,isBird?(i+1)%4:i%4))
- :lifeWordQuiz;
+const birdCustomQuiz=[
+ {display:'1. 羽「翮」不整（　　　　）',askZhuyin:true,answer:0,options:['ㄍㄜˊ','ㄏㄜˊ','ㄍㄜˇ','ㄏㄜˇ'],explanation:'翮：鳥類羽毛中央較堅硬的莖管。'},
+ {display:'2. 「ㄑㄩㄢˊ」伏不動（　　　　）',askZhuyin:false,answer:1,options:['拳','蜷','倦','圈'],explanation:'蜷伏：彎曲著身體，縮伏在一處。'},
+ {display:'3. 「瞵」視昂藏（　　　　）',askZhuyin:true,answer:2,options:['ㄌㄧㄥˊ','ㄌㄧㄣˇ','ㄌㄧㄣˊ','ㄌㄧㄥˇ'],explanation:'瞵：注視；瞵視昂藏，形容左顧右盼、神采飛揚。'},
+ {display:'4. 「ㄍㄨㄚ」呱噪啼（　　　　）',askZhuyin:false,answer:3,options:['刮','括','聒','呱'],explanation:'呱：形容烏鴉的叫聲。'},
+ {display:'5. 呱呱「噪」啼（　　　　）',askZhuyin:true,answer:0,options:['ㄗㄠˋ','ㄘㄠˋ','ㄗㄠˇ','ㄗㄠˊ'],explanation:'噪：喧譁吵鬧。'},
+ {display:'6. 「ㄑㄧ」絕哀樂（　　　　）',askZhuyin:false,answer:1,options:['妻','淒','悽','棲'],explanation:'淒：寒冷、悲傷；淒絕，形容極其淒涼悲傷。'},
+ {display:'7. 「曳」著長尾（　　　　）',askZhuyin:true,answer:2,options:['ㄧㄝˋ','ㄧㄝˇ','ㄧˋ','ㄧˊ'],explanation:'曳：拖、牽引。'},
+ {display:'8. 「ㄅㄢ」斕花彩（　　　　）',askZhuyin:false,answer:3,options:['般','搬','班','斑'],explanation:'斑斕：形容花紋或色彩鮮明美麗。'},
+ {display:'9. 「倏」地振翅（　　　　）',askZhuyin:true,answer:0,options:['ㄕㄨ','ㄕㄨˊ','ㄙㄨ','ㄕㄨˇ'],explanation:'倏：突然、快速地。'},
+ {display:'10. 窗「ㄌㄧㄥˊ」映影（　　　　）',askZhuyin:false,answer:1,options:['鈴','櫺','玲','零'],explanation:'櫺：窗戶或欄杆上的格子。'},
+ {display:'11. 臨風「顧」盼（　　　　）',askZhuyin:true,answer:2,options:['ㄍㄨ','ㄍㄨˇ','ㄍㄨˋ','ㄍㄨˊ'],explanation:'顧：回頭看；顧盼，指左顧右盼。'},
+ {display:'12. 清早街上蹓「ㄉㄚˊ」（　　　　）',askZhuyin:false,answer:3,options:['答','達','搭','躂'],explanation:'蹓躂：閒逛、散步。躂讀作ㄉㄚˊ。'},
+ {display:'13. 瞵視昂「藏」（　　　　）',askZhuyin:true,answer:0,options:['ㄘㄤˊ','ㄗㄤˋ','ㄘㄤˇ','ㄘㄤˋ'],explanation:'昂藏：形容氣度不凡、神采飛揚；「藏」在此讀ㄘㄤˊ。'},
+ {display:'14. 市聲鼎「ㄈㄟˋ」（　　　　）',askZhuyin:false,answer:1,options:['沸','費','肺','吠'],explanation:'鼎沸：形容聲音喧鬧，像水在鼎中沸騰。'},
+ {display:'15. 「ㄐㄩㄣˋ」俏形體（　　　　）',askZhuyin:false,answer:2,options:['峻','竣','俊','駿'],explanation:'俊俏：容貌或體態秀美好看。'},
+ {display:'16. 尖尖長「喙」（　　　　）',askZhuyin:true,answer:3,options:['ㄏㄨㄟ','ㄏㄨㄟˇ','ㄏㄨㄟˊ','ㄏㄨㄟˋ'],explanation:'喙：鳥類的嘴巴。'},
+ {display:'17. 斑「ㄌㄢˊ」花彩（　　　　）',askZhuyin:false,answer:0,options:['斕','瀾','蘭','欄'],explanation:'斕：形容花紋鮮麗、色彩繽紛。'},
+ {display:'18. 玲「瓏」飽滿（　　　　）',askZhuyin:true,answer:1,options:['ㄌㄨㄥˇ','ㄌㄨㄥˊ','ㄌㄨㄥˋ','ㄋㄨㄥˊ'],explanation:'瓏：常見於「玲瓏」，形容精巧、靈活。'},
+ {display:'19. 細瘦不乾「ㄅㄧㄝˇ」（　　　　）',askZhuyin:false,answer:2,options:['癖','撇','癟','憋'],explanation:'癟：乾枯、不飽滿或凹陷。'},
+ {display:'20. 豐「腴」不臃腫（　　　　）',askZhuyin:true,answer:3,options:['ㄩ','ㄩˇ','ㄩˋ','ㄩˊ'],explanation:'腴：豐滿圓潤。'},
+ {display:'21. 「ㄩㄥ」腫不堪（　　　　）',askZhuyin:false,answer:0,options:['臃','擁','雍','癰'],explanation:'臃腫：形容過度肥胖或衣物穿得太多、不俐落。'},
+ {display:'22. 穠「ㄒㄧㄢ」合度（　　　　）',askZhuyin:false,answer:1,options:['先','纖','仙','鮮'],explanation:'纖：細小；穠纖合度，形容胖瘦或大小恰到好處。'},
+ {display:'23. 高「踞」枝頭（　　　　）',askZhuyin:true,answer:2,options:['ㄐㄩ','ㄐㄩˇ','ㄐㄩˋ','ㄑㄩˋ'],explanation:'踞：蹲坐或盤據在某個地方。'}
+];
+const wordQuiz=isBird
+ ?birdCustomQuiz
+ :(isAilian?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,i%4)):lifeWordQuiz);
 registerTrainingModule('pronunciation',wordQuiz.length);
 const zy=document.getElementById('zhuyin');
 zy.innerHTML='<div id="wordPractice"><h3>🔤 '+(isAilian?'課文國字注音練習':(isBird?'鳥課文生難字注音練習':'課文指定字詞國字注音練習'))+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p></div>';

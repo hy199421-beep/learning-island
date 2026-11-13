@@ -20,9 +20,31 @@ button.secondary{border:1px solid #cbd6dc;background:white;color:var(--ink);bord
 @media(max-width:650px){.controls{grid-template-columns:1fr}.wrap{padding:14px 12px 32px}.hero{padding:20px}}
 
 .back-island{display:inline-flex;align-items:center;gap:8px;margin:0 0 14px;padding:11px 17px;border:1px solid #d6ad58;border-radius:999px;background:linear-gradient(135deg,#fffdf7,#f7e9c7);color:#36556b;text-decoration:none;font-weight:800;box-shadow:0 4px 12px #315c7a18;transition:transform .15s,box-shadow .15s}.back-island:hover{transform:translateY(-2px);box-shadow:0 7px 16px #315c7a25}.back-island:focus-visible{outline:3px solid #477da8;outline-offset:3px}
+
+/* 教師後台簡易密碼入口 */
+body.locked{overflow:hidden}
+body.locked .wrap{filter:blur(3px);pointer-events:none;user-select:none}
+#teacherGate{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(30,48,62,.62)}
+#teacherGate[hidden]{display:none}
+.gate-card{width:min(100%,420px);padding:30px;background:#fffdf7;border:2px solid #d6ad58;border-radius:22px;box-shadow:0 18px 60px #172b3b55;text-align:center}
+.gate-card h2{margin:0 0 10px;color:#36556b;font-size:25px}
+.gate-card p{margin:0 0 20px;color:#687887}
+.gate-card input{width:100%;padding:14px;border:1px solid #cbd6dc;border-radius:11px;font:inherit;font-size:22px;text-align:center;letter-spacing:8px}
+.gate-card button{width:100%;margin-top:14px;padding:13px;border:0;border-radius:11px;background:linear-gradient(120deg,#477da8,#315e7b);color:#fff;font:inherit;font-weight:800;cursor:pointer}
+#gateError{min-height:22px;margin-top:10px;color:#b94a48;font-size:14px}
+
 </style>
 </head>
-<body>
+<body class="locked">
+<div id="teacherGate">
+ <form class="gate-card" id="teacherGateForm">
+  <h2>🔐 教師積分管理</h2>
+  <p>請輸入教師管理密碼後進入</p>
+  <input id="teacherPassword" type="password" inputmode="numeric" autocomplete="current-password" maxlength="4" placeholder="請輸入 4 位數密碼" aria-label="教師管理密碼" required>
+  <button type="submit">確認登入</button>
+  <div id="gateError" role="alert"></div>
+ </form>
+</div>
 <div class="wrap">
 <a class="back-island" href="./index.html" aria-label="返回學習島首頁">🏝️ 返回學習島</a>
   <header class="hero">
@@ -157,9 +179,23 @@ async function addPoint(group,name,rawPoints=1){
 }
 $("group").addEventListener("change",render);
 $("refresh").addEventListener("click",loadData);
-detectClock();
-loadData();
-setInterval(detectClock,15000);
+let clockTimer=null;
+$("teacherGateForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const entered=$("teacherPassword").value;
+ if(entered==="5555"){
+   document.body.classList.remove("locked");
+   $("teacherGate").hidden=true;
+   $("teacherPassword").value="";
+   detectClock();
+   loadData();
+   if(!clockTimer)clockTimer=setInterval(detectClock,15000);
+ }else{
+   $("gateError").textContent="密碼錯誤，請再試一次。";
+   $("teacherPassword").select();
+ }
+});
+$("teacherPassword").addEventListener("input",()=>{$("gateError").textContent="";});
 </script>
 </body>
 </html>

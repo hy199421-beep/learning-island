@@ -1098,7 +1098,6 @@ const ailianCustomQuiz=[
 const wordQuiz=isBird
  ?birdCustomQuiz
  :(isAilian?ailianCustomQuiz:lifeWordQuiz);
- :(isAilian?wordBank.map((entry,i)=>buildWordQuestion(entry,i,i%2===0,i%4)):lifeWordQuiz);
 registerTrainingModule('pronunciation',wordQuiz.length);
 const zy=document.getElementById('zhuyin');
 zy.innerHTML='<div id="wordPractice"><h3>🔤 '+(isAilian?'課文國字注音練習':(isBird?'鳥課文生難字注音練習':'課文指定字詞國字注音練習'))+'</h3><div id="wordProgress" class="note"></div><div id="wordCard" class="note" style="min-height:220px"></div><div style="display:flex;gap:10px;flex-wrap:wrap"><button id="wordPrev" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#9a805f;color:white;font-weight:bold">上一題</button><button id="wordNext" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#765034;color:white;font-weight:bold">下一題</button><button id="wordFinish" type="button" style="padding:11px 18px;border:0;border-radius:9px;background:#547b55;color:white;font-weight:bold">查看成績</button></div><p id="wordResult" aria-live="polite"></p></div>';

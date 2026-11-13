@@ -682,6 +682,7 @@ if(isAilian){
   <div style="display:flex;flex-wrap:wrap;gap:9px;min-height:58px;margin-bottom:18px" id="ailianSlots"></div>
   <div style="display:flex;gap:10px;flex-wrap:wrap">
    <button type="button" id="ailianCheck" style="background:#a52222;color:white;border:0;border-radius:12px;padding:12px 22px;font-weight:800;cursor:pointer">檢查答案</button>
+   <button type="button" id="ailianHint" style="background:#fff2c9;color:#765034;border:1px solid #c9b17e;border-radius:12px;padding:12px 20px;font-weight:800;cursor:pointer">💡 提示</button>
    <button type="button" id="ailianReset" style="background:#fffaf0;color:#765034;border:1px solid #c9b17e;border-radius:12px;padding:12px 20px;font-weight:800;cursor:pointer">重置</button>
    <button type="button" id="ailianNext" style="background:#765034;color:white;border:0;border-radius:12px;padding:12px 20px;font-weight:800;cursor:pointer">下一句</button>
    <button type="button" id="ailianRead" aria-label="報讀題目" style="background:#fffaf0;border:1px solid #c9b17e;border-radius:12px;padding:10px 15px;cursor:pointer">🔊 報讀</button>
@@ -689,11 +690,11 @@ if(isAilian){
   <p id="ailianFeedback" aria-live="polite" style="font-weight:800;margin-bottom:0"></p>
  </section>`;
  const rebuildItems=[
-  {prompt:'第一段｜請重組句子：',parts:['水陸草木之花，','可愛者甚蕃。']},
-  {prompt:'第一段｜請重組句子：',parts:['予獨愛蓮之','出淤泥而不染，','濯清漣而不妖。']},
-  {prompt:'第一段｜請重組句子：',parts:['中通外直，','不蔓不枝，','香遠益清，','亭亭淨植，','可遠觀而不可褻玩焉。']},
-  {prompt:'第二段｜請重組句子：',parts:['予謂菊，','花之隱逸者也；','牡丹，','花之富貴者也；','蓮，','花之君子者也。']},
-  {prompt:'第三段｜請重組句子：',parts:['噫！','菊之愛，陶後鮮有聞。','蓮之愛，同予者何人？','牡丹之愛，宜乎眾矣。']}
+  {prompt:'第一段｜請重組句子：',parts:['水陸草木之花，','可愛者甚蕃。'],hint:'先說明水中、陸地上的花，再說這些花有很多值得喜愛。'},
+  {prompt:'第一段｜請重組句子：',parts:['予獨愛蓮之','出淤泥而不染，','濯清漣而不妖。'],hint:'先說作者特別喜歡蓮花，接著描述蓮花從污泥中長出、經清水洗滌的樣子。'},
+  {prompt:'第一段｜請重組句子：',parts:['中通外直，','不蔓不枝，','香遠益清，','亭亭淨植，','可遠觀而不可褻玩焉。'],hint:'依序想想蓮花的莖、枝葉、香氣、挺立的姿態，最後說明欣賞蓮花的方式。'},
+  {prompt:'第二段｜請重組句子：',parts:['予謂菊，','花之隱逸者也；','牡丹，','花之富貴者也；','蓮，','花之君子者也。'],hint:'三種花各代表一種人：菊花代表隱居的人、牡丹代表富貴的人、蓮花代表君子。先花名，再接代表的品格。'},
+  {prompt:'第三段｜請重組句子：',parts:['噫！','菊之愛，陶後鮮有聞。','蓮之愛，同予者何人？','牡丹之愛，宜乎眾矣。'],hint:'先感嘆，再說喜愛菊花的人很少；接著問有誰和作者一樣愛蓮，最後說喜愛牡丹的人很多。'}
  ];
  let rebuildIndex=0,placed=[];
  const rebuildFlash=registerFlashcardModule(document.getElementById('ailianRebuild'),rebuildItems.map((q,i)=>({front:'第 '+(i+1)+' 張｜句子重組重點',back:q.parts.join(''),note:'先看正確語句順序，再進行詞語卡重組。'})),'愛蓮說課文句子');
@@ -721,6 +722,10 @@ if(isAilian){
    slotHost.appendChild(b);
   });
  }
+ document.getElementById('ailianHint').addEventListener('click',()=>{
+  feedback.textContent='💡 提示：'+rebuildItems[rebuildIndex].hint;
+  feedback.style.color='#765034';
+ });
  document.getElementById('ailianCheck').addEventListener('click',()=>{
   const q=rebuildItems[rebuildIndex];
   if(placed.some(x=>x===null)){feedback.textContent='請先把所有詞語卡放進格子喔！';feedback.style.color='#9b5b24';return;}

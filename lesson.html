@@ -697,6 +697,8 @@ if(isAilian){
   {prompt:'第三段｜請重組句子：',parts:['噫！','菊之愛，陶後鮮有聞。','蓮之愛，同予者何人？','牡丹之愛，宜乎眾矣。'],hint:'先感嘆，再說喜愛菊花的人很少；接著問有誰和作者一樣愛蓮，最後說喜愛牡丹的人很多。'}
  ];
  let rebuildIndex=0,placed=[];
+ const rebuildCompleted=Array(rebuildItems.length).fill(false);
+ const rebuildNextButton=document.getElementById('ailianNext');
  const rebuildFlash=registerFlashcardModule(document.getElementById('ailianRebuild'),rebuildItems.map((q,i)=>({front:'第 '+(i+1)+' 張｜句子重組重點',back:q.parts.join(''),note:'先看正確語句順序，再進行詞語卡重組。'})),'愛蓮說課文句子');
  const tileHost=document.getElementById('ailianTiles'),slotHost=document.getElementById('ailianSlots');
  const feedback=document.getElementById('ailianFeedback');
@@ -704,6 +706,9 @@ if(isAilian){
   const q=rebuildItems[rebuildIndex];placed=Array(q.parts.length).fill(null);
   document.getElementById('ailianPrompt').textContent='';
   feedback.textContent='';
+  rebuildNextButton.disabled=!rebuildCompleted[rebuildIndex];
+  rebuildNextButton.style.opacity=rebuildNextButton.disabled?'.45':'1';
+  rebuildNextButton.style.cursor=rebuildNextButton.disabled?'not-allowed':'pointer';
   tileHost.innerHTML='';slotHost.innerHTML='';
   q.parts.map((v,i)=>({v,i})).sort(()=>Math.random()-.5).forEach(({v,i})=>{
    const b=document.createElement('button');b.type='button';b.textContent=v;b.dataset.part=i;
@@ -732,10 +737,38 @@ if(isAilian){
   const correct=placed.every((x,i)=>x===i);
   feedback.textContent=correct?'🎉 答對了！太棒了！':'再試一次，點選格子可以把詞語拿回來。';
   feedback.style.color=correct?'#26734d':'#a33d2e';
-  if(correct){celebrateCorrect(document.getElementById('ailianRebuild'),feedback);rebuildFlash?.advance(rebuildIndex);}
+  if(correct){
+   rebuildCompleted[rebuildIndex]=true;
+   rebuildNextButton.disabled=false;
+   rebuildNextButton.style.opacity='1';
+   rebuildNextButton.style.cursor='pointer';
+   celebrateCorrect(document.getElementById('ailianRebuild'),feedback);
+   rebuildFlash?.advance(rebuildIndex);
+  }else{
+   rebuildCompleted[rebuildIndex]=false;
+   rebuildNextButton.disabled=true;
+   rebuildNextButton.style.opacity='.45';
+   rebuildNextButton.style.cursor='not-allowed';
+  }
  });
- document.getElementById('ailianReset').addEventListener('click',drawRebuild);
- document.getElementById('ailianNext').addEventListener('click',()=>{rebuildIndex=(rebuildIndex+1)%rebuildItems.length;drawRebuild();});
+ document.getElementById('ailianReset').addEventListener('click',()=>{
+  rebuildCompleted[rebuildIndex]=false;
+  drawRebuild();
+ });
+ rebuildNextButton.addEventListener('click',()=>{
+  if(!rebuildCompleted[rebuildIndex]){
+   feedback.textContent='🔒 請先完成本句配對，並按「檢查答案」確認正確，才能進入下一句。';
+   feedback.style.color='#9b5b24';
+   return;
+  }
+  if(rebuildIndex===rebuildItems.length-1){
+   feedback.textContent='🎉 恭喜！你已完成全部五組愛蓮說課文句子配對！';
+   feedback.style.color='#26734d';
+   return;
+  }
+  rebuildIndex++;
+  drawRebuild();
+ });
  document.getElementById('ailianRead').addEventListener('click',()=>{
   const q=rebuildItems[rebuildIndex];const line=q.parts.join('，');
   if('speechSynthesis' in window){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(q.prompt+line);u.lang='zh-TW';u.rate=.8;speechSynthesis.speak(u);}

@@ -79,6 +79,20 @@ function startUnit(i){
   document.querySelector('#practice .actions .action').style.display='none';
   return;
  }
+ if(i===1){
+  document.getElementById('visual').innerHTML='<div class="subunit-grid"><button class="subunit-card" onclick="window.open(\'https://spedmixteaching.pages.dev/math/G9S1-2-2-1\',\'_blank\',\'noopener\')"><span class="num">2-2-1</span><strong>線上教學與互動練習</strong><small>開啟你提供的課程頁面</small><span class="go">前往 2-2-1 →</span></button><button class="subunit-card" onclick="startCircleAnglePractice()"><span class="num">補充練習</span><strong>弧與圓周角步驟練習</strong><small>使用本頁提示與分步作答</small><span class="go">開始練習 →</span></button></div>';
+  document.getElementById('question').textContent='請選擇 2-2 的學習內容';
+  document.getElementById('stepCount').textContent='';
+  document.getElementById('stepQuestion').textContent='';
+  document.getElementById('stepPrompt').textContent='';
+  document.getElementById('stepEntry').style.display='none';
+  document.getElementById('stepStatus').textContent='';
+  document.getElementById('feedback').textContent='';
+  document.getElementById('stepCard').style.display='none';
+  document.querySelector('#practice .progress').style.display='none';
+  document.querySelector('#practice .actions .action').style.display='none';
+  return;
+ }
  if(i===3){
   document.getElementById('visual').innerHTML='<div class="subunit-grid"><button class="subunit-card" onclick="startApplicationPractice()"><span class="num">01</span><strong>對應邊的比</strong><small>步驟式練習</small><span class="go">開始練習 →</span></button><button class="subunit-card" onclick="window.open(' + "'./trig-intro.html','_blank','noopener'" + ')"><span class="num">04</span><strong>sin／cos／tan</strong><small>三角比練習題</small><span class="go">前往練習 →</span></button></div>';
   document.getElementById('question').textContent='請選擇下方的練習單元';

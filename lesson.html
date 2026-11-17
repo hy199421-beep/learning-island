@@ -16,7 +16,7 @@ main{width:min(980px,calc(100% - 28px));margin:28px auto 60px}
 .back{margin:0;color:#765034;background:#fffaf0;border:1px solid #d2bd91;box-shadow:0 2px 4px #54351c20}
 @media(max-width:480px){.page-actions{gap:8px}.page-actions a{flex:1;padding:10px 12px;font-size:15px}}
 h2{text-align:center;font-size:clamp(25px,4vw,34px);margin:8px 0 22px;color:#68452e}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 18px}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0 0 18px}
 .tabs button{padding:15px 8px;border:2px solid #c39a5d;border-radius:12px;background:#fff8e9;color:#704b2c;font-size:18px;font-weight:800;cursor:pointer}
 .tabs button.active{background:linear-gradient(#a96e38,#754323);color:#fff3d8;border-color:#8e5c2e}
 .panel{display:none;padding:clamp(18px,4vw,34px);border:5px double #bd9253;background:#fff9ed;box-shadow:0 8px 20px #52331f20;border-radius:8px;line-height:2;font-size:18px}
@@ -176,7 +176,7 @@ main{width:min(1220px,calc(100% - 48px))!important;margin:28px auto 60px!importa
 .page-actions{margin-bottom:18px!important}
 .page-actions a{min-height:54px!important;padding:12px 22px!important;border-radius:18px!important;font-size:17px!important}
 h2{margin:18px 0 24px!important;font-size:clamp(28px,4vw,38px)!important}
-.tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important;margin-bottom:22px!important}
+.tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;margin-bottom:22px!important}
 .tabs button{min-height:64px!important;padding:15px 10px!important;font-size:19px!important;border-radius:19px!important}
 .panel{padding:clamp(24px,4vw,44px)!important;border-radius:25px!important;line-height:2!important}
 .panel h3{font-size:24px!important;margin:0 0 22px!important}
@@ -371,7 +371,7 @@ main{
 .training-head strong{font-size:21px!important}
 .training-track{height:10px!important;margin:9px 0 6px!important}
 .tabs{
- display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
  gap:10px!important;max-width:900px;margin:0 auto 16px!important;
  padding:6px!important;border:1px solid #dfcfaa!important;
  border-radius:17px!important;background:#eee3ca!important;
@@ -520,6 +520,8 @@ main{
  #meaning #lotusCard{padding:18px 14px!important}
 }
 
+#shapeMeaning iframe{min-height:720px}
+@media(max-width:560px){#shapeMeaning iframe{height:1050px;min-height:1050px}}
 </style>
 </head>
 <body>
@@ -542,10 +544,16 @@ main{
 <button class="active" data-tab="text">📖 課文</button>
 <button data-tab="zhuyin">🔤 國字注音</button>
 <button data-tab="meaning">📚 解釋</button>
+<button data-tab="shapeMeaning">🔎 形音義練習</button>
 </nav>
 <section class="panel active" id="text"></section>
 <section class="panel" id="zhuyin"></section>
 <section class="panel" id="meaning"></section>
+<section class="panel" id="shapeMeaning">
+  <h3>🔎 相似字小偵探｜形音義練習</h3>
+  <p class="muted">觀察字形、聽讀音、認識詞語，再開始挑戰。</p>
+  <iframe title="相似字小偵探形音義練習" src="./xiangsi-character-detective.html" loading="lazy" style="display:block;width:100%;height:900px;border:0;border-radius:18px;background:#fff8ec"></iframe>
+</section>
 </main>
 <script>
 const params=new URLSearchParams(location.search);

@@ -114,6 +114,16 @@ function startUnit(i){
  render();
 }
 function openCirclePart1(){window.open('./math-circle-2-1-part1.html','_blank','noopener');}
+function startCircleAnglePractice(){
+ current=1;index=0;
+ document.getElementById('stepEntry').style.display='flex';
+ document.getElementById('stepCard').style.display='';
+ document.querySelector('#practice .progress').style.display='';
+ document.querySelector('#practice .actions .action').style.display='';
+ document.getElementById('visual').innerHTML='';
+ document.querySelector('#practice .actions .action').textContent='下一步';
+ render();
+}
 function startCircleBasicsPractice(){
  document.getElementById('stepEntry').style.display='flex';
  document.getElementById('stepCard').style.display='';

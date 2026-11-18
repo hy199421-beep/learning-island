@@ -560,6 +560,7 @@ const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
 const isBird=key==='bird';
+if(!isBird){const shapeTab=document.querySelector('.tabs button[data-tab="shapeMeaning"]');if(shapeTab)shapeTab.style.display='none';const shapePanel=document.getElementById('shapeMeaning');if(shapePanel)shapePanel.style.display='none';}
 
 // 學徒模式：每題先看 5 秒閃卡，接著練習同一道題；答題後再看下一張。
 let learningMode=localStorage.getItem('learningIslandMode_'+key)||'challenge';

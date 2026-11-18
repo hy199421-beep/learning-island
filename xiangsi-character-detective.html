@@ -1,608 +1,125 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>相似字守衛戰 - 字辨小學堂</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f0fdf4;
-            background-image: radial-gradient(#bbf7d0 1px, transparent 1px);
-            background-size: 20px 20px;
-            user-select: none; /* 防止意外反白文字 */
-        }
-
-        /* 隱藏未顯示的畫面 */
-        .hidden-screen {
-            display: none !important;
-        }
-
-        /* 3D 按鈕效果 */
-        .btn-3d {
-            transition: all 0.1s;
-            box-shadow: 0 6px 0 var(--btn-shadow, #94a3b8);
-        }
-        .btn-3d:active:not(:disabled) {
-            transform: translateY(6px);
-            box-shadow: 0 0px 0 var(--btn-shadow, #94a3b8);
-        }
-        .btn-3d:disabled {
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
-
-        .btn-blue { background-color: #3b82f6; --btn-shadow: #2563eb; color: white; }
-        .btn-green { background-color: #22c55e; --btn-shadow: #16a34a; color: white; }
-        .btn-yellow { background-color: #eab308; --btn-shadow: #ca8a04; color: white; }
-        
-        /* 選項按鈕樣式 */
-        .option-btn {
-            background-color: white;
-            --btn-shadow: #cbd5e1;
-            color: #334155;
-            border: 2px solid #e2e8f0;
-        }
-        .option-btn:hover:not(:disabled) {
-            background-color: #f8fafc;
-            border-color: #94a3b8;
-        }
-        .option-btn.correct {
-            background-color: #dcfce7;
-            border-color: #22c55e;
-            --btn-shadow: #16a34a;
-            color: #166534;
-        }
-        .option-btn.wrong {
-            background-color: #fee2e2;
-            border-color: #ef4444;
-            --btn-shadow: #dc2626;
-            color: #991b1b;
-        }
-
-        /* 注音標音樣式 */
-        rt {
-            font-size: 0.5em;
-            color: #64748b;
-            font-weight: normal;
-        }
-        .option-btn.correct rt { color: #166534; }
-        .option-btn.wrong rt { color: #991b1b; }
-
-        /* 動畫 */
-        @keyframes bounce-in {
-            0% { transform: scale(0.8); opacity: 0; }
-            60% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .animate-bounce-in {
-            animation: bounce-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-        }
-        .animate-shake {
-            animation: shake 0.4s ease-in-out;
-        }
-
-        /* 題目空格 */
-        .blank-space {
-            display: inline-block;
-            min-width: 3rem;
-            border-bottom: 4px solid #cbd5e1;
-            text-align: center;
-            color: #3b82f6;
-            font-weight: 900;
-            padding: 0 0.5rem;
-            line-height: 1;
-        }
-
-        /* 填滿畫布用的 confetti */
-        #confetti-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50;
-        }
-    </style>
-</head>
-<body class="min-h-screen flex items-center justify-center p-4">
-
-    <!-- 粒子特效畫布 (過關時顯示) -->
-    <canvas id="confetti-canvas" class="hidden"></canvas>
-
-    <!-- 遊戲容器 -->
-    <div id="app" class="w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-green-200">
-        
-        <!-- 畫面 1：開始畫面 -->
-        <div id="screen-start" class="p-8 text-center animate-bounce-in">
-            <div class="text-6xl mb-4">🧙‍♂️</div>
-            <h1 class="text-4xl md:text-5xl font-black text-green-700 mb-4 tracking-wider">相似字守衛戰</h1>
-            <p class="text-lg text-gray-600 mb-8 font-medium">幫忙找出正確的字，修復被破壞的魔法句子！<br>挑戰你的形音義辨別能力！</p>
-            <button onclick="startGame()" class="btn-3d btn-green text-2xl font-bold py-4 px-12 rounded-2xl w-full sm:w-auto">
-                開始挑戰 🚀
-            </button>
-        </div>
-
-        <!-- 畫面 2：遊戲畫面 -->
-        <div id="screen-game" class="hidden-screen flex flex-col h-full">
-            <!-- 頂部資訊列 -->
-            <div class="bg-green-100 p-4 flex justify-between items-center border-b-4 border-green-200">
-                <div class="text-green-800 font-bold text-lg bg-white px-4 py-1 rounded-full shadow-sm">
-                    第 <span id="ui-question-num" class="text-xl text-green-600">1</span>/<span id="ui-total-questions">10</span> 題
-                </div>
-                <div class="text-green-800 font-bold text-lg bg-white px-4 py-1 rounded-full shadow-sm">
-                    ⭐ 積分: <span id="ui-score" class="text-xl text-yellow-500">0</span>
-                </div>
-            </div>
-
-            <!-- 題目區域 -->
-            <div class="p-6 md:p-8 flex-grow flex flex-col justify-center">
-                <div class="text-2xl md:text-3xl font-bold text-gray-800 leading-relaxed mb-8 text-center" id="ui-question-text">
-                    <!-- 題目將透過 JS 注入 -->
-                </div>
-
-                <!-- 新增：部首記憶提示區 (在題目下方、選項上方) -->
-                <div id="ui-hint-box" class="mb-8 w-full max-w-xl mx-auto bg-yellow-50 border-2 border-yellow-300 p-4 rounded-xl text-yellow-800 text-md md:text-lg shadow-sm flex flex-col items-center transition-all">
-                    <button id="btn-show-hint" onclick="showHint()" class="btn-3d btn-yellow py-2 px-6 rounded-full text-white text-base md:text-lg font-bold flex items-center gap-2 hover:bg-yellow-500">
-                        💡 需要部首小提示嗎？點我！
-                    </button>
-                    <div id="hint-content" class="hidden w-full flex items-start gap-3 mt-2">
-                        <span class="text-3xl drop-shadow-sm">💡</span>
-                        <div class="flex-grow">
-                            <div class="text-yellow-600 text-sm mb-1 font-bold">部首小提示</div>
-                            <span id="ui-hint-text" class="leading-relaxed font-bold"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 選項按鈕區 -->
-                <div id="ui-options" class="grid grid-cols-2 gap-4 md:gap-6 justify-center">
-                    <!-- 選項將透過 JS 注入 -->
-                </div>
-            </div>
-
-            <!-- 底部回饋與解說區塊 (預設隱藏) -->
-            <div id="ui-feedback" class="hidden h-0 bg-gray-50 border-t-4 border-gray-200 p-6 flex flex-col items-center transition-all duration-300">
-                <div class="flex items-center gap-4 mb-3 w-full justify-center">
-                    <div id="feedback-icon" class="text-4xl">✅</div>
-                    <div id="feedback-title" class="text-2xl font-black text-green-600">答對了！</div>
-                </div>
-                <p id="feedback-desc" class="text-gray-700 text-lg font-medium text-center mb-4 w-full max-w-xl"></p>
-
-                <button id="btn-next" onclick="nextQuestion()" class="btn-3d btn-blue text-xl font-bold py-3 px-8 rounded-xl w-full sm:w-64">
-                    下一題 ➡️
-                </button>
-            </div>
-        </div>
-
-        <!-- 畫面 3：結算畫面 -->
-        <div id="screen-result" class="hidden-screen p-8 text-center">
-            <div id="result-emoji" class="text-7xl mb-4">🏆</div>
-            <h2 class="text-4xl font-black text-gray-800 mb-2">挑戰完成！</h2>
-            <p class="text-xl text-gray-600 mb-6">你總共獲得了</p>
-            <div class="text-6xl font-black text-yellow-500 mb-8 drop-shadow-md">
-                <span id="ui-final-score">0</span> 分
-            </div>
-            <p id="result-message" class="text-lg text-gray-700 font-bold mb-8 bg-yellow-100 p-4 rounded-xl"></p>
-            <div class="flex gap-4 justify-center flex-wrap">
-                <button onclick="resetGame()" class="btn-3d btn-green text-xl font-bold py-3 px-8 rounded-xl">
-                    🔄 再玩一次
-                </button>
-            </div>
-        </div>
-
-    </div>
-
-    <script>
-        // --- 題庫資料 (融合使用者提供的易混淆字與部首記憶策略) ---
-        const allQuestions = [
-            // 第一組：淤 vs 瘀
-            {
-                text: "他不小心撞到桌角，大腿上多了一大塊[___]青。",
-                options: [ { char: "淤", pinyin: "ㄩ" }, { char: "瘀", pinyin: "ㄩ" } ],
-                answer: "瘀",
-                explanation: "「瘀」指血液凝滯，常與受傷有關，如「瘀青」、「瘀血」。",
-                memoryTip: "【部首記憶法】想一想，受傷、生病跟哪個部首有關呢？找找看哪個選項有「疒」（病字邊）！"
-            },
-            {
-                text: "颱風過後，下水道積滿了[___]泥，導致嚴重淹水。",
-                options: [ { char: "淤", pinyin: "ㄩ" }, { char: "瘀", pinyin: "ㄩ" } ],
-                answer: "淤",
-                explanation: "「淤」指水道被泥沙阻塞，如「淤積」、「淤泥」。",
-                memoryTip: "【部首記憶法】下水道堵住跟泥沙、水流有關。找找看哪個選項帶有「氵」（水部）！"
-            },
-            
-            // 第二組：褻 vs 褒
-            {
-                text: "校長在全校朝會上，特別[___]揚了見義勇為的同學。",
-                options: [ { char: "褻", pinyin: "ㄒㄧㄝˋ" }, { char: "褒", pinyin: "ㄅㄠ" } ],
-                answer: "褒",
-                explanation: "「褒」字有讚美、表揚的意思，如「褒揚」、「褒獎」。",
-                memoryTip: "【部首記憶法】表現優良值得被大家「保」護和讚美，看看哪個選項裡面藏著「保」字？"
-            },
-            {
-                text: "在莊嚴的寺廟裡大聲喧嘩，是對神明的[___]瀆。",
-                options: [ { char: "褻", pinyin: "ㄒㄧㄝˋ" }, { char: "褒", pinyin: "ㄅㄠ" } ],
-                answer: "褻",
-                explanation: "「褻」指不恭敬、輕浮，如「褻瀆」。",
-                memoryTip: "【部首記憶法】態度不莊重，就像一個人很固「執」不聽勸。找找看哪個字裡有「執」？"
-            },
-
-            // 第三組：濯 擢 躍 耀
-            {
-                text: "聽到明天要去遊樂園校外教學，弟弟開心得雀[___]萬分。",
-                options: [ 
-                    { char: "濯", pinyin: "ㄓㄨㄛˊ" }, { char: "擢", pinyin: "ㄓㄨㄛˊ" }, 
-                    { char: "躍", pinyin: "ㄩㄝˋ" }, { char: "耀", pinyin: "ㄧㄠˋ" } 
-                ],
-                answer: "躍",
-                explanation: "「躍」有跳起的意思，如「雀躍」、「跳躍」。",
-                memoryTip: "【部首記憶法】開心地跳起來，需要用到哪個身體部位呢？找找有「足」部的字！"
-            },
-            {
-                text: "經理看中他的才華與努力，特別拔[___]他為部門主管。",
-                options: [ 
-                    { char: "濯", pinyin: "ㄓㄨㄛˊ" }, { char: "擢", pinyin: "ㄓㄨㄛˊ" }, 
-                    { char: "躍", pinyin: "ㄩㄝˋ" }, { char: "耀", pinyin: "ㄧㄠˋ" } 
-                ],
-                answer: "擢",
-                explanation: "「擢」有抽取、提拔之意，如「拔擢」。",
-                memoryTip: "【部首記憶法】長官要提拔你，就像用手把你拉上來一樣。找找看有沒有「扌」（手部）的字！"
-            },
-            {
-                text: "蓮花出[___]泥而不染。（在清水中洗過，卻不顯妖媚）",
-                options: [ 
-                    { char: "濯", pinyin: "ㄓㄨㄛˊ" }, { char: "擢", pinyin: "ㄓㄨㄛˊ" }, 
-                    { char: "躍", pinyin: "ㄩㄝˋ" }, { char: "耀", pinyin: "ㄧㄠˋ" } 
-                ],
-                answer: "濯",
-                explanation: "「濯」有洗滌的意思。這句古文形容蓮花高潔。",
-                memoryTip: "【部首記憶法】洗東西一定需要用到水！找找看哪個字是「氵」（水部）？"
-            },
-            {
-                text: "太陽出來了，平靜的湖面閃[___]著金色的光芒。",
-                options: [ 
-                    { char: "濯", pinyin: "ㄓㄨㄛˊ" }, { char: "擢", pinyin: "ㄓㄨㄛˊ" }, 
-                    { char: "躍", pinyin: "ㄩㄝˋ" }, { char: "耀", pinyin: "ㄧㄠˋ" } 
-                ],
-                answer: "耀",
-                explanation: "「耀」有光線強烈、炫耀的意思，如「閃耀」、「耀眼」。",
-                memoryTip: "【部首記憶法】閃閃發光、非常刺眼。找找看哪個字旁邊有個「光」字！"
-            },
-
-            // 第四組：蔓 漫 謾
-            {
-                text: "森林裡濃霧彌[___]，開車在路上幾乎看不見前方的車輛。",
-                options: [ { char: "蔓", pinyin: "ㄇㄢˋ" }, { char: "漫", pinyin: "ㄇㄢˋ" }, { char: "謾", pinyin: "ㄇㄢˋ" } ],
-                answer: "漫",
-                explanation: "「漫」有水滿溢出、遍布的意思，如「彌漫」、「漫山遍野」。",
-                memoryTip: "【部首記憶法】想像大水滿出來，到處都是！跟水有關，找找看有沒有「氵」（水部）！"
-            },
-            {
-                text: "外婆家後院的藤[___]，不知不覺已經爬滿了整面紅磚牆壁。",
-                options: [ { char: "蔓", pinyin: "ㄇㄢˋ" }, { char: "漫", pinyin: "ㄇㄢˋ" }, { char: "謾", pinyin: "ㄇㄢˋ" } ],
-                answer: "蔓",
-                explanation: "「蔓」指植物細長會攀爬的莖，如「藤蔓」、「蔓延」。",
-                memoryTip: "【部首記憶法】藤蔓是植物的一種喔！跟植物有關的字通常會有「艹」（草字頭）。"
-            },
-            {
-                text: "在網路上對他人進行不理性的[___]罵，可能會觸犯法律。",
-                options: [ { char: "蔓", pinyin: "ㄇㄢˋ" }, { char: "漫", pinyin: "ㄇㄢˋ" }, { char: "謾", pinyin: "ㄇㄢˋ" } ],
-                answer: "謾",
-                explanation: "「謾」有欺騙、胡亂辱罵的意思，如「謾罵」。",
-                memoryTip: "【部首記憶法】罵人是用嘴巴「說話」，跟語言有關。找找看哪個選項是「言」部！"
-            }
-        ];
-
-        // --- 遊戲狀態管理 ---
-        let gameQuestions = [];
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let isAnswered = false;
-
-        // --- DOM 元素 ---
-        const screens = {
-            start: document.getElementById('screen-start'),
-            game: document.getElementById('screen-game'),
-            result: document.getElementById('screen-result')
-        };
-        const uiQuestionNum = document.getElementById('ui-question-num');
-        const uiTotalQuestions = document.getElementById('ui-total-questions');
-        const uiScore = document.getElementById('ui-score');
-        const uiQuestionText = document.getElementById('ui-question-text');
-        const uiOptions = document.getElementById('ui-options');
-        const uiFeedback = document.getElementById('ui-feedback');
-        const feedbackIcon = document.getElementById('feedback-icon');
-        const feedbackTitle = document.getElementById('feedback-title');
-        const feedbackDesc = document.getElementById('feedback-desc');
-        const btnNext = document.getElementById('btn-next');
-        const uiHintText = document.getElementById('ui-hint-text');
-        const btnShowHint = document.getElementById('btn-show-hint');
-        const hintContent = document.getElementById('hint-content');
-
-        // --- 工具函數 ---
-        // 陣列洗牌
-        function shuffleArray(array) {
-            let curId = array.length;
-            while (0 !== curId) {
-                let randId = Math.floor(Math.random() * curId);
-                curId -= 1;
-                let tmp = array[curId];
-                array[curId] = array[randId];
-                array[randId] = tmp;
-            }
-            return array;
-        }
-
-        // 切換畫面
-        function showScreen(screenName) {
-            Object.values(screens).forEach(screen => screen.classList.add('hidden-screen'));
-            screens[screenName].classList.remove('hidden-screen');
-        }
-
-        // 顯示提示
-        function showHint() {
-            btnShowHint.classList.add('hidden');
-            hintContent.classList.remove('hidden');
-            hintContent.classList.add('animate-bounce-in');
-        }
-
-        // --- 遊戲核心邏輯 ---
-        function startGame() {
-            // 隨機挑選 10 題 (如果題庫超過 10 題的話) 並打亂順序
-            gameQuestions = shuffleArray([...allQuestions]).slice(0, 10);
-            currentQuestionIndex = 0;
-            score = 0;
-            updateScoreUI();
-            uiTotalQuestions.textContent = gameQuestions.length;
-            
-            showScreen('game');
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            isAnswered = false;
-            const currentQ = gameQuestions[currentQuestionIndex];
-            
-            // 更新進度
-            uiQuestionNum.textContent = currentQuestionIndex + 1;
-            
-            // 隱藏回饋區
-            uiFeedback.classList.add('hidden');
-            uiFeedback.classList.remove('h-auto');
-            uiFeedback.style.height = '0';
-
-            // 渲染題目，將 [___] 替換為樣式化的空格
-            const formattedText = currentQ.text.replace('[___]', '<span id="blank-target" class="blank-space">？</span>');
-            uiQuestionText.innerHTML = formattedText;
-            
-            // 加上進場動畫
-            uiQuestionText.classList.remove('animate-bounce-in');
-            void uiQuestionText.offsetWidth; // 觸發重繪
-            uiQuestionText.classList.add('animate-bounce-in');
-
-            // 設置部首記憶提示 (預設隱藏並顯示按鈕)
-            btnShowHint.classList.remove('hidden');
-            hintContent.classList.add('hidden');
-            hintContent.classList.remove('animate-bounce-in');
-            uiHintText.textContent = currentQ.memoryTip;
-
-            // 渲染選項
-            uiOptions.innerHTML = '';
-            // 把選項順序打亂
-            const shuffledOptions = shuffleArray([...currentQ.options]);
-            
-            // 動態設定 grid column 數量
-            if(shuffledOptions.length === 4) {
-                uiOptions.className = "grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 justify-center";
-            } else if (shuffledOptions.length === 3) {
-                uiOptions.className = "grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 justify-center";
-            } else {
-                uiOptions.className = "grid grid-cols-2 gap-4 md:gap-6 justify-center";
-            }
-
-            shuffledOptions.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = `btn-3d option-btn text-4xl md:text-5xl font-bold py-6 px-4 rounded-2xl flex flex-col items-center gap-2 animate-bounce-in`;
-                btn.style.animationDelay = `${index * 0.1}s`;
-                
-                // 使用 ruby 標籤顯示注音
-                btn.innerHTML = `<ruby>${opt.char}<rt>${opt.pinyin}</rt></ruby>`;
-                
-                btn.onclick = () => handleAnswer(opt.char, btn);
-                uiOptions.appendChild(btn);
-            });
-        }
-
-        function handleAnswer(selectedChar, btnElement) {
-            if (isAnswered) return;
-            isAnswered = true;
-
-            const currentQ = gameQuestions[currentQuestionIndex];
-            const isCorrect = (selectedChar === currentQ.answer);
-
-            // 停用所有按鈕
-            const allBtns = uiOptions.querySelectorAll('button');
-            allBtns.forEach(btn => {
-                btn.disabled = true;
-                // 找出正確答案的按鈕，如果是錯的也讓正確答案亮起來
-                if(btn.textContent.includes(currentQ.answer)) {
-                     btn.classList.add('correct');
-                }
-            });
-
-            const blankTarget = document.getElementById('blank-target');
-
-            if (isCorrect) {
-                // 答對邏輯
-                score += 10;
-                updateScoreUI();
-                btnElement.classList.add('correct');
-                blankTarget.textContent = currentQ.answer;
-                blankTarget.style.color = '#16a34a'; // 綠色
-                blankTarget.style.borderBottomColor = '#16a34a';
-                
-                showFeedback(true, currentQ.explanation);
-            } else {
-                // 答錯邏輯
-                btnElement.classList.add('wrong');
-                btnElement.classList.add('animate-shake');
-                blankTarget.textContent = selectedChar;
-                blankTarget.style.color = '#dc2626'; // 紅色
-                blankTarget.style.borderBottomColor = '#dc2626';
-                blankTarget.style.textDecoration = 'line-through';
-                
-                showFeedback(false, currentQ.explanation);
-            }
-
-            // 如果是最後一題，更改下一題按鈕文字
-            if (currentQuestionIndex === gameQuestions.length - 1) {
-                btnNext.innerHTML = '看結果 🏆';
-                btnNext.classList.replace('btn-blue', 'btn-yellow');
-            } else {
-                btnNext.innerHTML = '下一題 ➡️';
-                btnNext.classList.replace('btn-yellow', 'btn-blue');
-            }
-        }
-
-        function showFeedback(isCorrect, explanation) {
-            uiFeedback.classList.remove('hidden');
-            uiFeedback.style.height = 'auto';
-            
-            if (isCorrect) {
-                feedbackIcon.textContent = '🎉';
-                feedbackTitle.textContent = '太棒了！答對啦！';
-                feedbackTitle.className = 'text-2xl font-black text-green-600';
-                uiFeedback.className = 'h-auto bg-green-50 border-t-4 border-green-300 p-6 flex flex-col items-center transition-all duration-300';
-            } else {
-                feedbackIcon.textContent = '👀';
-                feedbackTitle.textContent = '哎呀！選錯囉～';
-                feedbackTitle.className = 'text-2xl font-black text-red-600';
-                uiFeedback.className = 'h-auto bg-red-50 border-t-4 border-red-300 p-6 flex flex-col items-center transition-all duration-300';
-            }
-
-            feedbackDesc.textContent = explanation;
-        }
-
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < gameQuestions.length) {
-                loadQuestion();
-            } else {
-                endGame();
-            }
-        }
-
-        function updateScoreUI() {
-            uiScore.textContent = score;
-            // 簡單的分數跳動特效
-            uiScore.classList.remove('animate-bounce-in');
-            void uiScore.offsetWidth;
-            uiScore.classList.add('animate-bounce-in');
-        }
-
-        function endGame() {
-            showScreen('result');
-            document.getElementById('ui-final-score').textContent = score;
-            
-            const msgEl = document.getElementById('result-message');
-            const emojiEl = document.getElementById('result-emoji');
-            
-            const maxScore = gameQuestions.length * 10;
-            if (score === maxScore) {
-                msgEl.textContent = "太神啦！你是相似字大師！完美通關！";
-                emojiEl.textContent = "🥇";
-                fireConfetti();
-            } else if (score >= maxScore * 0.7) {
-                msgEl.textContent = "表現得非常好！只差一點點就完美囉！";
-                emojiEl.textContent = "🥈";
-                fireConfetti();
-            } else {
-                msgEl.textContent = "再多練習幾次，你一定會越來越厲害的！";
-                emojiEl.textContent = "💪";
-            }
-        }
-
-        function resetGame() {
-            stopConfetti();
-            startGame();
-        }
-
-        // --- 簡易粒子特效 (過關用) ---
-        const canvas = document.getElementById('confetti-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let animationId;
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-
-        function fireConfetti() {
-            canvas.classList.remove('hidden');
-            resizeCanvas();
-            particles = [];
-            const colors = ['#fce7f3', '#fef08a', '#bbf7d0', '#bfdbfe', '#e9d5ff', '#ef4444', '#3b82f6', '#22c55e'];
-            
-            for (let i = 0; i < 100; i++) {
-                particles.push({
-                    x: canvas.width / 2,
-                    y: canvas.height / 2 + 100,
-                    r: Math.random() * 6 + 4,
-                    dx: Math.random() * 10 - 5,
-                    dy: Math.random() * -10 - 5,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    tilt: Math.floor(Math.random() * 10) - 10,
-                    tiltAngleIncrement: (Math.random() * 0.07) + 0.05,
-                    tiltAngle: 0
-                });
-            }
-            animateConfetti();
-        }
-
-        function animateConfetti() {
-            requestAnimationFrame(animateConfetti);
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            particles.forEach((p, index) => {
-                p.tiltAngle += p.tiltAngleIncrement;
-                p.y += (Math.cos(p.tiltAngle) + 1 + p.r / 2) / 2;
-                p.x += Math.sin(p.tiltAngle) * 2;
-                p.dy += 0.05; // 重力
-                p.x += p.dx;
-                p.y += p.dy;
-
-                ctx.beginPath();
-                ctx.lineWidth = p.r;
-                ctx.strokeStyle = p.color;
-                ctx.moveTo(p.x + p.tilt + p.r, p.y);
-                ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r);
-                ctx.stroke();
-
-                // 移除掉出畫面的粒子
-                if (p.y > canvas.height) {
-                    particles.splice(index, 1);
-                }
-            });
-        }
-
-        function stopConfetti() {
-            canvas.classList.add('hidden');
-            particles = [];
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-    </script>
-</body>
-</html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>相似字小偵探｜形近字練習</title>
+<style>
+:root{--bg:#fff8ec;--card:#fff;--tx:#2b2540;--mu:#6b6480;--pri:#3b6cff;--on:#fff;--ok:#1fa366;--bad:#e5484d;--g:#8b87a0;--rad:#e8590c;--bd:#eadfc8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17141f;--card:#221e30;--tx:#f3efff;--mu:#b5aed0;--pri:#8aa4ff;--on:#17141f;--ok:#3ccf8e;--bad:#ff6b70;--g:#9a94b5;--rad:#ffa94d;--bd:#383152;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17141f;--card:#221e30;--tx:#f3efff;--mu:#b5aed0;--pri:#8aa4ff;--on:#17141f;--ok:#3ccf8e;--bad:#ff6b70;--g:#9a94b5;--rad:#ffa94d;--bd:#383152;color-scheme:dark}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.5}
+#app{max-width:540px;margin:0 auto;padding:12px 14px 30px}
+header{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:19px}
+#st{background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:2px 12px;font-size:16px}
+.bar{height:10px;background:var(--bd);border-radius:6px;margin:10px 0 14px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--pri);transition:width .4s}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:20px;padding:16px;margin-bottom:12px}
+h1,h2{margin:4px 0 8px}h2{font-size:21px}.mu{color:var(--mu);font-size:15px}
+.cz{position:relative;display:inline-block;font-weight:500;line-height:1.15}
+.cz .g{color:var(--g)}.cz.one .g{color:var(--tx)}
+.cz .r{position:absolute;left:0;top:0;color:var(--rad);animation:blink 1.6s infinite}
+@keyframes blink{50%{filter:brightness(1.25) saturate(1.3)}}
+.btn{border:0;border-radius:16px;padding:14px 20px;font-size:18px;font-weight:800;background:var(--pri);color:var(--on);cursor:pointer;font-family:inherit;min-height:56px}
+.btn.g{background:transparent;color:var(--pri);border:3px solid var(--pri)}.btn.s{padding:8px 14px;min-height:40px;font-size:15px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.fam{display:flex;flex-direction:column;gap:8px}.fam .chs{display:flex;gap:6px;justify-content:center;font-size:44px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cc{border:3px solid var(--bd);border-radius:18px;background:var(--card);padding:10px 6px;text-align:center;cursor:pointer;font-family:inherit;color:var(--tx)}
+.cc.on{border-color:var(--rad)}.cc .py{color:var(--pri);font-weight:800;font-size:18px}.cc .em{font-size:34px}.cc .w{font-size:16px}
+.det{border:3px dashed var(--rad);border-radius:18px;padding:12px;margin-top:12px;text-align:center}
+.eq{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:20px;font-weight:800;margin:8px 0}
+.chip{border:3px solid var(--rad);border-radius:14px;padding:4px 12px;color:var(--rad);animation:in1 .7s both}.chip.gr{border-color:var(--g);color:var(--g);animation-delay:.5s}
+.eq .res{animation:in1 .7s 1s both}.eq .pl{animation:in1 .5s .4s both}.eq .eqs{animation:in1 .5s .8s both}
+@keyframes in1{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+.bounce{display:inline-block;animation:bn .9s}@keyframes bn{0%{transform:translateY(-30px);opacity:0}60%{transform:translateY(6px);opacity:1}100%{transform:none}}
+.prompt{text-align:center}.prompt .pic{font-size:72px;line-height:1.1}.prompt .wb{font-size:40px;font-weight:800;letter-spacing:4px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.opt{border:3px solid var(--bd);border-radius:18px;background:var(--card);color:var(--tx);cursor:pointer;font-family:inherit;min-height:92px;font-size:52px;font-weight:500;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px}
+.opt small{font-size:16px;font-weight:700}.opt .oe{font-size:44px}.opt.w{font-size:30px;font-weight:800}
+.opt:hover{border-color:var(--pri)}.opt.ok{border-color:var(--ok);background:rgba(31,163,102,.15)}.opt.no{border-color:var(--bad);background:rgba(229,72,77,.13);animation:sk .4s}
+@keyframes sk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.fb{display:none;border-radius:16px;padding:12px;margin:8px 0;font-size:17px}.fb.show{display:block}
+.fb.ok{background:rgba(31,163,102,.13);border:3px solid var(--ok)}.fb.no{background:rgba(229,72,77,.1);border:3px solid var(--bad)}.fb.hint{background:rgba(59,108,255,.1);border:3px solid var(--pri)}
+.big{font-size:60px;text-align:center}ul{padding-left:20px}
+</style></head><body>
+<div id="app"><header><span>🔍 相似字小偵探</span><span id="st">⭐ 0</span></header><div class="bar"><i id="pg"></i></div><main id="main"></main></div>
+<script>
+const $=s=>document.querySelector(s),main=$('#main'),pg=$('#pg');
+const sh=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+const canSay='speechSynthesis' in window;
+function say(t){if(!canSay)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='zh-TW';u.rate=.8;speechSynthesis.speak(u)}catch(e){}}
+const C=(c,py,w,wb,pic,rad,re,rn,dir,cut,st,x)=>Object.assign({c,py,w,wb,pic,rad,re,rn,dir,cut,st},x||{});
+const FAM=[
+{id:'ce',name:'冊字族',ph:'冊',chars:[
+C('柵','ㄓㄚˋ','柵欄','＿欄','🚧','木','🌳','木頭','l',.46,'木 🌳 + 冊 = 柵：木頭做的欄杆（柵欄）。<br>⚠️ 這個字念 ㄓㄚˋ，和其他三個字不一樣！',{odd:1}),
+C('跚','ㄕㄢ','蹣跚','蹣＿','🧓','足','🦶','腳','l',.46,'足 🦶 + 冊 = 跚：用腳慢慢走（蹣跚）。'),
+C('珊','ㄕㄢ','珊瑚','＿瑚','🪸','玉','💎','玉石','l',.44,'玉 💎 + 冊 = 珊：像寶石的珊瑚。'),
+C('姍','ㄕㄢ','姍姍來遲','＿＿來遲','🕒','女','👩','女生','l',.44,'女 👩 + 冊 = 姍：女生慢慢走來（姍姍來遲）。')]},
+{id:'yu',name:'臾字族',ph:'臾',chars:[
+C('腴','ㄩˊ','豐腴','豐＿','🥩','肉','🥩','肉','l',.42,'肉（月）🥩 + 臾 = 腴：肉多、胖胖的（豐腴）。'),
+C('諛','ㄩˊ','阿諛','阿＿','💬','言','💬','說話','l',.46,'言 💬 + 臾 = 諛：說好聽的話討好人（阿諛）。'),
+C('臾','ㄩˊ','須臾','須＿','⏳',null,null,null,null,0,'臾 ⏳：一下子的意思（須臾）。這個字沒有部首，是另外兩個字的「聲音」來源。')]},
+{id:'hu',name:'黃字族',ph:'黃',chars:[
+C('簧','ㄏㄨㄤˊ','彈簧','彈＿','🌀','竹','🎋','竹子','t',.4,'竹 🎋 + 黃 = 簧：竹片做的彈簧片（彈簧）。'),
+C('潢','ㄏㄨㄤˊ','裝潢','裝＿','🏠','水','💧','水','l',.3,'水 💧 + 黃 = 潢：像水一樣刷牆面（裝潢）。'),
+C('磺','ㄏㄨㄤˊ','硫磺','硫＿','🌋','石','🪨','石頭','l',.46,'石 🪨 + 黃 = 磺：黃色的礦石（硫磺）。')]},
+{id:'qu',name:'拳字族',ph:null,chars:[
+C('拳','ㄑㄩㄢˊ','拳頭','＿頭','👊','手','✋','手','b',.42,'手 ✋ 握起來 = 拳：拳頭。'),
+C('眷','ㄐㄩㄢˋ','家眷','家＿','👨‍👩‍👧','目','👁️','眼睛','b',.38,'目 👁️ 看顧家人 = 眷：家眷、眷顧。'),
+C('券','ㄑㄩㄢˋ','入場券','入場＿','🎫','刀','🔪','刀','b',.4,'刀 🔪 刻下憑證 = 券：入場券。'),
+C('豢','ㄏㄨㄢˋ','豢養','＿養','🐖','豕','🐷','豬','b',.46,'豕（豬）🐷 = 豢：養豬、養動物（豢養）。')]}];
+FAM.forEach(f=>f.chars.forEach(c=>c.f=f));
+function cz(c,sz){const o=c.dir?{l:`inset(0 ${100-c.cut*100}% 0 0)`,t:`inset(0 0 ${100-c.cut*100}% 0)`,b:`inset(${100-c.cut*100}% 0 0 0)`}[c.dir]:'';
+return `<span class="cz${c.dir?'':' one'}" style="font-size:${sz}px"><span class="g">${c.c}</span>${c.dir?`<span class="r" style="clip-path:${o}">${c.c}</span>`:''}</span>`}
+function eq(c){const f=c.f;if(!c.dir)return `<div class="eq"><span class="res">${cz(c,64)}</span></div>`;
+return `<div class="eq"><span class="chip">${c.re} ${c.rad}</span><span class="pl">+</span><span class="chip gr">${f.ph||'相同的上半部'}</span><span class="eqs">=</span><span class="res">${cz(c,64)}</span></div>`}
+const sayBtn=(t)=>canSay?`<button class="btn g s" onclick="say('${t}')">🔊 聽聽看</button>`:'';
+let stars=0,tot=0;
+function star(){$('#st').textContent='⭐ '+stars}
+function home(){pg.style.width='0';
+main.innerHTML=`<div class="card"><div class="big">🔍</div><h1 style="text-align:center">相似字小偵探</h1><p>有些字長得很像，只有一小塊不一樣。<br><b style="color:var(--rad)">橘色</b>的部分是「部首」，它會告訴你這個字跟什麼有關。<br>一起來當偵探，把相似字分清楚！</p></div>`+
+FAM.map(f=>`<div class="card fam"><h2>${f.name}</h2><div class="chs">${f.chars.map(c=>cz(c,44)).join('')}</div><div class="row"><button class="btn g" onclick="learn('${f.id}')">📖 先看卡片</button><button class="btn" onclick="quiz('${f.id}')">🎮 開始挑戰</button></div></div>`).join('')+
+`<div class="card"><h2>🎲 全部混合挑戰</h2><p class="mu">從四個字族隨機出 16 題</p><button class="btn" onclick="quiz('all')">開始</button></div>`}
+function learn(id,sel){const f=FAM.find(x=>x.id==id);sel=sel==null?-1:sel;pg.style.width='0';
+const c=f.chars[sel];
+main.innerHTML=`<div class="card"><h2>📖 ${f.name}</h2><p class="mu">橘色＝部首（它告訴你這個字跟什麼有關）。點一點卡片，看看怎麼變成這個字！</p><div class="grid">${f.chars.map((x,k)=>`<button class="cc${k==sel?' on':''}" onclick="learn('${id}',${k})">${cz(x,72)}<div class="py">${x.py}</div><div class="em">${x.pic}</div><div class="w">${x.w}</div></button>`).join('')}</div>
+${c?`<div class="det">${eq(c)}<div class="bounce" style="font-size:64px">${c.pic}</div><p>${c.st}</p>${sayBtn(c.w)}</div>`:''}
+<div class="row"><button class="btn g" onclick="home()">⬅ 回首頁</button><button class="btn" onclick="quiz('${id}')">🎮 去挑戰</button></div></div>`}
+let Qs=[],qi=0,tr=0,hn=false,dn=false,lastPick=null;
+function mkQs(f){const q=[];
+sh(f.chars).forEach(c=>q.push({t:'pic',f,c}));
+sh(f.chars.filter(c=>c.rad)).slice(0,2).forEach(c=>q.push({t:'rad',f,c}));
+if(f.id=='ce')q.push({t:'odd',f});
+if(f.id=='qu')sh(f.chars).slice(0,2).forEach(c=>q.push({t:'py',f,c}));
+sh(f.chars).slice(0,2).forEach(c=>q.push({t:'word',f,c}));
+return q}
+function quiz(id){stars=0;tot=0;star();
+Qs=id=='all'?sh(FAM.flatMap(mkQs)).slice(0,16):mkQs(FAM.find(x=>x.id==id));qi=0;showQ()}
+function showQ(){const q=Qs[qi],f=q.f,c=q.c;tr=0;hn=false;dn=false;pg.style.width=(qi/Qs.length*100)+'%';
+let p='',o=[];
+if(q.t=='pic'){p=`<div class="pic">${c.pic}</div><div class="wb">${c.wb}</div><p class="mu">看圖片，選出空格要填的字</p>`;o=f.chars.map(x=>({k:x.c,h:x.c,ok:x===c}));q.h=`💡 ${c.re?c.re+' 「'+c.rad+'」跟「'+c.rn+'」有關。':'這個字的意思是「一下子」。'}想想看：${c.pic} 是什麼詞？`;}
+if(q.t=='rad'){p=`<div>${cz(c,96)}</div><p style="font-size:19px;font-weight:800">橘色的部分，跟什麼有關？</p>`;const rs=[...new Map(f.chars.filter(x=>x.rad).map(x=>[x.re,x])).values()];o=rs.map(x=>({k:x.re,h:`<span class="oe">${x.re}</span><small>${x.rn}</small>`,ok:x===c||x.re==c.re}));q.h=`💡 橘色的部分叫「${c.rad}」。想想看它的樣子像什麼？`}
+if(q.t=='odd'){p=`<div class="pic">🤔</div><p style="font-size:20px;font-weight:800">哪一個字的讀音和其他字<u>不一樣</u>？</p>`;o=f.chars.map(x=>({k:x.c,h:x.c,ok:!!x.odd}));q.h='💡 「蹣跚」、「珊瑚」、「姍姍來遲」都念ㄕㄢ，想想「柵欄」怎麼唸？'}
+if(q.t=='py'){p=`<div class="pic">👂</div><p style="font-size:20px;font-weight:800">哪一個字念 <span style="color:var(--pri);font-size:28px">${c.py}</span>？</p>`;o=f.chars.map(x=>({k:x.c,h:x.c,ok:x===c}));q.h=`💡 ${c.pic} ${c.w}，想想這個詞怎麼唸。`}
+if(q.t=='word'){const w1=c.wb.replace(/＿/g,c.c),oth=sh(f.chars.filter(x=>x!==c))[0],w2=c.wb.replace(/＿/g,oth.c);p=`<div class="pic">${c.pic}</div><p style="font-size:20px;font-weight:800">哪一個詞是對的？</p>`;o=sh([{k:w1,h:w1,ok:true,w:1},{k:w2,h:w2,ok:false,w:1}]);q.h=`💡 看看圖片：${c.pic}，這個詞的意思是什麼？`}
+if(q.t!='word')o=sh(o);q.o=o;
+main.innerHTML=`<div class="card"><div class="mu">第 ${qi+1} / ${Qs.length} 題・${f.name}</div><div class="prompt">${p}</div><div class="opts" id="ops">${o.map((x,k)=>`<button class="opt${x.w?' w':''}" data-k="${k}">${x.h}</button>`).join('')}</div><div class="fb" id="fb"></div><div class="row"><button class="btn g" id="hb">💡 提示</button>${canSay&&c?`<button class="btn g" onclick="say('${c.w}')">🔊 聽詞語</button>`:''}<button class="btn" id="nx" hidden>${qi==Qs.length-1?'看結果 🏁':'下一題 ➜'}</button></div></div>`;
+$('#ops').onclick=e=>{const b=e.target.closest('.opt');if(b&&!dn)pick(b,q)};
+$('#hb').onclick=()=>{if(dn)return;hn=true;fb('hint',q.h)};
+$('#nx').onclick=()=>{qi++;qi<Qs.length?showQ():end()}}
+function fb(c,h){const b=$('#fb');b.className='fb show '+c;b.innerHTML=h}
+function reveal(q,won){dn=true;tot++;const c=q.c||q.f.chars.find(x=>x.odd);
+[...document.querySelectorAll('.opt')].forEach((b,k)=>{if(q.o[k].ok)b.classList.add('ok')});
+$('#nx').hidden=false;$('#hb').hidden=true;
+if(won&&tr==0&&!hn){stars++;star()}
+fb(won?'ok':'no',`${won?'✅ 答對了！':'答案在綠色的地方喔。'}<div class="eq" style="margin:4px 0">${cz(c,64)}<span class="bounce" style="font-size:52px">${c.pic}</span></div>${c.st}`)}
+function pick(b,q){const k=+b.dataset.k,o=q.o[k];
+if(o.ok){b.classList.add('ok');reveal(q,true)}
+else{tr++;b.classList.add('no');
+if(tr>=2){reveal(q,false)}
+else{let m='再試一次！可以按「💡 提示」。';const s=q.f.chars.find(x=>x.c==o.k);
+if(s&&q.t!='word')m=`你選的是 ${cz(s,40)}：${s.re?s.re+' 「'+s.rad+'」跟「'+s.rn+'」有關，':''}是「${s.w}」的字。<br>再看看圖片，想一想！`;
+fb('no','❌ '+m)}}}
+function end(){pg.style.width='100%';const r=stars/Qs.length,k=r>=.85?['🏆','相似字大偵探',3]:r>=.55?['🥈','相似字小偵探',2]:['🌱','相似字見習生',1];
+main.innerHTML=`<div class="card"><div class="big">${k[0]}</div><h1 style="text-align:center">${'⭐'.repeat(k[2])}<br>${k[1]}</h1><p style="text-align:center;font-size:19px">第一次就答對：${stars} / ${Qs.length} 題</p><div class="row" style="justify-content:center"><button class="btn" onclick="home()">回首頁</button></div></div>`}
+home();
+</script></body></html>

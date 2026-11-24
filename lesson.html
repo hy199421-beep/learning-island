@@ -552,7 +552,7 @@ main{
 <section class="panel" id="shapeMeaning">
   <h3>🔎 相似字小偵探｜形音義練習</h3>
   <p class="muted">觀察字形、聽讀音、認識詞語，再開始挑戰。</p>
-  <iframe title="相似字小偵探形音義練習" src="./xiangsi-character-detective.html?v=20261124" loading="lazy" style="display:block;width:100%;height:900px;border:0;border-radius:18px;background:#fff8ec"></iframe>
+  <iframe title="相似字小偵探形音義練習" src="about:blank" loading="lazy" style="display:block;width:100%;height:900px;border:0;border-radius:18px;background:#fff8ec"></iframe>
 </section>
 </main>
 <script>
@@ -560,6 +560,9 @@ const params=new URLSearchParams(location.search);
 const key=params.get('lesson')||'ailian';
 const isAilian=key==='ailian';
 const isBird=key==='bird';
+const shapeMeaningFrame=document.querySelector('#shapeMeaning iframe');
+if(isAilian) shapeMeaningFrame.src='./xiangsi-character-detective.html?v=20261124';
+else if(isBird) shapeMeaningFrame.src='./bird-shape-meaning.html?v=20261124';
 // 形音義分頁：愛蓮說與鳥兩課皆顯示
 
 // 學徒模式：每題先看 5 秒閃卡，接著練習同一道題；答題後再看下一張。
